@@ -59,6 +59,7 @@
             cursor: pointer;
             margin-right: 12px;
             font-size: 20px;
+            color: var(--ios-blue);
         }
         .brand {
             font-size: 22px;
@@ -92,7 +93,7 @@
             max-width: 1400px;
             margin: 0 auto;
         }
-        /* Grid cards for menu */
+        /* Grid menu */
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -119,7 +120,7 @@
         }
         .page.active { display: block; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        /* Forms & cards */
+        /* Cards */
         .card {
             background: var(--ios-card);
             backdrop-filter: var(--glass-blur);
@@ -201,40 +202,33 @@
         .status-trial { background: var(--ios-orange); color: black; }
         .status-active { background: var(--ios-green); }
         .status-expired { background: var(--ios-gray); }
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 20000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        /* Filter panel */
+        .filter-panel {
+            background: var(--ios-card);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
-        .modal-box {
-            background: var(--ios-card-solid);
-            border-radius: 28px;
-            padding: 24px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid var(--ios-border);
-            max-height: 90vh;
-            overflow-y: auto;
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            color: var(--ios-text-secondary);
+            display: block;
+            margin-bottom: 4px;
         }
         .input, .select, textarea {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #000;
             border: 1px solid var(--ios-border);
             border-radius: 14px;
             color: white;
             margin-bottom: 12px;
-            font-size: 16px;
+            font-size: 14px;
         }
         .checkbox-label {
             display: flex;
@@ -247,18 +241,12 @@
             gap: 12px;
             margin-top: 12px;
         }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #222;
-            padding: 12px 24px;
-            border-radius: 40px;
-            z-index: 30000;
-            display: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--ios-border);
+        .stats-badge {
+            background: #1f1f1f;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
         }
         /* Tabs inside user modal */
         .user-tabs {
@@ -294,30 +282,43 @@
             justify-content: space-between;
             align-items: center;
         }
-        /* Filter panel */
-        .filter-panel {
-            background: var(--ios-card);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
+        .modal-box {
+            background: var(--ios-card-solid);
+            border-radius: 28px;
+            padding: 24px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--ios-border);
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .filter-group label {
-            font-size: 12px;
-            color: var(--ios-text-secondary);
-            display: block;
-            margin-bottom: 4px;
-        }
-        .stats-badge {
-            background: #1f1f1f;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: inline-block;
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #222;
+            padding: 12px 24px;
+            border-radius: 40px;
+            z-index: 30000;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--ios-border);
         }
     </style>
 </head>
@@ -365,7 +366,7 @@
     <div id="users" class="page">
         <div class="filter-panel">
             <div class="filter-grid">
-                <div class="filter-group"><label>Search</label><input type="text" id="searchUser" class="input" placeholder="Name/Email" onkeyup="filterUsers()"></div>
+                <div class="filter-group"><label>Search</label><input type="text" id="searchUser" class="input" placeholder="Name/Email" onkeyup="applyFilters()"></div>
                 <div class="filter-group"><label>Subscription</label><select id="filterSub" class="select"><option value="all">All</option><option value="premium">Premium</option><option value="trial">Trial</option><option value="none">None</option></select></div>
                 <div class="filter-group"><label>Status</label><select id="filterStatus" class="select"><option value="all">All</option><option value="active">Active</option><option value="blocked">Blocked</option><option value="expired">Expired</option></select></div>
                 <div class="filter-group"><label>Join From</label><input type="date" id="filterFrom" class="input"></div>
@@ -398,16 +399,76 @@
         <div id="moviesGrid" class="grid-2"></div>
     </div>
 
-    <!-- Other pages (simplified but functional) -->
+    <!-- Premium Page (simplified) -->
     <div id="premium" class="page"><h2>Premium Content</h2><div id="premiumContent"></div></div>
-    <div id="downloads" class="page"><h2>Downloads</h2><div id="downloadsGrid" class="grid-2"></div></div>
+
+    <!-- Downloads Page -->
+    <div id="downloads" class="page">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h2>Downloads</h2>
+            <button class="btn btn-primary" onclick="openDownloadModal()">+ Add Download</button>
+        </div>
+        <div id="downloadsGrid" class="grid-2"></div>
+    </div>
+
+    <!-- Chat Page (simplified) -->
     <div id="chat" class="page"><h2>Chat</h2><div id="chatList"></div></div>
+
+    <!-- Device Requests Page -->
     <div id="devices" class="page"><h2>Device Requests</h2><div id="devList"></div></div>
-    <div id="settings" class="page"><h2>Settings</h2><div class="card"><input id="appName" class="input" placeholder="App Name"><input id="primaryColor" class="input" placeholder="Primary Color"><input id="adminContact" class="input" placeholder="WhatsApp Number"><button class="btn btn-primary" onclick="saveSettings()">Save</button><button class="btn btn-danger" onclick="clearAllDevices()">Clear All Device Requests</button><button class="btn btn-danger" onclick="resetAllUsers()">Reset All Users (Danger)</button></div></div>
-    <div id="categories" class="page"><h2>Categories</h2><div id="categoriesList"></div></div>
-    <div id="tips" class="page"><h2>Tips & Guides</h2><div id="tipsGrid"></div></div>
-    <div id="bettingTips" class="page"><h2>Betting Tips</h2><div id="bettingTipsGrid"></div></div>
-    <div id="appSettings" class="page"><h2>App Settings</h2><div class="card"><div class="checkbox-label"><input type="checkbox" id="drmGlobal"> Enable DRM by default</div><button class="btn btn-primary" onclick="saveAppSettings()">Save App Settings</button></div></div>
+
+    <!-- Settings Page -->
+    <div id="settings" class="page">
+        <div class="card">
+            <h3>App Configuration</h3>
+            <input id="appName" class="input" placeholder="App Name">
+            <input id="primaryColor" class="input" placeholder="Primary Color (hex)">
+            <input id="adminContact" class="input" placeholder="WhatsApp Number">
+            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            <hr style="margin:20px 0; border-color:var(--ios-border);">
+            <button class="btn btn-danger" onclick="clearAllDevices()">Clear All Device Requests</button>
+            <button class="btn btn-danger" onclick="resetAllUsers()">Reset All Users (Danger)</button>
+        </div>
+    </div>
+
+    <!-- Categories Page -->
+    <div id="categories" class="page">
+        <div class="card">
+            <h3>Add Category</h3>
+            <input id="newCat" class="input" placeholder="Category Name">
+            <button class="btn btn-primary" onclick="addCategory()">Add Category</button>
+        </div>
+        <div id="categoriesList"></div>
+    </div>
+
+    <!-- Tips Page -->
+    <div id="tips" class="page">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h2>Tips & Guides</h2>
+            <button class="btn btn-primary" onclick="openTipModal()">+ Add Tip</button>
+        </div>
+        <div id="tipsGrid" class="grid-2"></div>
+    </div>
+
+    <!-- Betting Tips Page -->
+    <div id="bettingTips" class="page">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+            <h2>Betting Tips</h2>
+            <button class="btn btn-primary" onclick="openBettingTipModal()">+ Add Tip</button>
+        </div>
+        <div id="bettingTipsGrid" class="grid-2"></div>
+    </div>
+
+    <!-- App Settings Page -->
+    <div id="appSettings" class="page">
+        <div class="card">
+            <h3>App Settings for Users</h3>
+            <div class="checkbox-label"><input type="checkbox" id="drmGlobal"> Enable DRM by default</div>
+            <div class="flex">
+                <button class="btn btn-primary" onclick="saveAppSettings()">Save App Settings</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Channel Modal -->
@@ -433,7 +494,7 @@
     </div>
 </div>
 
-<!-- Movie Modal (similar) -->
+<!-- Movie Modal -->
 <div id="movieModal" class="modal">
     <div class="modal-box">
         <h3 id="movieModalTitle">Add Movie</h3>
@@ -456,19 +517,81 @@
     </div>
 </div>
 
+<!-- Download Modal -->
+<div id="downloadModal" class="modal">
+    <div class="modal-box">
+        <h3>Add Download</h3>
+        <input type="hidden" id="dlId">
+        <input type="text" id="dlTitle" class="input" placeholder="Title">
+        <input type="text" id="dlUrl" class="input" placeholder="Download URL">
+        <input type="text" id="dlPoster" class="input" placeholder="Poster URL">
+        <textarea id="dlDesc" class="input" placeholder="Description"></textarea>
+        <div class="flex">
+            <button class="btn btn-primary" onclick="saveDownload()">Save</button>
+            <button class="btn btn-secondary" onclick="closeModal('downloadModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tip Modal -->
+<div id="tipModal" class="modal">
+    <div class="modal-box">
+        <h3 id="tipModalTitle">Add Tip</h3>
+        <input type="hidden" id="tipId">
+        <input type="text" id="tipTitle" class="input" placeholder="Tip Title">
+        <select id="tipCategory" class="select">
+            <option value="general">General</option>
+            <option value="premium">Premium</option>
+            <option value="troubleshooting">Troubleshooting</option>
+        </select>
+        <textarea id="tipContent" class="input" placeholder="Tip Content" rows="4"></textarea>
+        <div class="flex">
+            <button class="btn btn-primary" onclick="saveTip()">Save</button>
+            <button class="btn btn-secondary" onclick="closeModal('tipModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Betting Tip Modal -->
+<div id="bettingTipModal" class="modal">
+    <div class="modal-box">
+        <h3 id="bettingTipModalTitle">Add Betting Tip</h3>
+        <input type="hidden" id="btId">
+        <input type="text" id="btTitle" class="input" placeholder="Tip Title">
+        <input type="text" id="btTeam1" class="input" placeholder="Team 1">
+        <input type="text" id="btTeam2" class="input" placeholder="Team 2">
+        <input type="text" id="btPrediction" class="input" placeholder="Prediction">
+        <input type="text" id="btOdds" class="input" placeholder="Odds">
+        <input type="text" id="btStake" class="input" placeholder="Stake (optional)">
+        <select id="btStatus" class="select">
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+            <option value="successful">Successful</option>
+            <option value="failed">Failed</option>
+        </select>
+        <input type="text" id="btResult" class="input" placeholder="Result (optional)">
+        <input type="text" id="btBookmakerLink" class="input" placeholder="Bookmaker Link">
+        <textarea id="btDescription" class="input" placeholder="Description" rows="2"></textarea>
+        <div class="flex">
+            <button class="btn btn-primary" onclick="saveBettingTip()">Save</button>
+            <button class="btn btn-secondary" onclick="closeModal('bettingTipModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <!-- User Detail Modal -->
 <div id="userModal" class="modal">
     <div class="modal-box">
         <h3>Manage User</h3>
         <input type="hidden" id="umId">
         <h4 id="umName"></h4>
-        <p id="umEmail"></p>
+        <p id="umEmail" style="color:var(--ios-text-secondary); margin-bottom:12px;"></p>
         <select id="umSubType" class="select">
             <option value="trial">Trial</option>
             <option value="premium">Premium</option>
             <option value="none">None</option>
         </select>
-        <div id="subFields"><input type="date" id="umDate" class="input"><div class="flex"><button onclick="addDays(1)">+1d</button><button onclick="addDays(7)">+7d</button><button onclick="addDays(30)">+30d</button></div></div>
+        <div id="subFields"><input type="date" id="umDate" class="input"><div class="flex"><button class="btn btn-secondary" onclick="addDays(1)">+1d</button><button onclick="addDays(7)">+7d</button><button onclick="addDays(30)">+30d</button></div></div>
         <input id="umDevice" class="input" readonly>
         <div class="user-tabs">
             <button class="user-tab active" onclick="switchUserTab('history')">History</button>
@@ -509,7 +632,7 @@
     function login() { const e=document.getElementById('lemail').value, p=document.getElementById('lpass').value; auth.signInWithEmailAndPassword(e,p).catch(e=>alert(e.message)); }
 
     function loadAllData() {
-        db.ref('users').on('value', s => { allUsers = []; s.forEach(c=>allUsers.push({key:c.key,...c.val()})); updateUserStats(); filterUsers(); });
+        db.ref('users').on('value', s => { allUsers = []; s.forEach(c=>allUsers.push({key:c.key,...c.val()})); updateUserStats(); applyFilters(); });
         db.ref('channels').on('value', s => { allChannels = {}; s.forEach(c=>allChannels[c.key]={id:c.key,...c.val()}); renderChannels(); document.getElementById('cntChan').innerText = s.numChildren(); });
         db.ref('movies').on('value', s => { allMovies = {}; s.forEach(m=>allMovies[m.key]={id:m.key,...m.val()}); renderMovies(); document.getElementById('cntMov').innerText = s.numChildren(); });
         db.ref('downloadableMovies').on('value', s => { allDownloads = {}; s.forEach(d=>allDownloads[d.key]={id:d.key,...d.val()}); renderDownloads(); document.getElementById('cntDownloads').innerText = s.numChildren(); });
@@ -521,7 +644,6 @@
     }
 
     function updateUserStats() { document.getElementById('cntUsers').innerText = allUsers.length; document.getElementById('totalUsers').innerText = allUsers.length; }
-    function filterUsers() { applyFilters(); }
     function applyFilters() {
         const search = document.getElementById('searchUser').value.toLowerCase();
         const sub = document.getElementById('filterSub').value;
@@ -643,12 +765,12 @@
     function rejectDevice(reqId) { db.ref(`deviceRequests/${reqId}/status`).set('rejected'); toast("Rejected"); }
     function renderCategories() {
         let container = document.getElementById('categoriesList');
-        container.innerHTML = '<div class="card"><input id="newCat" class="input" placeholder="New Category"><button class="btn btn-primary" onclick="addCategory()">Add</button></div>';
+        container.innerHTML = '';
         allCategories.forEach(cat => {
             container.innerHTML += `<div class="card"><div>${cat.name}</div><button class="btn btn-danger" onclick="deleteCategory('${cat.id}')">Delete</button></div>`;
         });
     }
-    function addCategory() { let name=document.getElementById('newCat').value; if(name) db.ref('genres').push({name}).then(()=>toast("Added")); }
+    function addCategory() { let name=document.getElementById('newCat').value; if(name) db.ref('genres').push({name}).then(()=>{ toast("Added"); document.getElementById('newCat').value=''; }); }
     function deleteCategory(id) { if(confirm("Delete?")) db.ref('genres/'+id).remove(); }
 
     function openChannelModal(id) {
@@ -683,9 +805,60 @@
         else { data.createdAt = Date.now(); db.ref('movies').push(data).then(()=>{ toast("Movie added"); closeModal('movieModal'); }); }
     }
     function editMovie(id) { openMovieModal(id); }
-    function editDownload(id) { /* similar */ alert("Edit download not implemented in this quick version"); }
-    function editTip(id) { alert("Edit tip not implemented"); }
-    function editBettingTip(id) { alert("Edit betting tip not implemented"); }
+
+    function openDownloadModal(id) {
+        let modal = document.getElementById('downloadModal');
+        if(id) { let d=allDownloads[id]; if(d){ document.getElementById('dlId').value=id; document.getElementById('dlTitle').value=d.title||''; document.getElementById('dlUrl').value=d.downloadURL||''; document.getElementById('dlPoster').value=d.posterURL||''; document.getElementById('dlDesc').value=d.description||''; } }
+        else { document.getElementById('dlId').value=''; document.getElementById('dlTitle').value=''; document.getElementById('dlUrl').value=''; document.getElementById('dlPoster').value=''; document.getElementById('dlDesc').value=''; }
+        modal.style.display='flex';
+    }
+    function saveDownload() {
+        let id = document.getElementById('dlId').value;
+        let data = { title: document.getElementById('dlTitle').value, downloadURL: document.getElementById('dlUrl').value, posterURL: document.getElementById('dlPoster').value, description: document.getElementById('dlDesc').value, updatedAt: Date.now() };
+        if(id) db.ref('downloadableMovies/'+id).update(data).then(()=>{ toast("Download updated"); closeModal('downloadModal'); });
+        else { data.createdAt = Date.now(); db.ref('downloadableMovies').push(data).then(()=>{ toast("Download added"); closeModal('downloadModal'); }); }
+    }
+    function editDownload(id) { openDownloadModal(id); }
+
+    function openTipModal(id) {
+        let modal = document.getElementById('tipModal');
+        if(id) { let t=allTips[id]; if(t){ document.getElementById('tipModalTitle').innerText='Edit Tip'; document.getElementById('tipId').value=id; document.getElementById('tipTitle').value=t.title||''; document.getElementById('tipCategory').value=t.category||'general'; document.getElementById('tipContent').value=t.content||''; } }
+        else { document.getElementById('tipModalTitle').innerText='Add Tip'; document.getElementById('tipId').value=''; document.getElementById('tipTitle').value=''; document.getElementById('tipCategory').value='general'; document.getElementById('tipContent').value=''; }
+        modal.style.display='flex';
+    }
+    function saveTip() {
+        let id = document.getElementById('tipId').value;
+        let data = { title: document.getElementById('tipTitle').value, category: document.getElementById('tipCategory').value, content: document.getElementById('tipContent').value, updatedAt: Date.now() };
+        if(id) db.ref('tips/'+id).update(data).then(()=>{ toast("Tip updated"); closeModal('tipModal'); });
+        else { data.createdAt = Date.now(); db.ref('tips').push(data).then(()=>{ toast("Tip added"); closeModal('tipModal'); }); }
+    }
+    function editTip(id) { openTipModal(id); }
+
+    function openBettingTipModal(id) {
+        let modal = document.getElementById('bettingTipModal');
+        if(id) { let t=allBettingTips[id]; if(t){ document.getElementById('bettingTipModalTitle').innerText='Edit Betting Tip'; document.getElementById('btId').value=id; document.getElementById('btTitle').value=t.title||''; document.getElementById('btTeam1').value=t.team1||''; document.getElementById('btTeam2').value=t.team2||''; document.getElementById('btPrediction').value=t.prediction||''; document.getElementById('btOdds').value=t.odds||''; document.getElementById('btStake').value=t.stake||''; document.getElementById('btStatus').value=t.status||'upcoming'; document.getElementById('btResult').value=t.result||''; document.getElementById('btBookmakerLink').value=t.bookmakerLink||''; document.getElementById('btDescription').value=t.description||''; } }
+        else { document.getElementById('bettingTipModalTitle').innerText='Add Betting Tip'; document.getElementById('btId').value=''; document.getElementById('btTitle').value=''; document.getElementById('btTeam1').value=''; document.getElementById('btTeam2').value=''; document.getElementById('btPrediction').value=''; document.getElementById('btOdds').value=''; document.getElementById('btStake').value=''; document.getElementById('btStatus').value='upcoming'; document.getElementById('btResult').value=''; document.getElementById('btBookmakerLink').value=''; document.getElementById('btDescription').value=''; }
+        modal.style.display='flex';
+    }
+    function saveBettingTip() {
+        let id = document.getElementById('btId').value;
+        let data = {
+            title: document.getElementById('btTitle').value,
+            team1: document.getElementById('btTeam1').value,
+            team2: document.getElementById('btTeam2').value,
+            prediction: document.getElementById('btPrediction').value,
+            odds: document.getElementById('btOdds').value,
+            stake: document.getElementById('btStake').value,
+            status: document.getElementById('btStatus').value,
+            result: document.getElementById('btResult').value,
+            bookmakerLink: document.getElementById('btBookmakerLink').value,
+            description: document.getElementById('btDescription').value,
+            updatedAt: Date.now()
+        };
+        if(id) db.ref('bettingTips/'+id).update(data).then(()=>{ toast("Tip updated"); closeModal('bettingTipModal'); });
+        else { data.createdAt = Date.now(); db.ref('bettingTips').push(data).then(()=>{ toast("Tip added"); closeModal('bettingTipModal'); }); }
+    }
+    function editBettingTip(id) { openBettingTipModal(id); }
 
     function saveSettings() { let data={ appName:document.getElementById('appName').value, primaryColor:document.getElementById('primaryColor').value, adminContactNumber:document.getElementById('adminContact').value, updatedAt:Date.now() }; db.ref('settings').set(data).then(()=>toast("Settings saved")); }
     function clearAllDevices() { if(confirm("Clear all device requests?")) db.ref('deviceRequests').remove(); }
@@ -709,6 +882,9 @@
     window.approveDevice = approveDevice; window.rejectDevice = rejectDevice; window.addCategory = addCategory; window.deleteCategory = deleteCategory;
     window.saveSettings = saveSettings; window.clearAllDevices = clearAllDevices; window.resetAllUsers = resetAllUsers; window.saveAppSettings = saveAppSettings;
     window.applyFilters = applyFilters; window.resetFilters = resetFilters;
+    window.openDownloadModal = openDownloadModal; window.saveDownload = saveDownload; window.editDownload = editDownload;
+    window.openTipModal = openTipModal; window.saveTip = saveTip; window.editTip = editTip;
+    window.openBettingTipModal = openBettingTipModal; window.saveBettingTip = saveBettingTip; window.editBettingTip = editBettingTip;
 </script>
 </body>
 </html>
