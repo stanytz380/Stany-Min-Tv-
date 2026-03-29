@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Dragula for drag & drop reordering (optional, but we'll use custom JS) -->
     <style>
         * {
             margin: 0;
@@ -1649,7 +1648,7 @@
         let dragSrcEl = null;
 
         // ===================================================
-        // AUTH & INIT
+        // AUTH & UTILS
         // ===================================================
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
@@ -1846,9 +1845,11 @@
 
         function confirmDeleteUser(uid, name) {
             showConfirm(`Delete user "${name}"? This cannot be undone.`, async () => {
-                await db.ref(`users/${uid}`).remove();
-                showToast('User deleted', 'success');
-                loadUsers();
+                try {
+                    await db.ref(`users/${uid}`).remove();
+                    showToast('User deleted', 'success');
+                    loadUsers();
+                } catch (e) { showToast(e.message, 'error'); }
             });
         }
 
@@ -1870,7 +1871,7 @@
                             <div class="item-title">${ch.name || 'Unnamed'}</div>
                             <div class="item-actions">
                                 <button class="btn btn-sm btn-secondary" onclick="openEditChannelModal('${ch.id}')">Edit</button>
-                                <button class="btn btn-sm btn-danger" onclick="confirmDeleteChannel('${ch.id}','${ch.name.replace(/'/g,"\\'")}')">Delete</button>
+                                <button class="btn btn-sm btn-danger" onclick="confirmDeleteChannel('${ch.id}','${(ch.name || '').replace(/'/g,"\\'")}')">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -1954,10 +1955,12 @@
 
         function confirmDeleteChannel(id, name) {
             showConfirm(`Delete channel "${name}"?`, async () => {
-                await db.ref(`channels/${id}`).remove();
-                showToast('Channel deleted', 'success');
-                loadChannels();
-                await logActivity('channel_deleted', `Deleted channel: ${name}`);
+                try {
+                    await db.ref(`channels/${id}`).remove();
+                    showToast('Channel deleted', 'success');
+                    loadChannels();
+                    await logActivity('channel_deleted', `Deleted channel: ${name}`);
+                } catch (e) { showToast(e.message, 'error'); }
             });
         }
 
@@ -1997,7 +2000,7 @@
                         <div class="meta"><span>${m.release_year || 'N/A'}</span><span>⭐ ${m.rating?.toFixed(1) || '0'}</span></div>
                         <div class="movie-card-actions">
                             <button class="btn btn-sm btn-secondary" onclick="openEditMovieModal('${m.id}')">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteMovie('${m.id}','${m.title.replace(/'/g,"\\'")}')">Delete</button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteMovie('${m.id}','${(m.title || '').replace(/'/g,"\\'")}')">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -2065,10 +2068,12 @@
 
         function confirmDeleteMovie(id, title) {
             showConfirm(`Delete movie "${title}"?`, async () => {
-                await db.ref(`movies/${id}`).remove();
-                showToast('Movie deleted', 'success');
-                loadAllMovies();
-                await logActivity('movie_deleted', `Deleted movie: ${title}`);
+                try {
+                    await db.ref(`movies/${id}`).remove();
+                    showToast('Movie deleted', 'success');
+                    loadAllMovies();
+                    await logActivity('movie_deleted', `Deleted movie: ${title}`);
+                } catch (e) { showToast(e.message, 'error'); }
             });
         }
 
@@ -2238,7 +2243,7 @@
                     </div>
                     <div class="carousel-slide-actions">
                         <button class="btn btn-sm btn-secondary" onclick="editCarouselSlide('${slide.key}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteCarouselSlide('${slide.key}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="confirmDeleteCarouselSlide('${slide.key}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -2288,7 +2293,7 @@
         }
 
         function handleDragEnd(e) {
-            dragSource.classList.remove('dragging');
+            if (dragSource) dragSource.classList.remove('dragging');
             dragSource = null;
         }
 
@@ -2345,12 +2350,14 @@
             showToast('Slide updated', 'success');
         }
 
-        async function deleteCarouselSlide(key) {
+        function confirmDeleteCarouselSlide(key) {
             showConfirm('Delete this carousel slide?', async () => {
-                await db.ref(`carousel/${key}`).remove();
-                allCarouselSlides = allCarouselSlides.filter(s => s.key !== key);
-                renderCarouselList();
-                showToast('Slide deleted', 'success');
+                try {
+                    await db.ref(`carousel/${key}`).remove();
+                    allCarouselSlides = allCarouselSlides.filter(s => s.key !== key);
+                    renderCarouselList();
+                    showToast('Slide deleted', 'success');
+                } catch (e) { showToast(e.message, 'error'); }
             });
         }
 
@@ -2398,7 +2405,7 @@
                     dragSrcEl = null;
                 });
                 item.addEventListener('dragend', e => {
-                    dragSrcEl.classList.remove('dragging');
+                    if (dragSrcEl) dragSrcEl.classList.remove('dragging');
                     dragSrcEl = null;
                 });
             });
@@ -2413,7 +2420,7 @@
                     <button class="btn btn-sm btn-danger" onclick="deleteCategory('${cat.id}')"><i class="fas fa-trash"></i></button>
                 </div>`;
             });
-            // Re-attach drag events (simplified)
+            // Re-attach drag events
             const items = listDiv.querySelectorAll('.sortable-item');
             items.forEach(item => {
                 item.addEventListener('dragstart', e => {
@@ -2438,7 +2445,7 @@
                     dragSrcEl = null;
                 });
                 item.addEventListener('dragend', e => {
-                    dragSrcEl.classList.remove('dragging');
+                    if (dragSrcEl) dragSrcEl.classList.remove('dragging');
                     dragSrcEl = null;
                 });
             });
@@ -2456,9 +2463,11 @@
 
         function deleteCategory(id) {
             showConfirm('Delete category?', async () => {
-                await db.ref('genres/'+id).remove();
-                showToast('Category deleted', 'success');
-                loadCategoriesPage();
+                try {
+                    await db.ref('genres/'+id).remove();
+                    showToast('Category deleted', 'success');
+                    loadCategoriesPage();
+                } catch (e) { showToast(e.message, 'error'); }
             });
         }
 
