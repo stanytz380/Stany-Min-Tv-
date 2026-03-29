@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* (keep all CSS from previous version – unchanged) */
         * {
             margin: 0;
             padding: 0;
@@ -1333,18 +1334,6 @@
     <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- CONFIRM DIALOG -->
-    <div class="confirm-overlay" id="confirmOverlay">
-        <div class="confirm-box">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p id="confirmMessage">Are you sure?</p>
-            <div class="confirm-buttons">
-                <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
-                <button class="btn btn-danger" id="confirmAction">Confirm</button>
-            </div>
-        </div>
-    </div>
-
     <!-- EDIT MOVIE MODAL -->
     <div class="modal-overlay" id="editModal">
         <div class="modal-box">
@@ -1406,7 +1395,8 @@
             <div class="loading-spinner" id="usersLoading"><div class="spinner"></div></div>
             <div class="users-container">
                 <table class="users-table">
-                    <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>
+                    <thead>*
+                        <th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th>
                     </thead>
                     <tbody id="usersTableBody"></tbody>
                 </table>
@@ -1643,7 +1633,6 @@
         let allCarouselSlides = [];
         let currentEditingMovieId = null;
         let currentEditingChannelId = null;
-        let confirmCallback = null;
         let categories = [];
         let dragSrcEl = null;
 
@@ -1844,13 +1833,14 @@
         }
 
         function confirmDeleteUser(uid, name) {
-            showConfirm(`Delete user "${name}"? This cannot be undone.`, async () => {
-                try {
-                    await db.ref(`users/${uid}`).remove();
-                    showToast('User deleted', 'success');
-                    loadUsers();
-                } catch (e) { showToast(e.message, 'error'); }
-            });
+            if (confirm(`Delete user "${name}"? This cannot be undone.`)) {
+                db.ref(`users/${uid}`).remove()
+                    .then(() => {
+                        showToast('User deleted', 'success');
+                        loadUsers();
+                    })
+                    .catch(e => showToast(e.message, 'error'));
+            }
         }
 
         // ===================================================
@@ -1954,14 +1944,15 @@
         }
 
         function confirmDeleteChannel(id, name) {
-            showConfirm(`Delete channel "${name}"?`, async () => {
-                try {
-                    await db.ref(`channels/${id}`).remove();
-                    showToast('Channel deleted', 'success');
-                    loadChannels();
-                    await logActivity('channel_deleted', `Deleted channel: ${name}`);
-                } catch (e) { showToast(e.message, 'error'); }
-            });
+            if (confirm(`Delete channel "${name}"?`)) {
+                db.ref(`channels/${id}`).remove()
+                    .then(() => {
+                        showToast('Channel deleted', 'success');
+                        loadChannels();
+                        logActivity('channel_deleted', `Deleted channel: ${name}`);
+                    })
+                    .catch(e => showToast(e.message, 'error'));
+            }
         }
 
         function closeEditChannelModal() {
@@ -2067,14 +2058,15 @@
         }
 
         function confirmDeleteMovie(id, title) {
-            showConfirm(`Delete movie "${title}"?`, async () => {
-                try {
-                    await db.ref(`movies/${id}`).remove();
-                    showToast('Movie deleted', 'success');
-                    loadAllMovies();
-                    await logActivity('movie_deleted', `Deleted movie: ${title}`);
-                } catch (e) { showToast(e.message, 'error'); }
-            });
+            if (confirm(`Delete movie "${title}"?`)) {
+                db.ref(`movies/${id}`).remove()
+                    .then(() => {
+                        showToast('Movie deleted', 'success');
+                        loadAllMovies();
+                        logActivity('movie_deleted', `Deleted movie: ${title}`);
+                    })
+                    .catch(e => showToast(e.message, 'error'));
+            }
         }
 
         function closeEditModal() {
@@ -2351,14 +2343,15 @@
         }
 
         function confirmDeleteCarouselSlide(key) {
-            showConfirm('Delete this carousel slide?', async () => {
-                try {
-                    await db.ref(`carousel/${key}`).remove();
-                    allCarouselSlides = allCarouselSlides.filter(s => s.key !== key);
-                    renderCarouselList();
-                    showToast('Slide deleted', 'success');
-                } catch (e) { showToast(e.message, 'error'); }
-            });
+            if (confirm('Delete this carousel slide?')) {
+                db.ref(`carousel/${key}`).remove()
+                    .then(() => {
+                        allCarouselSlides = allCarouselSlides.filter(s => s.key !== key);
+                        renderCarouselList();
+                        showToast('Slide deleted', 'success');
+                    })
+                    .catch(e => showToast(e.message, 'error'));
+            }
         }
 
         // ===================================================
@@ -2462,13 +2455,14 @@
         }
 
         function deleteCategory(id) {
-            showConfirm('Delete category?', async () => {
-                try {
-                    await db.ref('genres/'+id).remove();
-                    showToast('Category deleted', 'success');
-                    loadCategoriesPage();
-                } catch (e) { showToast(e.message, 'error'); }
-            });
+            if (confirm('Delete category?')) {
+                db.ref('genres/'+id).remove()
+                    .then(() => {
+                        showToast('Category deleted', 'success');
+                        loadCategoriesPage();
+                    })
+                    .catch(e => showToast(e.message, 'error'));
+            }
         }
 
         async function saveCategoryOrder() {
@@ -2628,23 +2622,9 @@
         // ===================================================
         // SETTINGS DANGER ACTIONS
         // ===================================================
-        function clearAllMovies() { showConfirm('Delete ALL movies?', async () => { await db.ref('movies').remove(); showToast('All movies deleted', 'success'); loadAllMovies(); }); }
-        function clearAllChannels() { showConfirm('Delete ALL channels?', async () => { await db.ref('channels').remove(); showToast('All channels deleted', 'success'); loadChannels(); }); }
-        function clearNotifHistory() { showConfirm('Clear notification history?', async () => { await db.ref('notification_history').remove(); showToast('History cleared', 'success'); loadNotificationHistory(); }); }
-
-        // ===================================================
-        // CONFIRM DIALOG
-        // ===================================================
-        function showConfirm(msg, callback) {
-            document.getElementById('confirmMessage').innerText = msg;
-            confirmCallback = callback;
-            document.getElementById('confirmAction').onclick = () => { closeConfirm(); if (confirmCallback) confirmCallback(); };
-            document.getElementById('confirmOverlay').classList.add('show');
-        }
-        function closeConfirm() {
-            document.getElementById('confirmOverlay').classList.remove('show');
-            confirmCallback = null;
-        }
+        function clearAllMovies() { if (confirm('Delete ALL movies?')) { db.ref('movies').remove().then(() => { showToast('All movies deleted', 'success'); loadAllMovies(); }); } }
+        function clearAllChannels() { if (confirm('Delete ALL channels?')) { db.ref('channels').remove().then(() => { showToast('All channels deleted', 'success'); loadChannels(); }); } }
+        function clearNotifHistory() { if (confirm('Clear notification history?')) { db.ref('notification_history').remove().then(() => { showToast('History cleared', 'success'); loadNotificationHistory(); }); } }
 
         // ===================================================
         // FIREBASE CONNECTION STATUS
