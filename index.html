@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Dragula for drag & drop reordering (optional, but we'll use custom JS) -->
     <style>
         * {
             margin: 0;
@@ -497,7 +498,7 @@
             font-size: 0.78rem;
         }
 
-        /* TMDB Search & Movie Form (NH BOX style) */
+        /* TMDB Search & Movie Form */
         .section-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -927,6 +928,88 @@
             color: #ccc;
         }
 
+        /* Carousel Management */
+        .carousel-slides {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .carousel-slide-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+
+        .carousel-slide-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .carousel-slide-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .carousel-slide-info {
+            flex: 1;
+        }
+
+        .carousel-slide-title {
+            font-weight: 600;
+        }
+
+        .carousel-slide-desc {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .carousel-slide-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Device Request Checkbox */
+        .device-checkbox {
+            margin-right: 0.8rem;
+            transform: scale(1.2);
+            accent-color: #FF0000;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Category Sortable */
+        .sortable-item {
+            background: #222;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .sortable-item.dragging {
+            opacity: 0.5;
+        }
+
         /* Loading Spinner */
         .loading-spinner {
             display: none;
@@ -1152,24 +1235,23 @@
 
         /* Device Request Card */
         .device-card {
-            background: var(--card);
+            background: rgba(255,255,255,0.04);
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .device-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            flex: 1;
         }
 
         .device-actions {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
         }
 
         .skip-button {
@@ -1239,6 +1321,7 @@
             <a href="#" data-section="movies" onclick="navigateTo('movies')"><i class="fas fa-film"></i> Movies</a>
             <a href="#" data-section="addMovie" onclick="navigateTo('addMovie')"><i class="fas fa-plus-circle"></i> Add Movie</a>
             <div class="sidebar-divider"></div>
+            <a href="#" data-section="carousel" onclick="navigateTo('carousel')"><i class="fas fa-images"></i> Carousel</a>
             <a href="#" data-section="categories" onclick="navigateTo('categories')"><i class="fas fa-layer-group"></i> Categories</a>
             <a href="#" data-section="devices" onclick="navigateTo('devices')"><i class="fas fa-mobile-alt"></i> Device Requests</a>
             <a href="#" data-section="notifications" onclick="navigateTo('notifications')"><i class="fas fa-bell"></i> Notifications</a>
@@ -1263,7 +1346,7 @@
         </div>
     </div>
 
-    <!-- EDIT MOVIE MODAL (used for edit) -->
+    <!-- EDIT MOVIE MODAL -->
     <div class="modal-overlay" id="editModal">
         <div class="modal-box">
             <h2><span><i class="fas fa-edit"></i> Edit Movie</span><button class="modal-close" onclick="closeEditModal()">&times;</button></h2>
@@ -1324,7 +1407,8 @@
             <div class="loading-spinner" id="usersLoading"><div class="spinner"></div></div>
             <div class="users-container">
                 <table class="users-table">
-                    <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
                     <tbody id="usersTableBody"></tbody>
                 </table>
             </div>
@@ -1418,9 +1502,37 @@
                             <button type="button" class="btn btn-sm" onclick="addManualCast()">Add</button>
                         </div>
                     </div>
+                    <!-- DRM & Stream Format -->
+                    <div class="full-width" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group"><label><input type="checkbox" id="drmEnabled"> DRM Protected</label></div>
+                        <div class="form-group"><label>Stream Format</label>
+                            <select id="streamFormat">
+                                <option value="hls">HLS (.m3u8)</option>
+                                <option value="dash">DASH (.mpd)</option>
+                                <option value="mp4">MP4</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="full-width"><button type="submit" class="btn btn-block" id="saveMovieBtn"><i class="fas fa-save"></i> Save Movie</button></div>
                 </div>
             </form>
+        </div>
+
+        <!-- CAROUSEL MANAGEMENT -->
+        <div class="content-section" id="sectionCarousel">
+            <h2 class="section-title"><i class="fas fa-images"></i> Carousel Management</h2>
+            <div class="settings-card">
+                <h3>Add New Slide</h3>
+                <div class="form-group"><label>Title</label><input type="text" id="carouselTitle" placeholder="Slide Title"></div>
+                <div class="form-group"><label>Description</label><input type="text" id="carouselDesc" placeholder="Short description"></div>
+                <div class="form-group"><label>Image URL</label><input type="url" id="carouselImage" placeholder="Image URL"></div>
+                <button class="btn" onclick="addCarouselSlide()"><i class="fas fa-plus"></i> Add Slide</button>
+            </div>
+            <div class="settings-card">
+                <h3>Existing Slides (Drag to Reorder)</h3>
+                <div id="carouselSlidesList" class="carousel-slides"></div>
+                <button class="btn btn-secondary" onclick="saveCarouselOrder()" style="margin-top: 1rem;">Save Order</button>
+            </div>
         </div>
 
         <!-- CATEGORIES MANAGEMENT -->
@@ -1444,6 +1556,10 @@
         <!-- DEVICE REQUESTS -->
         <div class="content-section" id="sectionDevices">
             <h2 class="section-title"><i class="fas fa-mobile-alt"></i> Device Requests</h2>
+            <div class="bulk-actions">
+                <button class="btn btn-sm btn-p" onclick="bulkApproveDevices()"><i class="fas fa-check-double"></i> Approve Selected</button>
+                <button class="btn btn-sm btn-danger" onclick="bulkRejectDevices()"><i class="fas fa-times-circle"></i> Reject Selected</button>
+            </div>
             <div id="devicesList"></div>
         </div>
 
@@ -1455,7 +1571,16 @@
                 <div class="form-group"><label>Message</label><textarea id="notifMessage" rows="3" maxlength="120" oninput="updateCharCount('notifMessage','msgCount',120)"></textarea><div class="char-count"><span id="msgCount">0</span>/120</div></div>
                 <div class="form-group"><label>Image URL (optional)</label><input type="url" id="notifImage"></div>
                 <div class="form-group"><label>Action URL (optional)</label><input type="url" id="notifActionUrl"></div>
-                <button class="btn btn-block" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> Send to All Users</button>
+                <div class="form-group"><label>Target Audience</label>
+                    <select id="notifTarget">
+                        <option value="all">All Users</option>
+                        <option value="premium">Premium Only</option>
+                        <option value="trial">Trial Only</option>
+                        <option value="active">Active Only</option>
+                        <option value="new">New Users Only</option>
+                    </select>
+                </div>
+                <button class="btn btn-block" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> Send</button>
             </div>
             <h3>Notification History</h3>
             <div id="notificationHistory"></div>
@@ -1516,10 +1641,12 @@
         let castArray = [];
         let allMoviesCache = {};
         let allChannelsCache = {};
+        let allCarouselSlides = [];
         let currentEditingMovieId = null;
         let currentEditingChannelId = null;
         let confirmCallback = null;
         let categories = [];
+        let dragSrcEl = null;
 
         // ===================================================
         // AUTH & INIT
@@ -1617,9 +1744,9 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             const sectionMap = {
                 dashboard: 'sectionDashboard', users: 'sectionUsers', channels: 'sectionChannels',
-                movies: 'sectionMovies', addMovie: 'sectionAddMovie', categories: 'sectionCategories',
-                devices: 'sectionDevices', notifications: 'sectionNotifications', login: 'sectionLogin',
-                settings: 'sectionSettings'
+                movies: 'sectionMovies', addMovie: 'sectionAddMovie', carousel: 'sectionCarousel',
+                categories: 'sectionCategories', devices: 'sectionDevices', notifications: 'sectionNotifications',
+                login: 'sectionLogin', settings: 'sectionSettings'
             };
             const target = document.getElementById(sectionMap[section]);
             if (target) target.classList.add('active');
@@ -1634,6 +1761,7 @@
             if (section === 'devices') loadDeviceRequests();
             if (section === 'notifications') loadNotificationHistory();
             if (section === 'dashboard') loadDashboardStats();
+            if (section === 'carousel') loadCarouselSlides();
         }
 
         function toggleSidebar() {
@@ -1725,7 +1853,7 @@
         }
 
         // ===================================================
-        // CHANNEL MANAGEMENT
+        // CHANNEL MANAGEMENT (with DRM & Format)
         // ===================================================
         async function loadChannels() {
             const snap = await db.ref('channels').once('value');
@@ -1759,6 +1887,14 @@
                 <div class="form-group"><label>Poster URL</label><input id="chPoster" class="input-box"></div>
                 <div class="form-group"><label>Description</label><textarea id="chDesc" rows="2"></textarea></div>
                 <div class="form-group"><label>Display Order</label><input type="number" id="chOrder" value="999"></div>
+                <div class="form-group"><label><input type="checkbox" id="chDrm"> DRM Protected</label></div>
+                <div class="form-group"><label>Stream Format</label>
+                    <select id="chFormat">
+                        <option value="hls">HLS (.m3u8)</option>
+                        <option value="dash">DASH (.mpd)</option>
+                        <option value="mp4">MP4</option>
+                    </select>
+                </div>
                 <div class="full-width"><button class="btn btn-p" onclick="saveChannel()">Save Channel</button></div>
             `;
             modal.classList.add('show');
@@ -1775,6 +1911,14 @@
                 <div class="form-group"><label>Poster URL</label><input id="chPoster" class="input-box" value="${ch.posterURL || ''}"></div>
                 <div class="form-group"><label>Description</label><textarea id="chDesc" rows="2">${ch.description || ''}</textarea></div>
                 <div class="form-group"><label>Display Order</label><input type="number" id="chOrder" value="${ch.order || 999}"></div>
+                <div class="form-group"><label><input type="checkbox" id="chDrm" ${ch.hasDRM ? 'checked' : ''}> DRM Protected</label></div>
+                <div class="form-group"><label>Stream Format</label>
+                    <select id="chFormat">
+                        <option value="hls" ${ch.streamFormat === 'hls' ? 'selected' : ''}>HLS (.m3u8)</option>
+                        <option value="dash" ${ch.streamFormat === 'dash' ? 'selected' : ''}>DASH (.mpd)</option>
+                        <option value="mp4" ${ch.streamFormat === 'mp4' ? 'selected' : ''}>MP4</option>
+                    </select>
+                </div>
                 <div class="full-width"><button class="btn btn-p" onclick="saveChannel()">Save Channel</button></div>
             `;
             modal.classList.add('show');
@@ -1787,6 +1931,8 @@
                 posterURL: document.getElementById('chPoster').value.trim(),
                 description: document.getElementById('chDesc').value.trim(),
                 order: parseInt(document.getElementById('chOrder').value) || 999,
+                hasDRM: document.getElementById('chDrm').checked,
+                streamFormat: document.getElementById('chFormat').value,
                 type: 'channel',
                 updatedAt: Date.now()
             };
@@ -1821,7 +1967,7 @@
         }
 
         // ===================================================
-        // MOVIE MANAGEMENT (with TMDB autofill)
+        // MOVIE MANAGEMENT (with DRM & Format)
         // ===================================================
         async function loadAllMovies() {
             document.getElementById('moviesLoading').style.display = 'block';
@@ -1875,6 +2021,14 @@
                 <div class="form-group"><label>720p Link</label><input id="editLink720" value="${movie.movie_links?.['720p'] || ''}"></div>
                 <div class="form-group"><label>480p Link</label><input id="editLink480" value="${movie.movie_links?.['480p'] || ''}"></div>
                 <div class="form-group"><label>Category</label><select id="editCategory">${document.getElementById('categorySelect').innerHTML}</select></div>
+                <div class="form-group"><label><input type="checkbox" id="editDrm" ${movie.hasDRM ? 'checked' : ''}> DRM Protected</label></div>
+                <div class="form-group"><label>Stream Format</label>
+                    <select id="editFormat">
+                        <option value="hls" ${movie.streamFormat === 'hls' ? 'selected' : ''}>HLS (.m3u8)</option>
+                        <option value="dash" ${movie.streamFormat === 'dash' ? 'selected' : ''}>DASH (.mpd)</option>
+                        <option value="mp4" ${movie.streamFormat === 'mp4' ? 'selected' : ''}>MP4</option>
+                    </select>
+                </div>
                 <div class="full-width"><button class="btn btn-p" onclick="saveEditedMovie()">Save Changes</button></div>
             `;
             if (movie.categories && movie.categories.length) document.getElementById('editCategory').value = movie.categories[0];
@@ -1895,7 +2049,10 @@
                     "720p": document.getElementById('editLink720').value,
                     "480p": document.getElementById('editLink480').value
                 },
-                categories: document.getElementById('editCategory').value ? [document.getElementById('editCategory').value] : []
+                categories: document.getElementById('editCategory').value ? [document.getElementById('editCategory').value] : [],
+                hasDRM: document.getElementById('editDrm').checked,
+                streamFormat: document.getElementById('editFormat').value,
+                updatedAt: Date.now()
             };
             try {
                 await db.ref(`movies/${currentEditingMovieId}`).update(updates);
@@ -1921,7 +2078,7 @@
         }
 
         // ===================================================
-        // TMDB SEARCH (NH BOX logic)
+        // TMDB SEARCH
         // ===================================================
         async function searchTMDB() {
             const query = document.getElementById('tmdbSearchInput').value.trim();
@@ -1972,7 +2129,7 @@
             } catch (e) { showToast('Error loading details', 'error'); }
         }
 
-        // Cast functions (as in NH BOX)
+        // Cast functions
         function renderCastList() {
             const container = document.getElementById('castContainer');
             if (!castArray.length) { container.innerHTML = '<div class="empty-state">No cast members</div>'; return; }
@@ -2013,7 +2170,6 @@
             showToast('Cast added', 'success');
         }
 
-        // Save movie (with proper fields for user app)
         async function saveMovie(e) {
             e.preventDefault();
             const title = document.getElementById('movieTitle').value.trim();
@@ -2038,6 +2194,8 @@
                 categories: document.getElementById('categorySelect').value ? [document.getElementById('categorySelect').value] : [],
                 cast: castArray,
                 trailer_url: document.getElementById('trailerUrl').value.trim(),
+                hasDRM: document.getElementById('drmEnabled').checked,
+                streamFormat: document.getElementById('streamFormat').value,
                 created_at: Date.now()
             };
             try {
@@ -2055,7 +2213,149 @@
         }
 
         // ===================================================
-        // CATEGORIES MANAGEMENT
+        // CAROUSEL MANAGEMENT (with drag & drop reorder)
+        // ===================================================
+        async function loadCarouselSlides() {
+            const snap = await db.ref('carousel').once('value');
+            const slides = snap.val() || {};
+            allCarouselSlides = Object.keys(slides).map(key => ({ key, ...slides[key] }));
+            allCarouselSlides.sort((a,b) => (a.order || 0) - (b.order || 0));
+            renderCarouselList();
+        }
+
+        function renderCarouselList() {
+            const container = document.getElementById('carouselSlidesList');
+            if (!allCarouselSlides.length) {
+                container.innerHTML = '<div class="empty-state">No slides</div>';
+                return;
+            }
+            container.innerHTML = allCarouselSlides.map((slide, idx) => `
+                <div class="carousel-slide-item" draggable="true" data-key="${slide.key}" data-index="${idx}">
+                    <img src="${slide.imageURL || 'https://via.placeholder.com/60x60'}" onerror="this.src='https://via.placeholder.com/60x60'">
+                    <div class="carousel-slide-info">
+                        <div class="carousel-slide-title">${slide.title || 'Untitled'}</div>
+                        <div class="carousel-slide-desc">${slide.description || ''}</div>
+                    </div>
+                    <div class="carousel-slide-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="editCarouselSlide('${slide.key}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCarouselSlide('${slide.key}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add drag and drop event listeners
+            const items = container.querySelectorAll('.carousel-slide-item');
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        let dragSource = null;
+
+        function handleDragStart(e) {
+            dragSource = e.target.closest('.carousel-slide-item');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', dragSource.dataset.key);
+            dragSource.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const target = e.target.closest('.carousel-slide-item');
+            if (!target || !dragSource || dragSource === target) return;
+
+            const sourceKey = dragSource.dataset.key;
+            const targetKey = target.dataset.key;
+
+            const sourceIndex = allCarouselSlides.findIndex(s => s.key === sourceKey);
+            const targetIndex = allCarouselSlides.findIndex(s => s.key === targetKey);
+
+            if (sourceIndex === -1 || targetIndex === -1) return;
+
+            // Reorder array
+            const [moved] = allCarouselSlides.splice(sourceIndex, 1);
+            allCarouselSlides.splice(targetIndex, 0, moved);
+
+            renderCarouselList(); // re-render with new order
+        }
+
+        function handleDragEnd(e) {
+            dragSource.classList.remove('dragging');
+            dragSource = null;
+        }
+
+        async function addCarouselSlide() {
+            const title = document.getElementById('carouselTitle').value.trim();
+            const desc = document.getElementById('carouselDesc').value.trim();
+            const img = document.getElementById('carouselImage').value.trim();
+            if (!title || !img) { showToast('Title and Image URL required', 'error'); return; }
+            const newSlide = {
+                title,
+                description: desc,
+                imageURL: img,
+                order: allCarouselSlides.length,
+                createdAt: Date.now()
+            };
+            const ref = await db.ref('carousel').push(newSlide);
+            newSlide.key = ref.key;
+            allCarouselSlides.push(newSlide);
+            renderCarouselList();
+            document.getElementById('carouselTitle').value = '';
+            document.getElementById('carouselDesc').value = '';
+            document.getElementById('carouselImage').value = '';
+            showToast('Slide added', 'success');
+        }
+
+        async function saveCarouselOrder() {
+            const updates = {};
+            allCarouselSlides.forEach((slide, idx) => {
+                updates[`${slide.key}/order`] = idx;
+            });
+            await db.ref('carousel').update(updates);
+            showToast('Order saved', 'success');
+            await logActivity('carousel_updated', 'Updated carousel order');
+        }
+
+        async function editCarouselSlide(key) {
+            const slide = allCarouselSlides.find(s => s.key === key);
+            if (!slide) return;
+            const newTitle = prompt('Title', slide.title);
+            if (newTitle === null) return;
+            const newDesc = prompt('Description', slide.description);
+            const newImg = prompt('Image URL', slide.imageURL);
+            if (newImg === null) return;
+            await db.ref(`carousel/${key}`).update({
+                title: newTitle,
+                description: newDesc || '',
+                imageURL: newImg,
+                updatedAt: Date.now()
+            });
+            slide.title = newTitle;
+            slide.description = newDesc || '';
+            slide.imageURL = newImg;
+            renderCarouselList();
+            showToast('Slide updated', 'success');
+        }
+
+        async function deleteCarouselSlide(key) {
+            showConfirm('Delete this carousel slide?', async () => {
+                await db.ref(`carousel/${key}`).remove();
+                allCarouselSlides = allCarouselSlides.filter(s => s.key !== key);
+                renderCarouselList();
+                showToast('Slide deleted', 'success');
+            });
+        }
+
+        // ===================================================
+        // CATEGORIES MANAGEMENT (with drag & drop)
         // ===================================================
         async function loadCategoriesPage() {
             const snap = await db.ref('genres').once('value');
@@ -2063,17 +2363,92 @@
             const listDiv = document.getElementById('categoryList');
             listDiv.innerHTML = '';
             snap.forEach(c => {
-                const cat = { id: c.key, name: c.val().name };
+                const cat = { id: c.key, name: c.val().name, order: c.val().order || 0 };
                 categories.push(cat);
-                listDiv.innerHTML += `<div class="sortable-item" style="background:#222;padding:12px;margin-bottom:8px;border-radius:8px;display:flex;justify-content:space-between;"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${c.key}')"><i class="fas fa-trash"></i></button></div>`;
+                listDiv.innerHTML += `<div class="sortable-item" draggable="true" data-id="${cat.id}">
+                    <span>${cat.name}</span>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCategory('${cat.id}')"><i class="fas fa-trash"></i></button>
+                </div>`;
             });
+            categories.sort((a,b) => (a.order || 0) - (b.order || 0));
             updateCategoryDropdowns();
+
+            // Add drag & drop for categories
+            const items = listDiv.querySelectorAll('.sortable-item');
+            items.forEach(item => {
+                item.addEventListener('dragstart', e => {
+                    dragSrcEl = item;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', item.dataset.id);
+                    item.classList.add('dragging');
+                });
+                item.addEventListener('dragover', e => e.preventDefault());
+                item.addEventListener('drop', e => {
+                    e.preventDefault();
+                    if (!dragSrcEl || dragSrcEl === item) return;
+                    const srcId = dragSrcEl.dataset.id;
+                    const tgtId = item.dataset.id;
+                    const srcIndex = categories.findIndex(c => c.id === srcId);
+                    const tgtIndex = categories.findIndex(c => c.id === tgtId);
+                    if (srcIndex === -1 || tgtIndex === -1) return;
+                    const [moved] = categories.splice(srcIndex, 1);
+                    categories.splice(tgtIndex, 0, moved);
+                    renderCategoryList();
+                    dragSrcEl.classList.remove('dragging');
+                    dragSrcEl = null;
+                });
+                item.addEventListener('dragend', e => {
+                    dragSrcEl.classList.remove('dragging');
+                    dragSrcEl = null;
+                });
+            });
+        }
+
+        function renderCategoryList() {
+            const listDiv = document.getElementById('categoryList');
+            listDiv.innerHTML = '';
+            categories.forEach(cat => {
+                listDiv.innerHTML += `<div class="sortable-item" draggable="true" data-id="${cat.id}">
+                    <span>${cat.name}</span>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCategory('${cat.id}')"><i class="fas fa-trash"></i></button>
+                </div>`;
+            });
+            // Re-attach drag events (simplified)
+            const items = listDiv.querySelectorAll('.sortable-item');
+            items.forEach(item => {
+                item.addEventListener('dragstart', e => {
+                    dragSrcEl = item;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', item.dataset.id);
+                    item.classList.add('dragging');
+                });
+                item.addEventListener('dragover', e => e.preventDefault());
+                item.addEventListener('drop', e => {
+                    e.preventDefault();
+                    if (!dragSrcEl || dragSrcEl === item) return;
+                    const srcId = dragSrcEl.dataset.id;
+                    const tgtId = item.dataset.id;
+                    const srcIndex = categories.findIndex(c => c.id === srcId);
+                    const tgtIndex = categories.findIndex(c => c.id === tgtId);
+                    if (srcIndex === -1 || tgtIndex === -1) return;
+                    const [moved] = categories.splice(srcIndex, 1);
+                    categories.splice(tgtIndex, 0, moved);
+                    renderCategoryList();
+                    dragSrcEl.classList.remove('dragging');
+                    dragSrcEl = null;
+                });
+                item.addEventListener('dragend', e => {
+                    dragSrcEl.classList.remove('dragging');
+                    dragSrcEl = null;
+                });
+            });
         }
 
         async function addCategory() {
             const name = document.getElementById('newCategoryName').value.trim();
             if (!name) return showToast('Enter category name', 'error');
-            await db.ref('genres').push({ name });
+            const newOrder = categories.length;
+            await db.ref('genres').push({ name, order: newOrder });
             document.getElementById('newCategoryName').value = '';
             showToast('Category added', 'success');
             loadCategoriesPage();
@@ -2087,7 +2462,15 @@
             });
         }
 
-        function saveCategoryOrder() { showToast('Order saved (not implemented)', 'info'); }
+        async function saveCategoryOrder() {
+            const updates = {};
+            categories.forEach((cat, idx) => {
+                updates[`${cat.id}/order`] = idx;
+            });
+            await db.ref('genres').update(updates);
+            showToast('Category order saved', 'success');
+            await logActivity('categories_updated', 'Updated category order');
+        }
 
         function updateCategoryDropdowns() {
             const options = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
@@ -2120,8 +2503,16 @@
             showToast('Categories assigned', 'success');
         }
 
+        function createNewCategory() {
+            const name = prompt('Enter new category name:');
+            if (name && name.trim()) {
+                db.ref('genres').push({ name, order: categories.length });
+                showToast('Category added, refresh to see', 'success');
+            }
+        }
+
         // ===================================================
-        // DEVICE REQUESTS
+        // DEVICE REQUESTS (with bulk actions)
         // ===================================================
         async function loadDeviceRequests() {
             const snap = await db.ref('deviceRequests').once('value');
@@ -2134,11 +2525,10 @@
                 if (r.status === 'pending') {
                     container.innerHTML += `
                         <div class="device-card">
-                            <div class="device-header"><div><b>${r.userName || 'User'}</b><div>${r.email}</div></div><div class="status-badge status-trial">PENDING</div></div>
-                            <div>Device: ${r.deviceId}</div>
-                            <div class="device-actions">
-                                <button class="btn btn-sm btn-p" onclick="approveDevice('${reqId}','${r.userUid}','${r.deviceId}')">Approve</button>
-                                <button class="btn btn-sm btn-danger" onclick="rejectDevice('${reqId}')">Reject</button>
+                            <input type="checkbox" class="device-checkbox" data-request-id="${reqId}" data-user-uid="${r.userUid}" data-device-id="${r.deviceId}">
+                            <div class="device-header">
+                                <div><b>${r.userName || 'User'}</b><div>${r.email}</div></div>
+                                <div>Device: ${r.deviceId}</div>
                             </div>
                         </div>
                     `;
@@ -2159,8 +2549,30 @@
             loadDeviceRequests();
         }
 
+        async function bulkApproveDevices() {
+            const checkboxes = document.querySelectorAll('#devicesList .device-checkbox:checked');
+            if (!checkboxes.length) { showToast('Select at least one request', 'error'); return; }
+            for (const cb of checkboxes) {
+                const reqId = cb.dataset.requestId;
+                const uid = cb.dataset.userUid;
+                const deviceId = cb.dataset.deviceId;
+                await approveDevice(reqId, uid, deviceId);
+            }
+            showToast(`Approved ${checkboxes.length} device(s)`, 'success');
+        }
+
+        async function bulkRejectDevices() {
+            const checkboxes = document.querySelectorAll('#devicesList .device-checkbox:checked');
+            if (!checkboxes.length) { showToast('Select at least one request', 'error'); return; }
+            for (const cb of checkboxes) {
+                const reqId = cb.dataset.requestId;
+                await rejectDevice(reqId);
+            }
+            showToast(`Rejected ${checkboxes.length} device(s)`, 'success');
+        }
+
         // ===================================================
-        // NOTIFICATIONS
+        // NOTIFICATIONS (with targeting)
         // ===================================================
         function updateCharCount(inputId, countId, max) {
             const len = document.getElementById(inputId).value.length;
@@ -2170,11 +2582,13 @@
         async function sendPushNotification() {
             const title = document.getElementById('notifTitle').value.trim();
             const msg = document.getElementById('notifMessage').value.trim();
+            const target = document.getElementById('notifTarget').value;
             if (!title || !msg) { showToast('Title and message required', 'error'); return; }
             const notifData = {
                 title, message: msg,
                 image: document.getElementById('notifImage').value,
                 url: document.getElementById('notifActionUrl').value,
+                target: target,
                 timestamp: Date.now(),
                 sent_by: currentUser?.email || 'admin'
             };
@@ -2185,7 +2599,7 @@
             document.getElementById('notifImage').value = '';
             document.getElementById('notifActionUrl').value = '';
             loadNotificationHistory();
-            await logActivity('notification_sent', `Sent: ${title}`);
+            await logActivity('notification_sent', `Sent to ${target}: ${title}`);
         }
 
         async function loadNotificationHistory() {
@@ -2195,7 +2609,7 @@
             if (!notifs) { container.innerHTML = '<div class="empty-state">No notifications</div>'; return; }
             container.innerHTML = Object.values(notifs).reverse().map(n => `
                 <div class="notif-item">
-                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-title">${n.title} <small style="color:#FF0000;">(${n.target || 'all'})</small></div>
                     <div class="notif-message">${n.message}</div>
                     <div class="notif-time">${formatTime(n.timestamp)} · ${n.sent_by}</div>
                 </div>
@@ -2245,7 +2659,6 @@
                 currentUser = user;
                 document.getElementById('settingsEmail').innerText = user.email;
                 document.getElementById('skipButton').classList.add('hidden');
-                // If on login page, switch to dashboard
                 if (document.getElementById('sectionLogin').classList.contains('active')) navigateTo('dashboard');
             } else {
                 isLoggedIn = false;
@@ -2261,14 +2674,9 @@
         // ===================================================
         window.addEventListener('DOMContentLoaded', () => {
             initFirebaseStatus();
-            // load categories for selectors
-            db.ref('genres').once('value', () => {
-                loadCategoriesPage();
-            });
-            // load channels and movies for other selectors
+            db.ref('genres').once('value', () => loadCategoriesPage());
             loadChannels();
             loadAllMovies();
-            // load dashboard initially if logged in, else show login
             if (!auth.currentUser) navigateTo('login');
             else navigateTo('dashboard');
         });
