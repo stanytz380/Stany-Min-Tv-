@@ -26,7 +26,6 @@
             color: #fff;
             min-height: 100vh;
         }
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -97,7 +96,6 @@
         }
         .dots-menu a:hover { background: rgba(255,0,0,0.15); color: #FF0000; }
 
-        /* Sidebar */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -148,7 +146,6 @@
             margin: 0.6rem 1rem;
         }
 
-        /* Main content */
         .main-content {
             padding: 1.5rem 1rem 6rem;
             max-width: 1200px;
@@ -161,7 +158,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Buttons, forms, etc. */
         .btn {
             background: linear-gradient(135deg, #FF0000, #C41E3A);
             color: #fff;
@@ -201,7 +197,6 @@
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.4rem; }
 
-        /* Login card */
         .login-wrapper {
             display: flex;
             justify-content: center;
@@ -225,7 +220,6 @@
         }
         .forgot-password:hover { color: #FF0000; }
 
-        /* Dashboard stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -250,7 +244,6 @@
         .stat-card .stat-number { font-size: 2rem; font-weight: 700; color: #FF0000; }
         .stat-card .stat-label { font-size: 0.85rem; color: #888; }
 
-        /* TMDB search */
         .search-tmdb-container { display: flex; gap: 0.6rem; margin-bottom: 1rem; }
         .tmdb-results {
             display: grid;
@@ -441,8 +434,8 @@
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <div class="sidebar-logo">NH BOX</div>
-        <p>Admin Control Panel</p>
+        <div class="sidebar-logo">STANY MIN</div>
+        <p>Admin Panel</p>
     </div>
     <nav>
         <a href="#" data-section="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
@@ -852,11 +845,14 @@
         if (!users) { tbody.innerHTML = '<tr><td colspan="5">No users</td></tr>'; return; }
         tbody.innerHTML = Object.keys(users).map(uid => {
             const u = users[uid];
-            return `<tr><td><img src="${u.photo_url||'https://via.placeholder.com/40'}" width="40" height="40" style="border-radius:50%;"></td>
-            <td>${u.display_name||'Unknown'}</td><td>${u.email||''}</td>
-            <td><span class="status-badge ${u.status==='blocked'?'status-blocked':'status-active'}">${u.status||'active'}</span></td>
-            <td><button class="btn btn-sm btn-secondary" onclick="toggleUserStatus('${uid}','${u.status||'active'}')">${u.status==='active'?'Block':'Unblock'}</button>
-            <button class="btn btn-sm btn-danger" onclick="confirmDeleteUser('${uid}','${(u.display_name||'').replace(/'/g,"\\'")}')">Delete</button></td></tr>`;
+            return `<tr>
+                <td><img src="${u.photo_url||'https://via.placeholder.com/40'}" width="40" height="40" style="border-radius:50%;"></td>
+                <td>${u.display_name||'Unknown'}</td>
+                <td>${u.email||''}</td>
+                <td><span class="status-badge ${u.status==='blocked'?'status-blocked':'status-active'}">${u.status||'active'}</span></td>
+                <td><button class="btn btn-sm btn-secondary" onclick="toggleUserStatus('${uid}','${u.status||'active'}')">${u.status==='active'?'Block':'Unblock'}</button>
+                <button class="btn btn-sm btn-danger" onclick="confirmDeleteUser('${uid}','${(u.display_name||'').replace(/'/g,"\\'")}')">Delete</button></td>
+            </tr>`;
         }).join('');
     }
     async function toggleUserStatus(uid, cur) { let newStatus = cur === 'active' ? 'blocked' : 'active'; await db.ref(`users/${uid}`).update({ status: newStatus }); showToast(`User ${newStatus}`, 'success'); loadUsers(); }
