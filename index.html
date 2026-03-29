@@ -101,6 +101,7 @@
 </head>
 <body>
 
+<!-- LOGIN MODAL -->
 <div id="authModal" class="modal" style="display:flex;">
     <div class="modal-box" style="text-align:center;">
         <h2 style="color:var(--primary); margin-bottom:15px;">ADMIN ACCESS</h2>
@@ -110,6 +111,7 @@
     </div>
 </div>
 
+<!-- HEADER -->
 <div class="top-bar">
     <div style="display:flex; align-items:center;">
         <i class="fas fa-arrow-left back-btn" id="backBtn" onclick="goHome()"></i>
@@ -121,7 +123,9 @@
     </div>
 </div>
 
+<!-- MAIN VIEW CONTAINER -->
 <div class="view-container">
+    <!-- HOME DASHBOARD -->
     <div id="homeView">
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-number" id="statTotalUsers">0</div><div class="stat-label">Total Users</div></div>
@@ -144,7 +148,7 @@
         <div class="menu-card" onclick="openPage('newUsers')"><i class="fas fa-user-plus menu-icon" style="color:var(--secondary)"></i><div class="menu-title">New Users</div><div class="menu-count" id="cntNewUsers">0</div></div>
     </div>
 
-    <!-- USERS -->
+    <!-- USERS PAGE -->
     <div id="users" class="page-view">
         <div class="filter-bar">
             <button class="btn btn-sm btn-p" onclick="filterUsers('all')">All</button>
@@ -159,19 +163,19 @@
         <div id="userList"></div>
     </div>
 
-    <!-- CHANNELS (with MDP type) -->
+    <!-- CHANNELS PAGE -->
     <div id="channels" class="page-view">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><h3>Live Channels</h3><button class="btn btn-p btn-sm" onclick="openChanModal()"><i class="fas fa-plus"></i> Add</button></div>
         <div class="grid" id="chanGrid"></div>
     </div>
 
-    <!-- MOVIES -->
+    <!-- MOVIES PAGE -->
     <div id="movies" class="page-view">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><h3>Movies</h3><button class="btn btn-p btn-sm" onclick="openMovModal()"><i class="fas fa-plus"></i> Add</button></div>
         <div class="grid" id="movGrid"></div>
     </div>
 
-    <!-- PREMIUM (Trial & Lock settings) -->
+    <!-- PREMIUM CONTENT PAGE -->
     <div id="premium" class="page-view">
         <div class="category-manager"><h3 style="color:var(--premium); margin-bottom:15px;"><i class="fas fa-crown"></i> Premium Content</h3>
             <div class="trial-settings-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
@@ -187,31 +191,31 @@
         </div>
     </div>
 
-    <!-- DOWNLOADS -->
+    <!-- DOWNLOADS PAGE -->
     <div id="downloads" class="page-view"><div style="display:flex; justify-content:space-between;"><h3>Downloads</h3><button class="btn btn-p btn-sm" onclick="openDownloadModal()">Add</button></div><div class="grid" id="downloadsGrid"></div></div>
 
-    <!-- CHAT -->
+    <!-- CHAT PAGE -->
     <div id="chat" class="page-view" style="padding:0;"><div id="chatListContainer" class="chat-layout"><div style="padding:12px; border-bottom:1px solid var(--border);">Inbox</div><div id="chatList" class="chat-list-view"></div></div><div id="chatRoom" class="chat-room-view" style="display:none;"><div style="padding:10px; background:var(--card); display:flex; align-items:center;"><i class="fas fa-arrow-left" onclick="closeChatRoom()" style="padding:8px; cursor:pointer;"></i><div style="margin-left:8px;"><b id="chatHeaderName"></b><small id="chatHeaderEmail" style="color:var(--gray);"></small></div></div><div id="chatMsgs" class="chat-msgs"></div><div class="chat-input-area"><input id="chatInput" class="input-box" style="margin:0;" placeholder="Reply..."><button class="btn btn-p btn-sm" onclick="sendReply()">Send</button></div></div></div>
 
-    <!-- DEVICES -->
+    <!-- DEVICE REQUESTS PAGE -->
     <div id="devices" class="page-view"><h3>Pending Device Approvals</h3><div class="bulk-actions"><button class="btn btn-sm btn-p" onclick="bulkApproveDevices()"><i class="fas fa-check-double"></i> Approve Selected</button><button class="btn btn-sm btn-d" onclick="bulkRejectDevices()"><i class="fas fa-times-circle"></i> Reject Selected</button></div><div id="devList"></div></div>
 
-    <!-- SETTINGS -->
+    <!-- SETTINGS PAGE -->
     <div id="settings" class="page-view"><div class="category-manager"><h3>App Configuration</h3><label>App Name</label><input id="setAppName" class="input-box"><label>Theme Color</label><div style="display:flex; gap:8px;"><input type="color" id="setColor"><input id="setColorText" class="input-box" style="margin:0;"></div><label>WhatsApp Number</label><input id="setContact" class="input-box"><button class="btn btn-p" onclick="saveSettings()">Save</button></div><div class="category-manager"><h3>System Controls</h3><button class="btn" style="background:#333;" onclick="clearAllDeviceRequests()">Clear Device Requests</button><button class="btn" style="background:var(--danger);" onclick="resetAllUsers()">Reset All Users</button></div></div>
 
-    <!-- CATEGORIES -->
+    <!-- CATEGORIES PAGE -->
     <div id="categories" class="page-view"><div class="category-manager"><h3>Categories</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><input id="newCategoryName" class="input-box" placeholder="New Category"><button class="btn btn-p" onclick="addCategory()">Add</button></div><div><div id="categoryList" class="sortable-list"></div><button class="btn btn-sm btn-p" onclick="saveCategoryOrder()">Save Order</button></div></div></div><div class="category-manager"><h4>Assign Categories</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><select id="assignChannelSelect" class="select-modern"></select><div id="assignChannelCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignChannelCategories()">Assign to Channel</button></div><div><select id="assignMovieSelect" class="select-modern"></select><div id="assignMovieCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignMovieCategories()">Assign to Movie</button></div></div></div><div id="categoryStats" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin-top:10px;"></div></div>
 
-    <!-- TIPS -->
+    <!-- TIPS PAGE -->
     <div id="tips" class="page-view"><div style="display:flex; justify-content:space-between;"><h3>Tips</h3><button class="btn btn-p btn-sm" onclick="openTipModal()">Add</button></div><div class="tips-grid" id="tipsGrid"></div></div>
 
-    <!-- BETTING TIPS -->
+    <!-- BETTING TIPS PAGE -->
     <div id="bettingTips" class="page-view"><div class="category-manager"><h3>Betting Tips</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><form id="addBettingTipForm">...</form></div><div><div id="bettingTipsList"></div></div></div></div></div>
 
-    <!-- NOTIF -->
+    <!-- NOTIFICATIONS PAGE -->
     <div id="notif" class="page-view"><div class="category-manager"><h3>Broadcast</h3><input id="nTitle" class="input-box" placeholder="Title"><textarea id="nMsg" class="input-box" rows="3" placeholder="Message"></textarea><select id="nTarget" class="select-modern"><option value="all">All Users</option><option value="premium">Premium Only</option><option value="trial">Trial Only</option><option value="active">Active Only</option><option value="new">New Only</option></select><button class="btn btn-p" onclick="sendNotif()">Send</button></div></div>
 
-    <!-- APP SETTINGS -->
+    <!-- APP SETTINGS PAGE -->
     <div id="appSettings" class="page-view">
         <div class="app-settings-section"><h3>User App Settings</h3><div class="settings-grid" style="display:grid; gap:10px;"><div><label>Card Size</label><select id="cardSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Font Size</label><select id="fontSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Carousel Interval (ms)</label><input type="number" id="carouselInterval" value="5000"></div></div><button class="btn btn-p" onclick="saveAppSettings()">Save</button></div>
         <div class="channel-lock-management"><h3>Channel Lock</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><h4>Lock Channels</h4><div id="lockChannelsList" class="channel-list-container"></div><button class="btn btn-d btn-sm" onclick="lockSelectedChannels()">Lock Selected</button></div><div><h4>Unlock Channels</h4><div id="unlockChannelsList" class="channel-list-container"></div><button class="btn btn-p btn-sm" onclick="unlockSelectedChannels()">Unlock Selected</button></div></div><div style="margin-top:15px;"><h4>Make Free</h4><div id="freeChannelsList" class="channel-list-container"></div><button class="btn btn-premium btn-sm" onclick="makeChannelsFree()">Make Selected Free</button></div></div>
@@ -219,7 +223,7 @@
         <div class="app-settings-section"><h3>Channel Scripts</h3><select id="scriptChannelSelect" class="select-modern"></select><textarea id="channelScriptCode" rows="4" class="input-box" placeholder="JavaScript code"></textarea><button class="btn btn-p" onclick="saveChannelScript()">Save Script</button><button class="btn btn-d" onclick="clearChannelScript()">Clear</button></div>
     </div>
 
-    <!-- NEW USERS -->
+    <!-- NEW USERS PAGE -->
     <div id="newUsers" class="page-view">
         <div class="date-filter"><input type="date" id="newUsersStartDate"><input type="date" id="newUsersEndDate"><button class="btn btn-sm btn-p" onclick="filterNewUsersByDate()">Filter</button></div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-sm btn-p" onclick="filterNewUsers('today')">Today</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('yesterday')">Yesterday</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('week')">This Week</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('month')">This Month</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('all')">All Time</button></div>
@@ -233,19 +237,22 @@
 <div id="chanModal" class="modal"><div class="modal-box"><h3 id="cTitle">Channel</h3><input type="hidden" id="cId"><input id="cName" class="input-box" placeholder="Name"><div class="form-group"><label>Categories</label><div id="cCategory" class="multi-select-container"></div></div>
 <select id="chType" class="select-modern" onchange="toggleChannelType()"><option value="normal">Normal (Stream URL)</option><option value="mdp">MDP Channel (Token + License)</option></select>
 <div id="normalChannelFields"><input id="cLink" class="input-box" placeholder="Stream URL"><input id="cImg" class="input-box" placeholder="Poster URL"><textarea id="cDesc" class="input-box" placeholder="Description"></textarea></div>
-<div id="mdpChannelFields" style="display:none;"><input id="mdpToken" class="input-box" placeholder="Token / API Key"><input id="mdpLicenseUrl" class="input-box" placeholder="License URL"><input id="mdpMpdUrl" class="input-box" placeholder="MPD URL (optional)"><input id="mdpPoster" class="input-box" placeholder="Poster URL"><textarea id="mdpDesc" class="input-box" placeholder="Description"></textarea></div>
+<div id="mdpChannelFields" style="display:none;"><input id="mdpToken" class="input-box" placeholder="Token / API Key"><input id="mdpLicenseUrl" class="input-box" placeholder="License URL"><input id="mdpMpdUrl" class="input-box" placeholder="MPD URL"><input id="mdpPoster" class="input-box" placeholder="Poster URL"><textarea id="mdpDesc" class="input-box" placeholder="Description"></textarea></div>
 <input type="number" id="cOrder" placeholder="Order" value="999"><label><input type="checkbox" id="chLock"> Locked (Premium only)</label>
 <div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveChan()">Save</button><button class="btn btn-d" onclick="closeModal('chanModal')">Cancel</button></div></div></div>
 
 <div id="movModal" class="modal"><div class="modal-box"><h3 id="mTitle">Movie</h3><input type="hidden" id="mId"><input id="mName" class="input-box" placeholder="Title"><div class="form-group"><label>Categories</label><div id="mCategory" class="multi-select-container"></div></div>
-<div class="tmdb-import" style="margin-bottom:10px;"><input id="tmdbSearchInput" class="input-box" placeholder="Search TMDB..."><button class="btn btn-sm btn-p" onclick="searchTMDB()">Search</button><div id="tmdbResults" class="tmdb-results" style="display:none;"></div></div>
+<div class="tmdb-import" style="margin-bottom:10px;"><input id="tmdbSearchInput" class="input-box" placeholder="Search TMDB..."><button class="btn btn-sm btn-p" onclick="searchTMDB()">Search</button><div id="tmdbResults" class="tmdb-results" style="display:none;"></div><div id="tmdbLoading" class="loading-spinner" style="display:none;"><div class="spinner"></div></div></div>
 <input id="mLink" class="input-box" placeholder="Movie URL"><input id="mImg" class="input-box" placeholder="Poster URL"><select id="mType" class="select-modern"><option value="internal">Internal Player</option><option value="external_browser">External Browser</option></select><textarea id="mDesc" class="input-box" placeholder="Description"></textarea><select id="mSection" class="select-modern"><option value="regular">Regular</option><option value="popular">Popular</option><option value="latest">Latest</option><option value="premium">Premium</option></select>
 <label><input type="checkbox" id="movLock"> Locked (Premium only)</label>
 <div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveMov()">Save</button><button class="btn btn-d" onclick="closeModal('movModal')">Cancel</button></div></div></div>
 
 <div id="downloadModal" class="modal"><div class="modal-box"><h3>Add Download</h3><input type="hidden" id="dlId"><input id="dlTitle" class="input-box" placeholder="Title"><input id="dlUrl" class="input-box" placeholder="Download URL"><input id="dlImg" class="input-box" placeholder="Poster"><textarea id="dlDesc" placeholder="Description"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveDownload()">Save</button><button class="btn btn-d" onclick="closeModal('downloadModal')">Cancel</button></div></div></div>
-<div id="tipModal" class="modal"><div class="modal-box"><h3 id="tipTitle">Tip</h3><input type="hidden" id="tipId"><input id="tipName" placeholder="Title"><select id="tipCategory"><option value="general">General</option><option value="premium">Premium</option></select><textarea id="tipContent" rows="3" placeholder="Content"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveTip()">Save</button><button class="btn btn-d" onclick="closeModal('tipModal')">Cancel</button></div></div></div>
-<div id="userModal" class="modal"><div class="modal-box"><h3>Manage User</h3><input type="hidden" id="umId"><h4 id="umName"></h4><p id="umEmail"></p><select id="umSubType" onchange="toggleSubscriptionFields()"><option value="trial">Trial</option><option value="premium">Premium</option><option value="none">None</option></select><div id="subFields"><input type="date" id="umDate"><div style="display:flex; gap:5px;"><button class="btn btn-sm" onclick="addTime(1)">+1d</button><button class="btn btn-sm" onclick="addTime(7)">+7d</button><button class="btn btn-sm" onclick="addTime(30)">+30d</button></div></div><input id="umDevice" readonly><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveUserSub()">Update</button><button id="umBlockBtn" class="btn btn-d" onclick="toggleBlock()">Block</button></div><button class="btn btn-sm" onclick="viewPass()">View Passwords</button><button class="btn btn-sm" onclick="forceLogout()">Force Logout</button><button class="btn btn-sm" onclick="closeModal('userModal')">Close</button></div></div>
+
+<div id="tipModal" class="modal"><div class="modal-box"><h3 id="tipTitle">Tip</h3><input type="hidden" id="tipId"><input id="tipName" class="input-box" placeholder="Title"><select id="tipCategory" class="select-modern"><option value="general">General</option><option value="premium">Premium</option></select><textarea id="tipContent" rows="3" class="input-box" placeholder="Content"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveTip()">Save</button><button class="btn btn-d" onclick="closeModal('tipModal')">Cancel</button></div></div></div>
+
+<div id="userModal" class="modal"><div class="modal-box"><h3>Manage User</h3><input type="hidden" id="umId"><h4 id="umName"></h4><p id="umEmail"></p><select id="umSubType" class="select-modern" onchange="toggleSubscriptionFields()"><option value="trial">Trial</option><option value="premium">Premium</option><option value="none">None</option></select><div id="subFields"><input type="date" id="umDate" class="input-box"><div style="display:flex; gap:5px;"><button class="btn btn-sm" onclick="addTime(1)">+1d</button><button class="btn btn-sm" onclick="addTime(7)">+7d</button><button class="btn btn-sm" onclick="addTime(30)">+30d</button></div></div><input id="umDevice" class="input-box" readonly><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveUserSub()">Update</button><button id="umBlockBtn" class="btn btn-d" onclick="toggleBlock()">Block</button></div><button class="btn btn-sm" onclick="viewPass()">View Passwords</button><button class="btn btn-sm" onclick="forceLogout()">Force Logout</button><button class="btn btn-sm" onclick="closeModal('userModal')">Close</button></div></div>
+
 <div id="passModal" class="modal"><div class="modal-box"><h3>Channel Passwords</h3><div id="passList"></div><button class="btn btn-d" onclick="closeModal('passModal')">Close</button></div></div>
 
 <script>
@@ -264,6 +271,7 @@
     let allUsers=[], channels={}, movies={}, downloads={}, tips={}, bettingTips={}, chatUid=null, currentChatUser=null;
     let trialSettings={duration:7,unit:'hours'}, categories=[], appSettings={cardSize:'medium',fontSize:'medium',carouselInterval:5000,lockedChannels:[],freeChannels:[],channelScripts:{}};
     let allCarouselSlides=[];
+    let currentBookingCodes=[], currentEditBookingCodes=[];
 
     auth.onAuthStateChanged(u=>{ if(u){ document.getElementById('authModal').style.display='none'; init(); } else { document.getElementById('authModal').style.display='flex'; } });
     function login(){ auth.signInWithEmailAndPassword(document.getElementById('lemail').value, document.getElementById('lpass').value).catch(e=>alert(e.message)); }
@@ -373,7 +381,7 @@
     function updateBookingCodesList(){} function updateEditBookingCodesList(){}
 
     // TMDB Search
-    async function searchTMDB(){ const query=document.getElementById('tmdbSearchInput').value.trim(); if(!query) return toast("Enter movie name"); const loading=document.getElementById('tmdbLoading'), results=document.getElementById('tmdbResults'); if(!loading) return; loading.style.display='block'; results.style.display='grid'; try{ const res=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=2e211dfda888f7cc55ce433d743f9bc3&query=${encodeURIComponent(query)}`); const data=await res.json(); loading.style.display='none'; if(!data.results||!data.results.length){ results.innerHTML='<div>No results</div>'; return; } results.innerHTML=data.results.map(m=>`<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)"><img src="${m.poster_path?'https://image.tmdb.org/t/p/w300'+m.poster_path:'https://via.placeholder.com/100x150'}"><div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||''}</small></div></div>`).join(''); }catch(e){ loading.style.display='none'; toast("Search failed"); } }
+    async function searchTMDB(){ const query=document.getElementById('tmdbSearchInput').value.trim(); if(!query) return toast("Enter movie name"); const loading=document.getElementById('tmdbLoading'), results=document.getElementById('tmdbResults'); if(loading) loading.style.display='block'; results.style.display='grid'; try{ const res=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=2e211dfda888f7cc55ce433d743f9bc3&query=${encodeURIComponent(query)}`); const data=await res.json(); if(loading) loading.style.display='none'; if(!data.results||!data.results.length){ results.innerHTML='<div>No results</div>'; return; } results.innerHTML=data.results.map(m=>`<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)"><img src="${m.poster_path?'https://image.tmdb.org/t/p/w300'+m.poster_path:'https://via.placeholder.com/100x150'}"><div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||''}</small></div></div>`).join(''); }catch(e){ if(loading) loading.style.display='none'; toast("Search failed"); } }
     async function selectTMDBMovie(id,el){ document.querySelectorAll('.tmdb-result-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); try{ const [details,credits]=await Promise.all([fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json()), fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json())]); document.getElementById('mName').value=details.title; document.getElementById('mLink').value=''; document.getElementById('mImg').value=details.poster_path?'https://image.tmdb.org/t/p/w500'+details.poster_path:''; document.getElementById('mDesc').value=details.overview||''; document.getElementById('mSection').value='regular'; document.getElementById('movLock').checked=false; document.querySelectorAll('#mCategory input').forEach(cb=>cb.checked=false); toast("Movie data loaded"); document.getElementById('tmdbResults').style.display='none'; document.getElementById('tmdbSearchInput').value=''; }catch(e){ toast("Error loading details"); } }
 
     setTimeout(()=>{ updateAssignmentDropdowns(); updateCategoryDropdowns(); loadChannels(); loadAllMovies(); },2000);
