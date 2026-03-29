@@ -2,617 +2,585 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>STANY MIN TV ADMIN - Full Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>STANY MIN TV - Admin Panel</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
-        :root {
-            --ios-bg: #000000;
-            --ios-card: rgba(28,28,30,0.65);
-            --ios-card-solid: #1c1c1e;
-            --ios-glass: rgba(255,255,255,0.08);
-            --ios-border: rgba(255,255,255,0.1);
-            --ios-blue: #0A84FF;
-            --ios-green: #30D158;
-            --ios-red: #FF453A;
-            --ios-orange: #FF9F0A;
-            --ios-gray: #8E8E93;
-            --ios-text: #FFFFFF;
-            --ios-text-secondary: #98989D;
-            --gradient-primary: linear-gradient(135deg, #FF2D55 0%, #5856D6 50%, #0A84FF 100%);
-            --glass-blur: blur(20px) saturate(180%);
-            --shadow-ios: 0 8px 32px rgba(0,0,0,0.4);
-        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'SF Pro Display', 'Inter', sans-serif;
         }
         body {
-            background: var(--ios-bg);
-            color: var(--ios-text);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #fff;
             min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: 20px;
         }
         /* Header */
-        .header {
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(14px);
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 16px 20px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--ios-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.15);
         }
-        .back-btn {
-            display: none;
-            cursor: pointer;
-            margin-right: 12px;
-            font-size: 20px;
-            color: var(--ios-blue);
-        }
-        .brand {
-            font-size: 22px;
+        .logo {
+            font-size: 1.4rem;
             font-weight: 700;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #FF0000;
         }
-        .header-actions {
-            display: flex;
-            gap: 16px;
-        }
-        .header-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
+        .logo span { color: #fff; font-weight: 400; }
+        .status-indicator {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            color: var(--ios-text);
-            font-size: 18px;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.06);
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
         }
-        .header-icon:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-        /* Container */
-        .container {
-            padding: 20px;
-            max-width: 1400px;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffff00;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,0,0.4); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(0,255,0,0); }
+        }
+        .header-dots {
+            font-size: 1.3rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 0.4rem;
+            border-radius: 6px;
+            position: relative;
+        }
+        .dots-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #2d2d2d;
+            border-radius: 10px;
+            min-width: 180px;
+            overflow: hidden;
+            z-index: 1001;
+            border: 1px solid rgba(255,0,0,0.15);
+        }
+        .dots-menu.show { display: block; }
+        .dots-menu a {
+            display: block;
+            padding: 0.8rem 1.2rem;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .dots-menu a:hover { background: rgba(255,0,0,0.15); color: #FF0000; }
+
+        /* Sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 998;
+        }
+        .sidebar-overlay.active { display: block; }
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #222 0%, #111 100%);
+            transition: left 0.35s cubic-bezier(0.4,0,0.2,1);
+            z-index: 999;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,0,0,0.1);
+        }
+        .sidebar.active { left: 0; }
+        .sidebar-header {
+            padding: 1.5rem 1.2rem;
+            background: linear-gradient(135deg, #FF0000 0%, #8B0000 100%);
+            text-align: center;
+        }
+        .sidebar-logo { font-size: 1.6rem; font-weight: 700; color: #fff; }
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.9rem 1rem;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 0.3rem 0.8rem;
+            transition: 0.3s;
+        }
+        .sidebar nav a i { width: 22px; }
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: linear-gradient(90deg, #FF0000, #DC143C);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 0.6rem 1rem;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 1.5rem 1rem 6rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        /* Grid menu */
-        .grid-menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 16px;
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeInUp 0.4s ease; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .menu-card {
-            background: var(--ios-card);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ios-border);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .menu-card:active { transform: scale(0.96); background: rgba(255,255,255,0.1); }
-        .menu-card i { font-size: 32px; margin-bottom: 12px; color: var(--ios-blue); }
-        .menu-card .title { font-weight: 600; margin-bottom: 4px; }
-        .menu-card .count { font-size: 12px; color: var(--ios-text-secondary); }
-        /* Page view */
-        .page {
-            display: none;
-            animation: fade 0.3s;
-        }
-        .page.active { display: block; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        /* Cards */
-        .card {
-            background: var(--ios-card);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ios-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .item-card {
-            background: var(--ios-card-solid);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--ios-border);
-        }
-        .item-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-        }
-        .item-card .body {
-            padding: 12px;
-        }
-        .item-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .badge-drm {
-            background: var(--ios-orange);
-            color: black;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 6px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
+
+        /* Buttons, forms, etc. */
         .btn {
-            flex: 1;
-            padding: 8px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #FF0000, #C41E3A);
+            color: #fff;
             border: none;
-            font-weight: 500;
+            padding: 0.85rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-            text-align: center;
-        }
-        .btn-primary { background: var(--ios-blue); color: white; }
-        .btn-danger { background: var(--ios-red); color: white; }
-        .btn-secondary { background: var(--ios-glass); border: 1px solid var(--ios-border); color: white; }
-        /* User row */
-        .user-row {
-            background: var(--ios-card);
-            border: 1px solid var(--ios-border);
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
+            display: inline-flex;
             align-items: center;
-            cursor: pointer;
+            gap: 0.5rem;
+            transition: 0.3s;
         }
-        .user-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,0,0,0.5); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            box-shadow: none;
+            border: 1px solid rgba(255,255,255,0.15);
         }
-        .status-blocked { background: var(--ios-red); }
-        .status-premium { background: #ffd700; color: black; }
-        .status-trial { background: var(--ios-orange); color: black; }
-        .status-active { background: var(--ios-green); }
-        .status-expired { background: var(--ios-gray); }
-        /* Filter panel */
-        .filter-panel {
-            background: var(--ios-card);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-        }
-        .filter-group label {
-            font-size: 12px;
-            color: var(--ios-text-secondary);
-            display: block;
-            margin-bottom: 4px;
-        }
-        .input, .select, textarea {
+        .btn-danger { background: linear-gradient(135deg, #8B0000, #5a0000); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        .btn-block { width: 100%; justify-content: center; }
+        input, textarea, select {
             width: 100%;
-            padding: 12px;
-            background: #000;
-            border: 1px solid var(--ios-border);
-            border-radius: 14px;
-            color: white;
-            margin-bottom: 12px;
-            font-size: 14px;
+            padding: 0.85rem 1rem;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
         }
-        .checkbox-label {
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #FF0000;
+            box-shadow: 0 0 0 3px rgba(255,0,0,0.15);
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.4rem; }
+
+        /* Login card */
+        .login-wrapper {
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            min-height: calc(100vh - 120px);
         }
-        .flex {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .stats-badge {
-            background: #1f1f1f;
-            padding: 6px 12px;
+        .login-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,0,0,0.15);
             border-radius: 20px;
-            font-size: 12px;
-            display: inline-block;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 420px;
         }
-        /* Tabs inside user modal */
-        .user-tabs {
-            display: flex;
-            gap: 8px;
-            margin: 15px 0;
-            border-bottom: 1px solid var(--ios-border);
-            padding-bottom: 10px;
-        }
-        .user-tab {
-            padding: 8px 16px;
-            background: transparent;
-            border: none;
-            color: var(--ios-gray);
-            font-weight: 500;
+        .login-card h2 { text-align: center; color: #FF0000; margin-bottom: 0.5rem; }
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+            color: #888;
             cursor: pointer;
-            border-radius: 20px;
         }
-        .user-tab.active {
-            background: var(--ios-blue);
-            color: white;
+        .forgot-password:hover { color: #FF0000; }
+
+        /* Dashboard stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        .tab-content {
+        .stat-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 1.4rem;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FF0000, #DC143C);
+        }
+        .stat-card .stat-number { font-size: 2rem; font-weight: 700; color: #FF0000; }
+        .stat-card .stat-label { font-size: 0.85rem; color: #888; }
+
+        /* TMDB search */
+        .search-tmdb-container { display: flex; gap: 0.6rem; margin-bottom: 1rem; }
+        .tmdb-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+        .tmdb-result-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+        .tmdb-result-card:hover, .tmdb-result-card.selected { border-color: #FF0000; transform: translateY(-3px); }
+        .tmdb-result-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .tmdb-result-card .tmdb-card-info { padding: 0.6rem; }
+        .tmdb-result-card .tmdb-card-info p { font-size: 0.8rem; font-weight: 600; }
+        .movie-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .full-width { grid-column: 1 / -1; }
+        .links-section {
+            grid-column: 1 / -1;
+            background: rgba(255,0,0,0.04);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+        .cast-section-form {
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+        .cast-list {
             max-height: 300px;
             overflow-y: auto;
         }
-        .data-item {
-            background: #222;
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 8px;
+        .cast-member {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 0.8rem;
+            background: rgba(255,255,255,0.04);
+            padding: 0.7rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
         }
-        /* Modal */
-        .modal {
+        .cast-member img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .add-cast-manual {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .movie-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .movie-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .movie-card-info { padding: 0.8rem; }
+        .movie-card-info h3 { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .movie-card-actions { display: flex; gap: 0.4rem; margin-top: 0.6rem; }
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .users-table th, .users-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .users-table th { background: rgba(255,0,0,0.1); color: #FF0000; }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }
+        .status-active { background: rgba(0,255,0,0.1); color: #00ff00; }
+        .status-blocked { background: rgba(255,0,0,0.1); color: #ff4444; }
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 1rem;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            background: #2d2d2d;
+            padding: 0.9rem 1.4rem;
+            border-radius: 10px;
+            border-left: 3px solid #FF0000;
+            animation: slideInRight 0.4s ease;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,0,0,0.2);
+            border-top-color: #FF0000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 20000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
+        .modal-overlay.show { display: flex; }
         .modal-box {
-            background: var(--ios-card-solid);
-            border-radius: 28px;
-            padding: 24px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid var(--ios-border);
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
         }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #222;
-            padding: 12px 24px;
-            border-radius: 40px;
-            z-index: 30000;
+        .confirm-overlay {
             display: none;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--ios-border);
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        .confirm-overlay.show { display: flex; }
+        .confirm-box {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+        }
+        @media (max-width: 768px) {
+            .movie-form, .add-cast-manual { grid-template-columns: 1fr; }
+            .movies-grid { grid-template-columns: repeat(2,1fr); }
         }
     </style>
 </head>
 <body>
 
-<div id="authModal" class="modal" style="display:flex;">
-    <div class="modal-box" style="text-align:center;">
-        <h2 style="margin-bottom:20px;">Admin Access</h2>
-        <input type="email" id="lemail" class="input" placeholder="Email">
-        <input type="password" id="lpass" class="input" placeholder="Password">
-        <button class="btn btn-primary" onclick="login()">Login</button>
-    </div>
-</div>
-
-<div class="header">
-    <div style="display:flex; align-items:center;">
-        <i class="fas fa-arrow-left back-btn" id="backBtn" onclick="goHome()"></i>
-        <div class="brand" id="pageTitle">STANY MIN TV ADMIN</div>
-    </div>
-    <div class="header-actions">
-        <div class="header-icon" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i></div>
-    </div>
-</div>
-
-<div class="container" id="appContainer">
-    <!-- Home Grid -->
-    <div id="homeView" class="page active">
-        <div class="grid-menu">
-            <div class="menu-card" onclick="openPage('users')"><i class="fas fa-users"></i><div class="title">Users</div><div class="count" id="cntUsers">0</div></div>
-            <div class="menu-card" onclick="openPage('channels')"><i class="fas fa-tv"></i><div class="title">Channels</div><div class="count" id="cntChan">0</div></div>
-            <div class="menu-card" onclick="openPage('movies')"><i class="fas fa-film"></i><div class="title">Movies</div><div class="count" id="cntMov">0</div></div>
-            <div class="menu-card" onclick="openPage('premium')"><i class="fas fa-crown"></i><div class="title">Premium</div></div>
-            <div class="menu-card" onclick="openPage('downloads')"><i class="fas fa-download"></i><div class="title">Downloads</div><div class="count" id="cntDownloads">0</div></div>
-            <div class="menu-card" onclick="openPage('chat')"><i class="fas fa-comments"></i><div class="title">Chat</div><div class="count" id="cntChat">0</div></div>
-            <div class="menu-card" onclick="openPage('devices')"><i class="fas fa-mobile-alt"></i><div class="title">Device Requests</div><div class="count" id="cntDev">0</div></div>
-            <div class="menu-card" onclick="openPage('settings')"><i class="fas fa-cog"></i><div class="title">Settings</div></div>
-            <div class="menu-card" onclick="openPage('categories')"><i class="fas fa-layer-group"></i><div class="title">Categories</div></div>
-            <div class="menu-card" onclick="openPage('tips')"><i class="fas fa-lightbulb"></i><div class="title">Tips & Guides</div></div>
-            <div class="menu-card" onclick="openPage('bettingTips')"><i class="fas fa-chart-line"></i><div class="title">Betting Tips</div><div class="count" id="cntBettingTips">0</div></div>
-            <div class="menu-card" onclick="openPage('appSettings')"><i class="fas fa-sliders-h"></i><div class="title">App Settings</div></div>
+<header>
+    <div class="logo">STANY MIN <span>ADMIN</span></div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="status-indicator">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Connecting...</span>
         </div>
-    </div>
-
-    <!-- Users Page -->
-    <div id="users" class="page">
-        <div class="filter-panel">
-            <div class="filter-grid">
-                <div class="filter-group"><label>Search</label><input type="text" id="searchUser" class="input" placeholder="Name/Email" onkeyup="applyFilters()"></div>
-                <div class="filter-group"><label>Subscription</label><select id="filterSub" class="select"><option value="all">All</option><option value="premium">Premium</option><option value="trial">Trial</option><option value="none">None</option></select></div>
-                <div class="filter-group"><label>Status</label><select id="filterStatus" class="select"><option value="all">All</option><option value="active">Active</option><option value="blocked">Blocked</option><option value="expired">Expired</option></select></div>
-                <div class="filter-group"><label>Join From</label><input type="date" id="filterFrom" class="input"></div>
-                <div class="filter-group"><label>Join To</label><input type="date" id="filterTo" class="input"></div>
-            </div>
-            <div class="flex" style="justify-content:space-between; margin-top:12px;">
-                <button class="btn btn-primary" onclick="applyFilters()">Apply</button>
-                <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
-                <div class="stats-badge">Showing: <span id="filteredCount">0</span> / <span id="totalUsers">0</span></div>
-            </div>
-        </div>
-        <div id="userList"></div>
-    </div>
-
-    <!-- Channels Page -->
-    <div id="channels" class="page">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2>Channels</h2>
-            <button class="btn btn-primary" onclick="openChannelModal()">+ Add Channel</button>
-        </div>
-        <div id="channelsGrid" class="grid-2"></div>
-    </div>
-
-    <!-- Movies Page -->
-    <div id="movies" class="page">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2>Movies</h2>
-            <button class="btn btn-primary" onclick="openMovieModal()">+ Add Movie</button>
-        </div>
-        <div id="moviesGrid" class="grid-2"></div>
-    </div>
-
-    <!-- Premium Page (simplified) -->
-    <div id="premium" class="page"><h2>Premium Content</h2><div id="premiumContent"></div></div>
-
-    <!-- Downloads Page -->
-    <div id="downloads" class="page">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2>Downloads</h2>
-            <button class="btn btn-primary" onclick="openDownloadModal()">+ Add Download</button>
-        </div>
-        <div id="downloadsGrid" class="grid-2"></div>
-    </div>
-
-    <!-- Chat Page (simplified) -->
-    <div id="chat" class="page"><h2>Chat</h2><div id="chatList"></div></div>
-
-    <!-- Device Requests Page -->
-    <div id="devices" class="page"><h2>Device Requests</h2><div id="devList"></div></div>
-
-    <!-- Settings Page -->
-    <div id="settings" class="page">
-        <div class="card">
-            <h3>App Configuration</h3>
-            <input id="appName" class="input" placeholder="App Name">
-            <input id="primaryColor" class="input" placeholder="Primary Color (hex)">
-            <input id="adminContact" class="input" placeholder="WhatsApp Number">
-            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
-            <hr style="margin:20px 0; border-color:var(--ios-border);">
-            <button class="btn btn-danger" onclick="clearAllDevices()">Clear All Device Requests</button>
-            <button class="btn btn-danger" onclick="resetAllUsers()">Reset All Users (Danger)</button>
-        </div>
-    </div>
-
-    <!-- Categories Page -->
-    <div id="categories" class="page">
-        <div class="card">
-            <h3>Add Category</h3>
-            <input id="newCat" class="input" placeholder="Category Name">
-            <button class="btn btn-primary" onclick="addCategory()">Add Category</button>
-        </div>
-        <div id="categoriesList"></div>
-    </div>
-
-    <!-- Tips Page -->
-    <div id="tips" class="page">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2>Tips & Guides</h2>
-            <button class="btn btn-primary" onclick="openTipModal()">+ Add Tip</button>
-        </div>
-        <div id="tipsGrid" class="grid-2"></div>
-    </div>
-
-    <!-- Betting Tips Page -->
-    <div id="bettingTips" class="page">
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2>Betting Tips</h2>
-            <button class="btn btn-primary" onclick="openBettingTipModal()">+ Add Tip</button>
-        </div>
-        <div id="bettingTipsGrid" class="grid-2"></div>
-    </div>
-
-    <!-- App Settings Page -->
-    <div id="appSettings" class="page">
-        <div class="card">
-            <h3>App Settings for Users</h3>
-            <div class="checkbox-label"><input type="checkbox" id="drmGlobal"> Enable DRM by default</div>
-            <div class="flex">
-                <button class="btn btn-primary" onclick="saveAppSettings()">Save App Settings</button>
+        <div class="header-dots" onclick="toggleDotsMenu()">
+            <i class="fas fa-ellipsis-vertical"></i>
+            <div class="dots-menu" id="dotsMenu">
+                <a href="#" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#" onclick="navigateTo('settings')"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
     </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">NH BOX</div>
+        <p>Admin Control Panel</p>
+    </div>
+    <nav>
+        <a href="#" data-section="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#" data-section="addMovie" onclick="navigateTo('addMovie')"><i class="fas fa-plus-circle"></i> Add Movie</a>
+        <a href="#" data-section="editMovies" onclick="navigateTo('editMovies')"><i class="fas fa-edit"></i> Edit Movies</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" data-section="userManagement" onclick="navigateTo('userManagement')"><i class="fas fa-users"></i> User Management</a>
+        <a href="#" data-section="notifications" onclick="navigateTo('notifications')"><i class="fas fa-bell"></i> Notifications</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" data-section="settings" onclick="navigateTo('settings')"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#" data-section="login" onclick="navigateTo('login')"><i class="fas fa-sign-in-alt"></i> Login</a>
+    </nav>
 </div>
 
-<!-- Channel Modal -->
-<div id="channelModal" class="modal">
-    <div class="modal-box">
-        <h3 id="channelModalTitle">Add Channel</h3>
-        <input type="hidden" id="channelId">
-        <input type="text" id="chanName" class="input" placeholder="Channel Name">
-        <input type="text" id="chanUrl" class="input" placeholder="Stream URL (m3u8/mpd)">
-        <input type="text" id="chanPoster" class="input" placeholder="Poster URL">
-        <textarea id="chanDesc" class="input" placeholder="Description" rows="2"></textarea>
-        <div class="checkbox-label">
-            <input type="checkbox" id="chanDrmEnabled"> <label>Enable DRM</label>
+<div class="main-content">
+    <!-- Dashboard -->
+    <div class="content-section" id="sectionDashboard">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back, Admin!</p>
         </div>
-        <div id="drmFields" style="display:none;">
-            <input type="text" id="chanDrmToken" class="input" placeholder="DRM Token (key:token)">
-            <input type="text" id="chanLicenseUrl" class="input" placeholder="License URL">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number" id="statMovies">0</div><div class="stat-label">Total Movies</div></div>
+            <div class="stat-card"><div class="stat-number" id="statUsers">0</div><div class="stat-label">Total Users</div></div>
+            <div class="stat-card"><div class="stat-number" id="statCategories">0</div><div class="stat-label">Categories</div></div>
+            <div class="stat-card"><div class="stat-number" id="statNotifs">0</div><div class="stat-label">Notifications Sent</div></div>
         </div>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveChannel()">Save</button>
-            <button class="btn btn-secondary" onclick="closeModal('channelModal')">Cancel</button>
+        <div class="recent-activity"><h3>Recent Activity</h3><div id="activityList">Loading...</div></div>
+    </div>
+
+    <!-- Login -->
+    <div class="content-section" id="sectionLogin">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <h2>Admin Login</h2>
+                <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="admin@example.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Password"></div>
+                <button class="btn btn-block" onclick="adminLogin()">Login</button>
+                <div class="forgot-password" onclick="forgotPassword()">Forgot Password?</div>
+            </div>
         </div>
+    </div>
+
+    <!-- Add Movie -->
+    <div class="content-section" id="sectionAddMovie">
+        <h2 class="section-title"><i class="fas fa-plus-circle"></i> Add New Movie</h2>
+        <div class="search-tmdb-container">
+            <input type="text" id="tmdbSearchInput" placeholder="Search movie on TMDB...">
+            <button class="btn" onclick="searchTMDB()"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div class="loading-spinner" id="tmdbLoading"><div class="spinner"></div></div>
+        <div class="tmdb-results" id="tmdbResults"></div>
+
+        <form id="movieForm" onsubmit="saveMovie(event)">
+            <div class="movie-form">
+                <div class="form-group"><label>Title</label><input type="text" id="movieTitle" placeholder="Movie Title"></div>
+                <div class="form-group"><label>Release Year</label><input type="number" id="releaseYear" placeholder="Year"></div>
+                <div class="form-group"><label>Rating</label><input type="number" id="movieRating" step="0.1" placeholder="Rating"></div>
+                <div class="form-group"><label>Runtime (min)</label><input type="number" id="movieRuntime" placeholder="Runtime"></div>
+                <div class="form-group full-width"><label>Poster URL</label><input type="url" id="posterUrl" placeholder="Poster URL"></div>
+                <div class="form-group full-width"><label>Backdrop URL</label><input type="url" id="backdropUrl" placeholder="Backdrop URL"></div>
+                <div class="form-group full-width"><label>Storyline</label><textarea id="storyline" rows="3"></textarea></div>
+                <div class="form-group full-width"><label>Trailer URL</label><input type="url" id="trailerUrl" placeholder="YouTube trailer URL"></div>
+                <div class="links-section full-width">
+                    <h4>Download Links</h4>
+                    <div class="form-group"><label>1080p Link</label><input type="url" id="link1080p" required></div>
+                    <div class="form-group"><label>720p Link</label><input type="url" id="link720p" required></div>
+                    <div class="form-group"><label>480p Link</label><input type="url" id="link480p" required></div>
+                </div>
+                <div class="category-row full-width">
+                    <div class="form-group"><label>Category</label><select id="categorySelect"><option value="">Select Category</option></select></div>
+                    <button type="button" class="btn btn-secondary" onclick="createNewCategory()" style="margin-bottom:0;">+ New</button>
+                </div>
+                <div class="cast-section-form full-width">
+                    <h4>Cast <button type="button" class="btn btn-sm btn-secondary" onclick="toggleManualCast()">+ Add Manual</button></h4>
+                    <div class="cast-list" id="castContainer"></div>
+                    <div class="add-cast-manual" id="manualCastForm" style="display:none;">
+                        <input type="text" id="manualCastName" placeholder="Actor Name">
+                        <input type="text" id="manualCastCharacter" placeholder="Character">
+                        <input type="url" id="manualCastImage" placeholder="Image URL">
+                        <button type="button" class="btn btn-sm" onclick="addManualCast()">Add</button>
+                    </div>
+                </div>
+                <div class="full-width"><button type="submit" class="btn btn-block"><i class="fas fa-save"></i> Save Movie</button></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Edit Movies -->
+    <div class="content-section" id="sectionEditMovies">
+        <h2 class="section-title"><i class="fas fa-edit"></i> Edit Movies</h2>
+        <div class="filter-bar" style="display:flex; gap:0.8rem; margin-bottom:1rem;">
+            <input type="text" id="filterSearch" placeholder="Search movies..." oninput="filterMovies()">
+            <select id="filterCategory" onchange="filterMovies()"><option value="">All Categories</option></select>
+            <select id="sortBy" onchange="filterMovies()">
+                <option value="date_desc">Newest First</option><option value="title_asc">Title A-Z</option><option value="rating_desc">Highest Rated</option>
+            </select>
+        </div>
+        <div class="loading-spinner" id="moviesLoading"><div class="spinner"></div></div>
+        <div class="movies-grid" id="moviesGrid"></div>
+    </div>
+
+    <!-- User Management -->
+    <div class="content-section" id="sectionUserManagement">
+        <h2 class="section-title"><i class="fas fa-users"></i> User Management</h2>
+        <div class="loading-spinner" id="usersLoading"><div class="spinner"></div></div>
+        <table class="users-table"><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="usersTableBody"></tbody></table>
+    </div>
+
+    <!-- Notifications -->
+    <div class="content-section" id="sectionNotifications">
+        <h2 class="section-title"><i class="fas fa-bell"></i> Push Notifications</h2>
+        <div class="notif-form">
+            <div class="form-group"><label>Title</label><input type="text" id="notifTitle" maxlength="50"></div>
+            <div class="form-group"><label>Message</label><textarea id="notifMessage" rows="3" maxlength="120"></textarea></div>
+            <div class="form-group"><label>Image URL (optional)</label><input type="url" id="notifImage"></div>
+            <div class="form-group"><label>Action URL (optional)</label><input type="url" id="notifActionUrl"></div>
+            <button class="btn btn-block" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> Send to All Users</button>
+        </div>
+        <h3>Notification History</h3>
+        <div id="notificationHistory"></div>
+    </div>
+
+    <!-- Settings -->
+    <div class="content-section" id="sectionSettings">
+        <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
+        <div class="settings-card"><h3>Firebase Status</h3><div class="status-indicator"><span class="status-dot" id="settingsStatusDot"></span><span id="settingsStatusText">Checking...</span></div></div>
+        <div class="settings-card"><h3>Admin Account</h3><div class="setting-item"><label>Logged in as</label><span id="settingsEmail">Not logged in</span></div><button class="btn btn-sm btn-secondary" onclick="changePassword()">Change Password</button></div>
+        <div class="settings-card"><h3>Danger Zone</h3><button class="btn btn-sm btn-danger" onclick="clearAllMovies()">Clear All Movies</button><button class="btn btn-sm btn-danger" onclick="clearNotifHistory()">Clear Notification History</button></div>
     </div>
 </div>
 
-<!-- Movie Modal -->
-<div id="movieModal" class="modal">
-    <div class="modal-box">
-        <h3 id="movieModalTitle">Add Movie</h3>
-        <input type="hidden" id="movieId">
-        <input type="text" id="movTitle" class="input" placeholder="Movie Title">
-        <input type="text" id="movUrl" class="input" placeholder="Stream URL">
-        <input type="text" id="movPoster" class="input" placeholder="Poster URL">
-        <textarea id="movDesc" class="input" placeholder="Description"></textarea>
-        <div class="checkbox-label">
-            <input type="checkbox" id="movDrmEnabled"> <label>Enable DRM</label>
-        </div>
-        <div id="movDrmFields" style="display:none;">
-            <input type="text" id="movDrmToken" class="input" placeholder="DRM Token">
-            <input type="text" id="movLicenseUrl" class="input" placeholder="License URL">
-        </div>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveMovie()">Save</button>
-            <button class="btn btn-secondary" onclick="closeModal('movieModal')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- Download Modal -->
-<div id="downloadModal" class="modal">
-    <div class="modal-box">
-        <h3>Add Download</h3>
-        <input type="hidden" id="dlId">
-        <input type="text" id="dlTitle" class="input" placeholder="Title">
-        <input type="text" id="dlUrl" class="input" placeholder="Download URL">
-        <input type="text" id="dlPoster" class="input" placeholder="Poster URL">
-        <textarea id="dlDesc" class="input" placeholder="Description"></textarea>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveDownload()">Save</button>
-            <button class="btn btn-secondary" onclick="closeModal('downloadModal')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- Tip Modal -->
-<div id="tipModal" class="modal">
-    <div class="modal-box">
-        <h3 id="tipModalTitle">Add Tip</h3>
-        <input type="hidden" id="tipId">
-        <input type="text" id="tipTitle" class="input" placeholder="Tip Title">
-        <select id="tipCategory" class="select">
-            <option value="general">General</option>
-            <option value="premium">Premium</option>
-            <option value="troubleshooting">Troubleshooting</option>
-        </select>
-        <textarea id="tipContent" class="input" placeholder="Tip Content" rows="4"></textarea>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveTip()">Save</button>
-            <button class="btn btn-secondary" onclick="closeModal('tipModal')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- Betting Tip Modal -->
-<div id="bettingTipModal" class="modal">
-    <div class="modal-box">
-        <h3 id="bettingTipModalTitle">Add Betting Tip</h3>
-        <input type="hidden" id="btId">
-        <input type="text" id="btTitle" class="input" placeholder="Tip Title">
-        <input type="text" id="btTeam1" class="input" placeholder="Team 1">
-        <input type="text" id="btTeam2" class="input" placeholder="Team 2">
-        <input type="text" id="btPrediction" class="input" placeholder="Prediction">
-        <input type="text" id="btOdds" class="input" placeholder="Odds">
-        <input type="text" id="btStake" class="input" placeholder="Stake (optional)">
-        <select id="btStatus" class="select">
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-            <option value="successful">Successful</option>
-            <option value="failed">Failed</option>
-        </select>
-        <input type="text" id="btResult" class="input" placeholder="Result (optional)">
-        <input type="text" id="btBookmakerLink" class="input" placeholder="Bookmaker Link">
-        <textarea id="btDescription" class="input" placeholder="Description" rows="2"></textarea>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveBettingTip()">Save</button>
-            <button class="btn btn-secondary" onclick="closeModal('bettingTipModal')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- User Detail Modal -->
-<div id="userModal" class="modal">
-    <div class="modal-box">
-        <h3>Manage User</h3>
-        <input type="hidden" id="umId">
-        <h4 id="umName"></h4>
-        <p id="umEmail" style="color:var(--ios-text-secondary); margin-bottom:12px;"></p>
-        <select id="umSubType" class="select">
-            <option value="trial">Trial</option>
-            <option value="premium">Premium</option>
-            <option value="none">None</option>
-        </select>
-        <div id="subFields"><input type="date" id="umDate" class="input"><div class="flex"><button class="btn btn-secondary" onclick="addDays(1)">+1d</button><button onclick="addDays(7)">+7d</button><button onclick="addDays(30)">+30d</button></div></div>
-        <input id="umDevice" class="input" readonly>
-        <div class="user-tabs">
-            <button class="user-tab active" onclick="switchUserTab('history')">History</button>
-            <button class="user-tab" onclick="switchUserTab('favorites')">Favorites</button>
-            <button class="user-tab" onclick="switchUserTab('downloads')">Downloads</button>
-        </div>
-        <div id="userHistoryTab" class="tab-content"></div>
-        <div id="userFavoritesTab" class="tab-content" style="display:none;"></div>
-        <div id="userDownloadsTab" class="tab-content" style="display:none;"></div>
-        <div class="flex">
-            <button class="btn btn-primary" onclick="saveUserSub()">Update</button>
-            <button id="umBlockBtn" class="btn btn-danger" onclick="toggleBlock()">Block</button>
-        </div>
-        <button class="btn btn-secondary" onclick="forceLogout()">Force Logout</button>
-        <button class="btn btn-secondary" onclick="closeModal('userModal')">Close</button>
-    </div>
-</div>
-
-<div id="toast" class="toast">Saved</div>
+<div class="toast-container" id="toastContainer"></div>
+<div class="confirm-overlay" id="confirmOverlay"><div class="confirm-box"><i class="fas fa-exclamation-triangle"></i><p id="confirmMessage"></p><div class="confirm-buttons"><button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button><button class="btn btn-danger" id="confirmAction">Confirm</button></div></div></div>
+<div class="modal-overlay" id="editModal"><div class="modal-box"><h2>Edit Movie <button class="modal-close" onclick="closeEditModal()">&times;</button></h2><div class="modal-form" id="editMovieForm"></div></div></div>
 
 <script>
+    // Firebase config (STANY MIN TV)
     const firebaseConfig = {
         apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
         authDomain: "stanyappstore.firebaseapp.com",
@@ -624,267 +592,342 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
+    const TMDB_API_KEY = "2e211dfda888f7cc55ce433d743f9bc3";
+    const TMDB_IMG_BASE = "https://image.tmdb.org/t/p/";
 
-    let allUsers = [], allChannels = {}, allMovies = {}, allDownloads = {}, allTips = {}, allBettingTips = {}, allCategories = [], deviceRequests = {};
-    let currentUserUid = null;
+    let isLoggedIn = false;
+    let currentUser = null;
+    let allMovies = {};
+    let castArray = [];
+    let currentEditingMovieId = null;
+    let confirmCallback = null;
 
-    auth.onAuthStateChanged(u => { if(u) { document.getElementById('authModal').style.display='none'; loadAllData(); } else { document.getElementById('authModal').style.display='flex'; } });
-    function login() { const e=document.getElementById('lemail').value, p=document.getElementById('lpass').value; auth.signInWithEmailAndPassword(e,p).catch(e=>alert(e.message)); }
-
-    function loadAllData() {
-        db.ref('users').on('value', s => { allUsers = []; s.forEach(c=>allUsers.push({key:c.key,...c.val()})); updateUserStats(); applyFilters(); });
-        db.ref('channels').on('value', s => { allChannels = {}; s.forEach(c=>allChannels[c.key]={id:c.key,...c.val()}); renderChannels(); document.getElementById('cntChan').innerText = s.numChildren(); });
-        db.ref('movies').on('value', s => { allMovies = {}; s.forEach(m=>allMovies[m.key]={id:m.key,...m.val()}); renderMovies(); document.getElementById('cntMov').innerText = s.numChildren(); });
-        db.ref('downloadableMovies').on('value', s => { allDownloads = {}; s.forEach(d=>allDownloads[d.key]={id:d.key,...d.val()}); renderDownloads(); document.getElementById('cntDownloads').innerText = s.numChildren(); });
-        db.ref('tips').on('value', s => { allTips = {}; s.forEach(t=>allTips[t.key]={id:t.key,...t.val()}); renderTips(); });
-        db.ref('bettingTips').on('value', s => { allBettingTips = {}; s.forEach(t=>allBettingTips[t.key]={id:t.key,...t.val()}); renderBettingTips(); document.getElementById('cntBettingTips').innerText = s.numChildren(); });
-        db.ref('deviceRequests').on('value', s => { deviceRequests = {}; s.forEach(r=>deviceRequests[r.key]=r.val()); renderDeviceRequests(); document.getElementById('cntDev').innerText = Object.values(deviceRequests).filter(r=>r.status==='pending').length; });
-        db.ref('genres').on('value', s => { allCategories = []; s.forEach(g=>allCategories.push({id:g.key,name:g.val().name})); renderCategories(); });
-        db.ref('settings').once('value', s => { if(s.exists()){ document.getElementById('appName').value = s.val().appName||''; document.getElementById('primaryColor').value = s.val().primaryColor||''; document.getElementById('adminContact').value = s.val().adminContactNumber||''; } });
+    // Utility
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle'}"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
     }
 
-    function updateUserStats() { document.getElementById('cntUsers').innerText = allUsers.length; document.getElementById('totalUsers').innerText = allUsers.length; }
-    function applyFilters() {
-        const search = document.getElementById('searchUser').value.toLowerCase();
-        const sub = document.getElementById('filterSub').value;
-        const status = document.getElementById('filterStatus').value;
-        const from = document.getElementById('filterFrom').value;
-        const to = document.getElementById('filterTo').value;
-        let filtered = allUsers.filter(u => {
-            if(search && !(u.name?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search))) return false;
-            if(sub!='all' && u.subscriptionType !== sub) return false;
-            if(status!='all') {
-                if(status==='active' && (u.isBlocked || (u.accessExpiry && u.accessExpiry<Date.now()) || !u.accessExpiry)) return false;
-                if(status==='blocked' && !u.isBlocked) return false;
-                if(status==='expired' && (!u.accessExpiry || u.accessExpiry>=Date.now() || u.isBlocked)) return false;
-            }
-            const joinDate = u.joinDate ? new Date(u.joinDate) : (u.registeredAt ? new Date(u.registeredAt) : null);
-            if(from && joinDate && joinDate < new Date(from)) return false;
-            if(to && joinDate) { let end = new Date(to); end.setHours(23,59,59,999); if(joinDate > end) return false; }
-            return true;
-        });
-        document.getElementById('filteredCount').innerText = filtered.length;
-        renderUserList(filtered);
-    }
-    function resetFilters() { document.getElementById('searchUser').value=''; document.getElementById('filterSub').value='all'; document.getElementById('filterStatus').value='all'; document.getElementById('filterFrom').value=''; document.getElementById('filterTo').value=''; applyFilters(); }
-    function renderUserList(users) {
-        const container = document.getElementById('userList');
-        container.innerHTML = '';
-        users.forEach(u => {
-            let statusClass = '', statusText = '';
-            if(u.isBlocked) { statusClass='status-blocked'; statusText='BLOCKED'; }
-            else if(u.accessExpiry && u.accessExpiry<Date.now()) { statusClass='status-expired'; statusText='EXPIRED'; }
-            else if(u.subscriptionType==='premium') { statusClass='status-premium'; statusText='PREMIUM'; }
-            else if(u.subscriptionType==='trial') { statusClass='status-trial'; statusText='TRIAL'; }
-            else { statusClass='status-active'; statusText='ACTIVE'; }
-            container.innerHTML += `<div class="user-row" onclick="openUserModal('${u.key}')"><div><b>${u.name||'No Name'}</b><div style="font-size:12px;color:var(--ios-gray);">${u.email}</div></div><div class="user-status ${statusClass}">${statusText}</div></div>`;
-        });
-    }
-    function openUserModal(uid) {
-        const u = allUsers.find(x=>x.key===uid);
-        if(!u) return;
-        currentUserUid = uid;
-        document.getElementById('umId').value = uid;
-        document.getElementById('umName').innerText = u.name||'User';
-        document.getElementById('umEmail').innerText = u.email;
-        document.getElementById('umSubType').value = u.subscriptionType||'none';
-        document.getElementById('umDevice').value = u.activeDeviceId||'None';
-        if(u.accessExpiry) document.getElementById('umDate').value = new Date(u.accessExpiry).toISOString().split('T')[0];
-        else document.getElementById('umDate').value = '';
-        document.getElementById('umBlockBtn').innerText = u.isBlocked ? 'Unblock' : 'Block';
-        toggleSubFields();
-        loadUserHistory(uid);
-        loadUserFavorites(uid);
-        loadUserDownloads(uid);
-        switchUserTab('history');
-        document.getElementById('userModal').style.display = 'flex';
-    }
-    function toggleSubFields() { document.getElementById('subFields').style.display = document.getElementById('umSubType').value==='none'?'none':'block'; }
-    function addDays(d) { let inp=document.getElementById('umDate'); let date=inp.value?new Date(inp.value):new Date(); date.setDate(date.getDate()+d); inp.value=date.toISOString().split('T')[0]; }
-    function saveUserSub() { let uid=document.getElementById('umId').value; let type=document.getElementById('umSubType').value; let date=document.getElementById('umDate').value; let upd={subscriptionType:type}; if(type!=='none' && date) upd.accessExpiry=new Date(date).getTime(); else if(type==='none') upd.accessExpiry=null; db.ref('users/'+uid).update(upd).then(()=>{ toast("User updated"); closeModal('userModal'); applyFilters(); }); }
-    function toggleBlock() { let uid=document.getElementById('umId').value; let u=allUsers.find(x=>x.key===uid); if(u) db.ref('users/'+uid+'/isBlocked').set(!u.isBlocked).then(()=>{ toast(u.isBlocked?"Unblocked":"Blocked"); closeModal('userModal'); applyFilters(); }); }
-    function forceLogout() { let uid=document.getElementById('umId').value; db.ref('users/'+uid+'/activeDeviceId').set(null).then(()=>toast("Logged out")); }
-    function loadUserHistory(uid) { db.ref(`userWatchHistory/${uid}`).orderByChild('timestamp').limitToLast(50).once('value', snap=>{ let c=document.getElementById('userHistoryTab'); c.innerHTML=''; if(!snap.exists()){ c.innerHTML='<div>No history</div>'; return; } snap.forEach(item=>{ let v=item.val(); c.innerHTML+=`<div class="data-item"><div><b>${v.name}</b><div>${v.type} - ${new Date(v.timestamp).toLocaleString()}</div></div><button class="btn btn-danger" style="width:auto;" onclick="deleteUserHistoryItem('${uid}','${item.key}')">Delete</button></div>`; }); if(snap.numChildren()) c.innerHTML+=`<button class="btn btn-danger" onclick="clearAllUserHistory('${uid}')">Clear All</button>`; }); }
-    function loadUserFavorites(uid) { db.ref(`userFavorites/${uid}`).once('value', snap=>{ let c=document.getElementById('userFavoritesTab'); c.innerHTML=''; if(!snap.exists()){ c.innerHTML='<div>No favorites</div>'; return; } snap.forEach(fav=>{ c.innerHTML+=`<div class="data-item"><div>${fav.key}</div><button class="btn btn-danger" onclick="deleteUserFavorite('${uid}','${fav.key}')">Delete</button></div>`; }); if(snap.numChildren()) c.innerHTML+=`<button class="btn btn-danger" onclick="clearAllUserFavorites('${uid}')">Clear All</button>`; }); }
-    function loadUserDownloads(uid) { db.ref(`userDownloads/${uid}`).once('value', snap=>{ let c=document.getElementById('userDownloadsTab'); c.innerHTML=''; if(!snap.exists()){ c.innerHTML='<div>No downloads</div>'; return; } snap.forEach(dl=>{ let v=dl.val(); c.innerHTML+=`<div class="data-item"><div><b>${v.name}</b><div>${v.type}</div></div><button class="btn btn-danger" onclick="deleteUserDownload('${uid}','${dl.key}')">Delete</button></div>`; }); if(snap.numChildren()) c.innerHTML+=`<button class="btn btn-danger" onclick="clearAllUserDownloads('${uid}')">Clear All</button>`; }); }
-    function deleteUserHistoryItem(uid,id) { db.ref(`userWatchHistory/${uid}/${id}`).remove().then(()=>{ toast("Deleted"); loadUserHistory(uid); }); }
-    function deleteUserFavorite(uid,id) { db.ref(`userFavorites/${uid}/${id}`).remove().then(()=>{ toast("Deleted"); loadUserFavorites(uid); }); }
-    function deleteUserDownload(uid,id) { db.ref(`userDownloads/${uid}/${id}`).remove().then(()=>{ toast("Deleted"); loadUserDownloads(uid); }); }
-    function clearAllUserHistory(uid) { if(confirm("Clear all history?")) db.ref(`userWatchHistory/${uid}`).remove().then(()=>{ toast("Cleared"); loadUserHistory(uid); }); }
-    function clearAllUserFavorites(uid) { if(confirm("Clear all favorites?")) db.ref(`userFavorites/${uid}`).remove().then(()=>{ toast("Cleared"); loadUserFavorites(uid); }); }
-    function clearAllUserDownloads(uid) { if(confirm("Clear all downloads?")) db.ref(`userDownloads/${uid}`).remove().then(()=>{ toast("Cleared"); loadUserDownloads(uid); }); }
-    function switchUserTab(tab) { document.querySelectorAll('.tab-content').forEach(t=>t.style.display='none'); document.getElementById(`user${tab.charAt(0).toUpperCase()+tab.slice(1)}Tab`).style.display='block'; document.querySelectorAll('.user-tab').forEach(btn=>btn.classList.remove('active')); event.target.classList.add('active'); }
+    function formatTime(ts) { return ts ? new Date(ts).toLocaleString() : 'Unknown'; }
 
-    function renderChannels() {
-        let grid = document.getElementById('channelsGrid');
-        grid.innerHTML = '';
-        Object.values(allChannels).forEach(ch => {
-            let drmBadge = ch.drmToken ? '<span class="badge-drm">DRM</span>' : '';
-            grid.innerHTML += `<div class="item-card"><img src="${ch.posterURL||'https://via.placeholder.com/300x200'}"><div class="body">${drmBadge}<div class="item-title">${ch.name}</div><div class="btn-group"><button class="btn btn-primary" onclick="editChannel('${ch.id}')">Edit</button><button class="btn btn-danger" onclick="deleteItem('channels','${ch.id}')">Del</button></div></div></div>`;
-        });
+    // Auth
+    function adminLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        if (!email || !password) { showToast('Enter email and password', 'error'); return; }
+        auth.signInWithEmailAndPassword(email, password).then(() => {
+            showToast('Login successful', 'success');
+            navigateTo('dashboard');
+        }).catch(e => showToast(e.message, 'error'));
     }
-    function renderMovies() {
-        let grid = document.getElementById('moviesGrid');
-        grid.innerHTML = '';
-        Object.values(allMovies).forEach(m => {
-            let drmBadge = m.drmToken ? '<span class="badge-drm">DRM</span>' : '';
-            grid.innerHTML += `<div class="item-card"><img src="${m.posterURL||'https://via.placeholder.com/300x200'}"><div class="body">${drmBadge}<div class="item-title">${m.title}</div><div class="btn-group"><button class="btn btn-primary" onclick="editMovie('${m.id}')">Edit</button><button class="btn btn-danger" onclick="deleteItem('movies','${m.id}')">Del</button></div></div></div>`;
-        });
+    function handleLogout() { auth.signOut().then(() => { showToast('Logged out', 'success'); navigateTo('login'); }); }
+    function forgotPassword() {
+        const email = document.getElementById('loginEmail').value.trim();
+        if (!email) { showToast('Enter email first', 'error'); return; }
+        auth.sendPasswordResetEmail(email).then(() => showToast('Reset email sent', 'success')).catch(e => showToast(e.message, 'error'));
     }
-    function renderDownloads() {
-        let grid = document.getElementById('downloadsGrid');
-        grid.innerHTML = '';
-        Object.values(allDownloads).forEach(d => {
-            grid.innerHTML += `<div class="item-card"><img src="${d.posterURL||'https://via.placeholder.com/300x200'}"><div class="body"><div class="item-title">${d.title}</div><div class="btn-group"><button class="btn btn-primary" onclick="editDownload('${d.id}')">Edit</button><button class="btn btn-danger" onclick="deleteItem('downloadableMovies','${d.id}')">Del</button></div></div></div>`;
-        });
+    function changePassword() {
+        if (!currentUser) { showToast('Not logged in', 'error'); return; }
+        const newPass = prompt('New password (min 6 chars):');
+        if (newPass && newPass.length >= 6) currentUser.updatePassword(newPass).then(() => showToast('Password updated', 'success')).catch(e => showToast(e.message, 'error'));
+        else if (newPass) showToast('Minimum 6 characters', 'error');
     }
-    function renderTips() {
-        let grid = document.getElementById('tipsGrid');
-        grid.innerHTML = '';
-        Object.values(allTips).forEach(t => {
-            grid.innerHTML += `<div class="item-card"><div class="body"><div class="item-title">${t.title}</div><div>${t.category}</div><div class="btn-group"><button class="btn btn-primary" onclick="editTip('${t.id}')">Edit</button><button class="btn btn-danger" onclick="deleteItem('tips','${t.id}')">Del</button></div></div></div>`;
-        });
+
+    // Navigation
+    function navigateTo(section) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        const map = { dashboard:'sectionDashboard', addMovie:'sectionAddMovie', editMovies:'sectionEditMovies', userManagement:'sectionUserManagement', notifications:'sectionNotifications', login:'sectionLogin', settings:'sectionSettings' };
+        const target = document.getElementById(map[section]);
+        if (target) target.classList.add('active');
+        document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+        const activeSidebar = document.querySelector(`.sidebar nav a[data-section="${section}"]`);
+        if (activeSidebar) activeSidebar.classList.add('active');
+        if (section === 'editMovies') loadAllMovies();
+        if (section === 'userManagement') loadUsers();
+        if (section === 'notifications') loadNotificationHistory();
+        if (section === 'dashboard') loadDashboardStats();
+        closeSidebar();
     }
-    function renderBettingTips() {
-        let grid = document.getElementById('bettingTipsGrid');
-        grid.innerHTML = '';
-        Object.values(allBettingTips).forEach(t => {
-            grid.innerHTML += `<div class="item-card"><div class="body"><div class="item-title">${t.title}</div><div>${t.team1} vs ${t.team2}</div><div class="btn-group"><button class="btn btn-primary" onclick="editBettingTip('${t.id}')">Edit</button><button class="btn btn-danger" onclick="deleteItem('bettingTips','${t.id}')">Del</button></div></div></div>`;
-        });
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); }
+    function toggleDotsMenu() { document.getElementById('dotsMenu').classList.toggle('show'); }
+
+    // TMDB Search
+    async function searchTMDB() {
+        const query = document.getElementById('tmdbSearchInput').value.trim();
+        if (!query) { showToast('Enter movie name', 'error'); return; }
+        document.getElementById('tmdbLoading').style.display = 'block';
+        try {
+            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            document.getElementById('tmdbLoading').style.display = 'none';
+            const container = document.getElementById('tmdbResults');
+            if (!data.results || data.results.length === 0) { container.innerHTML = '<div class="empty-state">No results</div>'; return; }
+            container.innerHTML = data.results.map(m => `<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)">
+                <img src="${m.poster_path ? TMDB_IMG_BASE+'w300'+m.poster_path : 'https://via.placeholder.com/300x450'}" onerror="this.src='https://via.placeholder.com/300x450'">
+                <div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||'N/A'}</small></div>
+            </div>`).join('');
+        } catch (e) { document.getElementById('tmdbLoading').style.display = 'none'; showToast('Search failed', 'error'); }
     }
-    function renderDeviceRequests() {
-        let container = document.getElementById('devList');
-        container.innerHTML = '';
-        Object.entries(deviceRequests).forEach(([id, req]) => {
-            if(req.status==='pending') {
-                container.innerHTML += `<div class="card"><div><b>${req.userName||'User'}</b><div>${req.email}</div><div>Device: ${req.deviceId}</div></div><div class="btn-group"><button class="btn btn-primary" onclick="approveDevice('${id}','${req.userUid}','${req.deviceId}')">Approve</button><button class="btn btn-danger" onclick="rejectDevice('${id}')">Reject</button></div></div>`;
-            }
-        });
+    async function selectTMDBMovie(id, element) {
+        document.querySelectorAll('.tmdb-result-card').forEach(c => c.classList.remove('selected'));
+        element.classList.add('selected');
+        showToast('Fetching details...', 'success');
+        try {
+            const [details, credits] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}`).then(r=>r.json()),
+                fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}`).then(r=>r.json())
+            ]);
+            const videos = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`).then(r=>r.json());
+            document.getElementById('movieTitle').value = details.title || '';
+            document.getElementById('releaseYear').value = details.release_date?.substring(0,4) || '';
+            document.getElementById('movieRating').value = details.vote_average?.toFixed(1) || '';
+            document.getElementById('movieRuntime').value = details.runtime || '';
+            document.getElementById('posterUrl').value = details.poster_path ? TMDB_IMG_BASE+'w500'+details.poster_path : '';
+            document.getElementById('backdropUrl').value = details.backdrop_path ? TMDB_IMG_BASE+'original'+details.backdrop_path : '';
+            document.getElementById('storyline').value = details.overview || '';
+            const trailer = videos.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+            document.getElementById('trailerUrl').value = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+            castArray = (credits.cast || []).slice(0,10).map(c => ({ name: c.name, character: c.character, profile_image: c.profile_path ? TMDB_IMG_BASE+'w185'+c.profile_path : 'https://via.placeholder.com/185x278' }));
+            renderCastList();
+        } catch(e) { showToast('Error loading details', 'error'); }
     }
-    function approveDevice(reqId, userId, deviceId) { db.ref(`deviceRequests/${reqId}/status`).set('approved'); db.ref(`users/${userId}/activeDeviceId`).set(deviceId); toast("Approved"); }
-    function rejectDevice(reqId) { db.ref(`deviceRequests/${reqId}/status`).set('rejected'); toast("Rejected"); }
-    function renderCategories() {
-        let container = document.getElementById('categoriesList');
-        container.innerHTML = '';
-        allCategories.forEach(cat => {
-            container.innerHTML += `<div class="card"><div>${cat.name}</div><button class="btn btn-danger" onclick="deleteCategory('${cat.id}')">Delete</button></div>`;
+
+    // Cast management
+    function renderCastList() {
+        const container = document.getElementById('castContainer');
+        if (!castArray.length) { container.innerHTML = '<div class="empty-state">No cast members</div>'; return; }
+        container.innerHTML = castArray.map((a,i) => `<div class="cast-member">
+            <img src="${a.profile_image}" onerror="this.src='https://via.placeholder.com/50'">
+            <div class="cast-info"><div class="cast-name">${a.name}</div><div class="cast-character">${a.character||''}</div></div>
+            <div class="cast-actions"><button class="btn btn-sm btn-secondary" onclick="editCastMember(${i})"><i class="fas fa-pen"></i></button><button class="btn btn-sm btn-danger" onclick="removeCastMember(${i})"><i class="fas fa-trash"></i></button></div>
+        </div>`).join('');
+    }
+    function editCastMember(i) { let a=castArray[i]; let n=prompt('Name',a.name); if(n!==null) a.name=n; let c=prompt('Character',a.character); if(c!==null) a.character=c; let img=prompt('Image URL',a.profile_image); if(img!==null) a.profile_image=img; renderCastList(); }
+    function removeCastMember(i) { castArray.splice(i,1); renderCastList(); }
+    function toggleManualCast() { document.getElementById('manualCastForm').style.display = document.getElementById('manualCastForm').style.display === 'none' ? 'grid' : 'none'; }
+    function addManualCast() {
+        let name = document.getElementById('manualCastName').value.trim();
+        if (!name) { showToast('Enter actor name', 'error'); return; }
+        castArray.push({ name, character: document.getElementById('manualCastCharacter').value.trim(), profile_image: document.getElementById('manualCastImage').value.trim() || 'https://via.placeholder.com/185x278' });
+        document.getElementById('manualCastName').value = ''; document.getElementById('manualCastCharacter').value = ''; document.getElementById('manualCastImage').value = '';
+        renderCastList();
+        showToast('Cast added', 'success');
+    }
+
+    // Categories
+    async function loadCategories() {
+        const snap = await db.ref('categories').once('value');
+        const cats = snap.val();
+        const selects = ['categorySelect', 'filterCategory'];
+        selects.forEach(id => {
+            const sel = document.getElementById(id);
+            if (!sel) return;
+            sel.innerHTML = id === 'filterCategory' ? '<option value="">All Categories</option>' : '<option value="">Select Category</option>';
+            if (cats) Object.values(cats).forEach(c => { let opt = document.createElement('option'); opt.value = c.name; opt.textContent = c.name; sel.appendChild(opt); });
         });
     }
-    function addCategory() { let name=document.getElementById('newCat').value; if(name) db.ref('genres').push({name}).then(()=>{ toast("Added"); document.getElementById('newCat').value=''; }); }
-    function deleteCategory(id) { if(confirm("Delete?")) db.ref('genres/'+id).remove(); }
+    async function createNewCategory() {
+        let name = prompt('New category name:');
+        if (!name) return;
+        await db.ref('categories').push({ name });
+        await loadCategories();
+        document.getElementById('categorySelect').value = name;
+        showToast('Category created', 'success');
+    }
 
-    function openChannelModal(id) {
-        let modal = document.getElementById('channelModal');
-        if(id) { let ch=allChannels[id]; if(ch){ document.getElementById('channelModalTitle').innerText='Edit Channel'; document.getElementById('channelId').value=id; document.getElementById('chanName').value=ch.name||''; document.getElementById('chanUrl').value=ch.m3u8Link||''; document.getElementById('chanPoster').value=ch.posterURL||''; document.getElementById('chanDesc').value=ch.description||''; let drm=!!(ch.drmToken); document.getElementById('chanDrmEnabled').checked=drm; document.getElementById('drmFields').style.display=drm?'block':'none'; document.getElementById('chanDrmToken').value=ch.drmToken||''; document.getElementById('chanLicenseUrl').value=ch.licenseUrl||''; } }
-        else { document.getElementById('channelModalTitle').innerText='Add Channel'; document.getElementById('channelId').value=''; document.getElementById('chanName').value=''; document.getElementById('chanUrl').value=''; document.getElementById('chanPoster').value=''; document.getElementById('chanDesc').value=''; document.getElementById('chanDrmEnabled').checked=false; document.getElementById('drmFields').style.display='none'; }
-        modal.style.display='flex';
-    }
-    function saveChannel() {
-        let id = document.getElementById('channelId').value;
-        let data = { name: document.getElementById('chanName').value, m3u8Link: document.getElementById('chanUrl').value, posterURL: document.getElementById('chanPoster').value, description: document.getElementById('chanDesc').value, updatedAt: Date.now() };
-        if(document.getElementById('chanDrmEnabled').checked) { data.drmToken = document.getElementById('chanDrmToken').value; data.licenseUrl = document.getElementById('chanLicenseUrl').value; }
-        else { data.drmToken = null; data.licenseUrl = null; }
-        if(id) db.ref('channels/'+id).update(data).then(()=>{ toast("Channel updated"); closeModal('channelModal'); });
-        else { data.createdAt = Date.now(); db.ref('channels').push(data).then(()=>{ toast("Channel added"); closeModal('channelModal'); }); }
-    }
-    function editChannel(id) { openChannelModal(id); }
-    function deleteItem(path, id) { if(confirm("Delete?")) db.ref(path+'/'+id).remove().then(()=>toast("Deleted")); }
-
-    function openMovieModal(id) {
-        let modal = document.getElementById('movieModal');
-        if(id) { let m=allMovies[id]; if(m){ document.getElementById('movieModalTitle').innerText='Edit Movie'; document.getElementById('movieId').value=id; document.getElementById('movTitle').value=m.title||''; document.getElementById('movUrl').value=m.movieURL||''; document.getElementById('movPoster').value=m.posterURL||''; document.getElementById('movDesc').value=m.description||''; let drm=!!(m.drmToken); document.getElementById('movDrmEnabled').checked=drm; document.getElementById('movDrmFields').style.display=drm?'block':'none'; document.getElementById('movDrmToken').value=m.drmToken||''; document.getElementById('movLicenseUrl').value=m.licenseUrl||''; } }
-        else { document.getElementById('movieModalTitle').innerText='Add Movie'; document.getElementById('movieId').value=''; document.getElementById('movTitle').value=''; document.getElementById('movUrl').value=''; document.getElementById('movPoster').value=''; document.getElementById('movDesc').value=''; document.getElementById('movDrmEnabled').checked=false; document.getElementById('movDrmFields').style.display='none'; }
-        modal.style.display='flex';
-    }
-    function saveMovie() {
-        let id = document.getElementById('movieId').value;
-        let data = { title: document.getElementById('movTitle').value, movieURL: document.getElementById('movUrl').value, posterURL: document.getElementById('movPoster').value, description: document.getElementById('movDesc').value, updatedAt: Date.now() };
-        if(document.getElementById('movDrmEnabled').checked) { data.drmToken = document.getElementById('movDrmToken').value; data.licenseUrl = document.getElementById('movLicenseUrl').value; }
-        else { data.drmToken = null; data.licenseUrl = null; }
-        if(id) db.ref('movies/'+id).update(data).then(()=>{ toast("Movie updated"); closeModal('movieModal'); });
-        else { data.createdAt = Date.now(); db.ref('movies').push(data).then(()=>{ toast("Movie added"); closeModal('movieModal'); }); }
-    }
-    function editMovie(id) { openMovieModal(id); }
-
-    function openDownloadModal(id) {
-        let modal = document.getElementById('downloadModal');
-        if(id) { let d=allDownloads[id]; if(d){ document.getElementById('dlId').value=id; document.getElementById('dlTitle').value=d.title||''; document.getElementById('dlUrl').value=d.downloadURL||''; document.getElementById('dlPoster').value=d.posterURL||''; document.getElementById('dlDesc').value=d.description||''; } }
-        else { document.getElementById('dlId').value=''; document.getElementById('dlTitle').value=''; document.getElementById('dlUrl').value=''; document.getElementById('dlPoster').value=''; document.getElementById('dlDesc').value=''; }
-        modal.style.display='flex';
-    }
-    function saveDownload() {
-        let id = document.getElementById('dlId').value;
-        let data = { title: document.getElementById('dlTitle').value, downloadURL: document.getElementById('dlUrl').value, posterURL: document.getElementById('dlPoster').value, description: document.getElementById('dlDesc').value, updatedAt: Date.now() };
-        if(id) db.ref('downloadableMovies/'+id).update(data).then(()=>{ toast("Download updated"); closeModal('downloadModal'); });
-        else { data.createdAt = Date.now(); db.ref('downloadableMovies').push(data).then(()=>{ toast("Download added"); closeModal('downloadModal'); }); }
-    }
-    function editDownload(id) { openDownloadModal(id); }
-
-    function openTipModal(id) {
-        let modal = document.getElementById('tipModal');
-        if(id) { let t=allTips[id]; if(t){ document.getElementById('tipModalTitle').innerText='Edit Tip'; document.getElementById('tipId').value=id; document.getElementById('tipTitle').value=t.title||''; document.getElementById('tipCategory').value=t.category||'general'; document.getElementById('tipContent').value=t.content||''; } }
-        else { document.getElementById('tipModalTitle').innerText='Add Tip'; document.getElementById('tipId').value=''; document.getElementById('tipTitle').value=''; document.getElementById('tipCategory').value='general'; document.getElementById('tipContent').value=''; }
-        modal.style.display='flex';
-    }
-    function saveTip() {
-        let id = document.getElementById('tipId').value;
-        let data = { title: document.getElementById('tipTitle').value, category: document.getElementById('tipCategory').value, content: document.getElementById('tipContent').value, updatedAt: Date.now() };
-        if(id) db.ref('tips/'+id).update(data).then(()=>{ toast("Tip updated"); closeModal('tipModal'); });
-        else { data.createdAt = Date.now(); db.ref('tips').push(data).then(()=>{ toast("Tip added"); closeModal('tipModal'); }); }
-    }
-    function editTip(id) { openTipModal(id); }
-
-    function openBettingTipModal(id) {
-        let modal = document.getElementById('bettingTipModal');
-        if(id) { let t=allBettingTips[id]; if(t){ document.getElementById('bettingTipModalTitle').innerText='Edit Betting Tip'; document.getElementById('btId').value=id; document.getElementById('btTitle').value=t.title||''; document.getElementById('btTeam1').value=t.team1||''; document.getElementById('btTeam2').value=t.team2||''; document.getElementById('btPrediction').value=t.prediction||''; document.getElementById('btOdds').value=t.odds||''; document.getElementById('btStake').value=t.stake||''; document.getElementById('btStatus').value=t.status||'upcoming'; document.getElementById('btResult').value=t.result||''; document.getElementById('btBookmakerLink').value=t.bookmakerLink||''; document.getElementById('btDescription').value=t.description||''; } }
-        else { document.getElementById('bettingTipModalTitle').innerText='Add Betting Tip'; document.getElementById('btId').value=''; document.getElementById('btTitle').value=''; document.getElementById('btTeam1').value=''; document.getElementById('btTeam2').value=''; document.getElementById('btPrediction').value=''; document.getElementById('btOdds').value=''; document.getElementById('btStake').value=''; document.getElementById('btStatus').value='upcoming'; document.getElementById('btResult').value=''; document.getElementById('btBookmakerLink').value=''; document.getElementById('btDescription').value=''; }
-        modal.style.display='flex';
-    }
-    function saveBettingTip() {
-        let id = document.getElementById('btId').value;
-        let data = {
-            title: document.getElementById('btTitle').value,
-            team1: document.getElementById('btTeam1').value,
-            team2: document.getElementById('btTeam2').value,
-            prediction: document.getElementById('btPrediction').value,
-            odds: document.getElementById('btOdds').value,
-            stake: document.getElementById('btStake').value,
-            status: document.getElementById('btStatus').value,
-            result: document.getElementById('btResult').value,
-            bookmakerLink: document.getElementById('btBookmakerLink').value,
-            description: document.getElementById('btDescription').value,
-            updatedAt: Date.now()
+    // Save movie
+    async function saveMovie(e) {
+        e.preventDefault();
+        const title = document.getElementById('movieTitle').value.trim();
+        if (!title) { showToast('Title required', 'error'); return; }
+        const movieData = {
+            title, release_year: parseInt(document.getElementById('releaseYear').value) || 0,
+            rating: parseFloat(document.getElementById('movieRating').value) || 0,
+            runtime: parseInt(document.getElementById('movieRuntime').value) || 0,
+            poster_url: document.getElementById('posterUrl').value.trim(),
+            backdrop_url: document.getElementById('backdropUrl').value.trim(),
+            storyline: document.getElementById('storyline').value.trim(),
+            trailer_url: document.getElementById('trailerUrl').value.trim(),
+            movie_links: { "1080p": document.getElementById('link1080p').value.trim(), "720p": document.getElementById('link720p').value.trim(), "480p": document.getElementById('link480p').value.trim() },
+            categories: document.getElementById('categorySelect').value ? [document.getElementById('categorySelect').value] : [],
+            cast: castArray,
+            created_at: Date.now()
         };
-        if(id) db.ref('bettingTips/'+id).update(data).then(()=>{ toast("Tip updated"); closeModal('bettingTipModal'); });
-        else { data.createdAt = Date.now(); db.ref('bettingTips').push(data).then(()=>{ toast("Tip added"); closeModal('bettingTipModal'); }); }
+        try {
+            await db.ref('movies').push(movieData);
+            await logActivity('movie_added', `Added movie: ${title}`);
+            showToast('Movie saved', 'success');
+            document.getElementById('movieForm').reset();
+            castArray = []; renderCastList();
+            document.getElementById('tmdbResults').innerHTML = '';
+        } catch (err) { showToast('Save failed: '+err.message, 'error'); }
     }
-    function editBettingTip(id) { openBettingTipModal(id); }
 
-    function saveSettings() { let data={ appName:document.getElementById('appName').value, primaryColor:document.getElementById('primaryColor').value, adminContactNumber:document.getElementById('adminContact').value, updatedAt:Date.now() }; db.ref('settings').set(data).then(()=>toast("Settings saved")); }
-    function clearAllDevices() { if(confirm("Clear all device requests?")) db.ref('deviceRequests').remove(); }
-    function resetAllUsers() { if(confirm("Reset ALL user device IDs?")) db.ref('users').once('value', s=>{ s.forEach(u=>db.ref(`users/${u.key}/activeDeviceId`).set(null)); toast("Reset done"); }); }
-    function saveAppSettings() { toast("App settings saved (placeholder)"); }
+    // Edit movies
+    async function loadAllMovies() {
+        document.getElementById('moviesLoading').style.display = 'block';
+        const snap = await db.ref('movies').once('value');
+        allMovies = snap.val() || {};
+        document.getElementById('moviesLoading').style.display = 'none';
+        filterMovies();
+    }
+    function filterMovies() {
+        let movies = Object.keys(allMovies).map(id => ({ id, ...allMovies[id] }));
+        const search = document.getElementById('filterSearch').value.toLowerCase();
+        if (search) movies = movies.filter(m => m.title && m.title.toLowerCase().includes(search));
+        const cat = document.getElementById('filterCategory').value;
+        if (cat) movies = movies.filter(m => m.categories && m.categories.includes(cat));
+        const sort = document.getElementById('sortBy').value;
+        if (sort === 'date_desc') movies.sort((a,b)=> (b.created_at||0)-(a.created_at||0));
+        if (sort === 'title_asc') movies.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
+        if (sort === 'rating_desc') movies.sort((a,b)=> (b.rating||0)-(a.rating||0));
+        const grid = document.getElementById('moviesGrid');
+        if (!movies.length) { grid.innerHTML = '<div class="empty-state">No movies</div>'; return; }
+        grid.innerHTML = movies.map(m => `<div class="movie-card">
+            <img src="${m.poster_url||'https://via.placeholder.com/300x450'}" onerror="this.src='https://via.placeholder.com/300x450'">
+            <div class="movie-card-info"><h3>${m.title||'Untitled'}</h3><div class="meta">${m.release_year||''} ⭐ ${m.rating||0}</div>
+            <div class="movie-card-actions"><button class="btn btn-sm btn-secondary" onclick="openEditModal('${m.id}')">Edit</button><button class="btn btn-sm btn-danger" onclick="confirmDeleteMovie('${m.id}','${m.title.replace(/'/g,"\\'")}')">Delete</button></div></div>
+        </div>`).join('');
+    }
+    async function openEditModal(id) {
+        currentEditingMovieId = id;
+        const movie = allMovies[id];
+        if (!movie) return;
+        const formHtml = `<div class="form-group"><label>Title</label><input id="editTitle" value="${movie.title||''}"></div>
+            <div class="form-group"><label>Year</label><input id="editYear" value="${movie.release_year||''}"></div>
+            <div class="form-group"><label>Rating</label><input id="editRating" value="${movie.rating||''}"></div>
+            <div class="form-group"><label>Poster URL</label><input id="editPoster" value="${movie.poster_url||''}"></div>
+            <div class="form-group"><label>Backdrop URL</label><input id="editBackdrop" value="${movie.backdrop_url||''}"></div>
+            <div class="form-group"><label>Storyline</label><textarea id="editStoryline">${movie.storyline||''}</textarea></div>
+            <div class="form-group"><label>Trailer URL</label><input id="editTrailer" value="${movie.trailer_url||''}"></div>
+            <div class="form-group"><label>1080p Link</label><input id="edit1080" value="${movie.movie_links?.['1080p']||''}"></div>
+            <div class="form-group"><label>720p Link</label><input id="edit720" value="${movie.movie_links?.['720p']||''}"></div>
+            <div class="form-group"><label>480p Link</label><input id="edit480" value="${movie.movie_links?.['480p']||''}"></div>
+            <div class="form-group"><label>Category</label><select id="editCategory">${document.getElementById('categorySelect').innerHTML}</select></div>
+            <button class="btn btn-block" onclick="saveEditedMovie()">Save</button>`;
+        document.getElementById('editMovieForm').innerHTML = formHtml;
+        if (movie.categories && movie.categories[0]) document.getElementById('editCategory').value = movie.categories[0];
+        document.getElementById('editModal').classList.add('show');
+    }
+    async function saveEditedMovie() {
+        const updates = {
+            title: document.getElementById('editTitle').value,
+            release_year: parseInt(document.getElementById('editYear').value)||0,
+            rating: parseFloat(document.getElementById('editRating').value)||0,
+            poster_url: document.getElementById('editPoster').value,
+            backdrop_url: document.getElementById('editBackdrop').value,
+            storyline: document.getElementById('editStoryline').value,
+            trailer_url: document.getElementById('editTrailer').value,
+            movie_links: { "1080p": document.getElementById('edit1080').value, "720p": document.getElementById('edit720').value, "480p": document.getElementById('edit480').value },
+            categories: document.getElementById('editCategory').value ? [document.getElementById('editCategory').value] : []
+        };
+        await db.ref(`movies/${currentEditingMovieId}`).update(updates);
+        await logActivity('movie_updated', `Updated ${updates.title}`);
+        showToast('Updated', 'success');
+        closeEditModal();
+        loadAllMovies();
+    }
+    function closeEditModal() { document.getElementById('editModal').classList.remove('show'); currentEditingMovieId = null; }
+    function confirmDeleteMovie(id, title) {
+        showConfirm(`Delete "${title}"?`, async () => {
+            await db.ref(`movies/${id}`).remove();
+            await logActivity('movie_deleted', `Deleted ${title}`);
+            showToast('Deleted', 'success');
+            loadAllMovies();
+        });
+    }
 
-    document.getElementById('chanDrmEnabled').addEventListener('change', e=>document.getElementById('drmFields').style.display=e.target.checked?'block':'none');
-    document.getElementById('movDrmEnabled').addEventListener('change', e=>document.getElementById('movDrmFields').style.display=e.target.checked?'block':'none');
+    // User management
+    async function loadUsers() {
+        document.getElementById('usersLoading').style.display = 'block';
+        const snap = await db.ref('users').once('value');
+        const users = snap.val();
+        document.getElementById('usersLoading').style.display = 'none';
+        const tbody = document.getElementById('usersTableBody');
+        if (!users) { tbody.innerHTML = '<tr><td colspan="5">No users</td></tr>'; return; }
+        tbody.innerHTML = Object.keys(users).map(uid => {
+            const u = users[uid];
+            return `<tr><td><img src="${u.photo_url||'https://via.placeholder.com/40'}" width="40" height="40" style="border-radius:50%;"></td>
+            <td>${u.display_name||'Unknown'}</td><td>${u.email||''}</td>
+            <td><span class="status-badge ${u.status==='blocked'?'status-blocked':'status-active'}">${u.status||'active'}</span></td>
+            <td><button class="btn btn-sm btn-secondary" onclick="toggleUserStatus('${uid}','${u.status||'active'}')">${u.status==='active'?'Block':'Unblock'}</button>
+            <button class="btn btn-sm btn-danger" onclick="confirmDeleteUser('${uid}','${(u.display_name||'').replace(/'/g,"\\'")}')">Delete</button></td></tr>`;
+        }).join('');
+    }
+    async function toggleUserStatus(uid, cur) { let newStatus = cur === 'active' ? 'blocked' : 'active'; await db.ref(`users/${uid}`).update({ status: newStatus }); showToast(`User ${newStatus}`, 'success'); loadUsers(); }
+    function confirmDeleteUser(uid, name) { showConfirm(`Delete ${name}?`, async () => { await db.ref(`users/${uid}`).remove(); showToast('Deleted', 'success'); loadUsers(); }); }
 
-    function openPage(page) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(page).classList.add('active'); document.getElementById('backBtn').style.display='block'; document.getElementById('pageTitle').innerText = page.toUpperCase(); }
-    function goHome() { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('homeView').classList.add('active'); document.getElementById('backBtn').style.display='none'; document.getElementById('pageTitle').innerText = 'STANY MIN TV ADMIN'; }
-    function closeModal(id) { document.getElementById(id).style.display='none'; }
-    function toast(msg) { let t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
+    // Notifications
+    async function sendPushNotification() {
+        let title = document.getElementById('notifTitle').value.trim();
+        let message = document.getElementById('notifMessage').value.trim();
+        if (!title || !message) { showToast('Title and message required', 'error'); return; }
+        await db.ref('notification_history').push({ title, message, image: document.getElementById('notifImage').value, url: document.getElementById('notifActionUrl').value, timestamp: Date.now(), sent_by: currentUser?.email||'admin' });
+        await logActivity('notification_sent', `Sent: ${title}`);
+        showToast('Notification saved', 'success');
+        document.getElementById('notifTitle').value = ''; document.getElementById('notifMessage').value = ''; document.getElementById('notifImage').value = ''; document.getElementById('notifActionUrl').value = '';
+        loadNotificationHistory();
+    }
+    async function loadNotificationHistory() {
+        const snap = await db.ref('notification_history').limitToLast(20).once('value');
+        const notifs = snap.val();
+        const container = document.getElementById('notificationHistory');
+        if (!notifs) { container.innerHTML = '<div class="empty-state">No notifications</div>'; return; }
+        container.innerHTML = Object.values(notifs).reverse().map(n => `<div class="notif-item"><div class="notif-title">${n.title}</div><div class="notif-message">${n.message}</div><div class="notif-time">${formatTime(n.timestamp)}</div></div>`).join('');
+    }
 
-    window.openPage = openPage; window.goHome = goHome; window.openChannelModal = openChannelModal; window.saveChannel = saveChannel; window.editChannel = editChannel;
-    window.openMovieModal = openMovieModal; window.saveMovie = saveMovie; window.editMovie = editMovie; window.deleteItem = deleteItem;
-    window.openUserModal = openUserModal; window.saveUserSub = saveUserSub; window.toggleBlock = toggleBlock; window.forceLogout = forceLogout;
-    window.switchUserTab = switchUserTab; window.deleteUserHistoryItem = deleteUserHistoryItem; window.deleteUserFavorite = deleteUserFavorite;
-    window.deleteUserDownload = deleteUserDownload; window.clearAllUserHistory = clearAllUserHistory; window.clearAllUserFavorites = clearAllUserFavorites;
-    window.clearAllUserDownloads = clearAllUserDownloads; window.addDays = addDays; window.toggleSubFields = toggleSubFields;
-    window.approveDevice = approveDevice; window.rejectDevice = rejectDevice; window.addCategory = addCategory; window.deleteCategory = deleteCategory;
-    window.saveSettings = saveSettings; window.clearAllDevices = clearAllDevices; window.resetAllUsers = resetAllUsers; window.saveAppSettings = saveAppSettings;
-    window.applyFilters = applyFilters; window.resetFilters = resetFilters;
-    window.openDownloadModal = openDownloadModal; window.saveDownload = saveDownload; window.editDownload = editDownload;
-    window.openTipModal = openTipModal; window.saveTip = saveTip; window.editTip = editTip;
-    window.openBettingTipModal = openBettingTipModal; window.saveBettingTip = saveBettingTip; window.editBettingTip = editBettingTip;
+    // Dashboard
+    async function loadDashboardStats() {
+        const movies = await db.ref('movies').once('value');
+        const users = await db.ref('users').once('value');
+        const cats = await db.ref('categories').once('value');
+        const notifs = await db.ref('notification_history').once('value');
+        document.getElementById('statMovies').innerText = movies.exists() ? Object.keys(movies.val()).length : 0;
+        document.getElementById('statUsers').innerText = users.exists() ? Object.keys(users.val()).length : 0;
+        document.getElementById('statCategories').innerText = cats.exists() ? Object.keys(cats.val()).length : 0;
+        document.getElementById('statNotifs').innerText = notifs.exists() ? Object.keys(notifs.val()).length : 0;
+        const actSnap = await db.ref('activity_log').limitToLast(8).once('value');
+        const acts = actSnap.val();
+        const actDiv = document.getElementById('activityList');
+        if (!acts) { actDiv.innerHTML = '<div class="empty-state">No activity</div>'; return; }
+        actDiv.innerHTML = Object.values(acts).reverse().map(a => `<div class="activity-item"><div class="activity-icon"><i class="fas ${a.type==='movie_added'?'fa-plus':a.type==='movie_updated'?'fa-pen':a.type==='movie_deleted'?'fa-trash':'fa-bell'}"></i></div><div class="activity-text"><p>${a.message}</p><small>${formatTime(a.timestamp)}</small></div></div>`).join('');
+    }
+    async function logActivity(type, msg) { await db.ref('activity_log').push({ type, message: msg, timestamp: Date.now(), user: currentUser?.email||'admin' }); }
+
+    // Danger zone
+    function clearAllMovies() { showConfirm('Delete ALL movies?', async () => { await db.ref('movies').remove(); showToast('All movies deleted', 'success'); loadAllMovies(); }); }
+    function clearNotifHistory() { showConfirm('Clear all notification history?', async () => { await db.ref('notification_history').remove(); showToast('History cleared', 'success'); loadNotificationHistory(); }); }
+
+    // Confirm dialog
+    function showConfirm(msg, callback) { document.getElementById('confirmMessage').innerText = msg; confirmCallback = callback; document.getElementById('confirmAction').onclick = () => { closeConfirm(); if(confirmCallback) confirmCallback(); }; document.getElementById('confirmOverlay').classList.add('show'); }
+    function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); }
+
+    // Firebase status & auth
+    function initFirebaseStatus() {
+        db.ref('.info/connected').on('value', snap => {
+            const connected = snap.val() === true;
+            document.getElementById('statusDot').style.backgroundColor = connected ? '#00ff00' : '#ff0000';
+            document.getElementById('statusText').innerText = connected ? 'Connected' : 'Disconnected';
+            document.getElementById('settingsStatusDot').style.backgroundColor = connected ? '#00ff00' : '#ff0000';
+            document.getElementById('settingsStatusText').innerText = connected ? 'Connected' : 'Disconnected';
+        });
+    }
+    auth.onAuthStateChanged(user => {
+        if (user) { isLoggedIn = true; currentUser = user; document.getElementById('settingsEmail').innerText = user.email; navigateTo('dashboard'); }
+        else { isLoggedIn = false; currentUser = null; document.getElementById('settingsEmail').innerText = 'Not logged in'; navigateTo('login'); }
+    });
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+        initFirebaseStatus();
+        loadCategories();
+        setInterval(() => { if (document.getElementById('sectionDashboard').classList.contains('active')) loadDashboardStats(); }, 30000);
+    });
 </script>
 </body>
 </html>
