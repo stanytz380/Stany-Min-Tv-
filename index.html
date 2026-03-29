@@ -2,18 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stany Min Tv - Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>STANY MIN TV - Admin Panel</title>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-    <!-- Font -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -42,7 +40,7 @@
             overflow-x: hidden;
         }
 
-        /* ===== HEADER ===== */
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -50,8 +48,6 @@
             padding: 0.8rem 1.2rem;
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 4px 24px rgba(255, 0, 0, 0.25);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -130,7 +126,6 @@
             border: none;
             padding: 0.4rem;
             border-radius: 6px;
-            transition: all 0.3s;
             position: relative;
         }
 
@@ -170,7 +165,7 @@
             color: #FF0000;
         }
 
-        /* ===== SIDEBAR ===== */
+        /* Sidebar */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -263,7 +258,7 @@
             margin: 0.6rem 1rem;
         }
 
-        /* ===== MAIN CONTENT ===== */
+        /* Main Content */
         .main-content {
             padding: 1.5rem 1rem 6rem;
             max-width: 1200px;
@@ -285,104 +280,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== SKIP BUTTON ===== */
-        .skip-button {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: linear-gradient(135deg, #FF0000 0%, #C41E3A 100%);
-            color: #fff;
-            border: none;
-            padding: 0.9rem 1.8rem;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.45);
-            z-index: 997;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .skip-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(255, 0, 0, 0.65);
-        }
-
-        .skip-button.hidden {
-            display: none;
-        }
-
-        /* ===== FORMS & INPUTS ===== */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-bottom: 0.4rem;
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="url"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            margin-bottom: 0;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 10px;
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #FF0000;
-            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
-
-        input[readonly] {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-        }
-
-        select option {
-            background: #2d2d2d;
-            color: #fff;
-        }
-
-        /* ===== BUTTONS ===== */
+        /* Buttons & Forms */
         .btn {
             background: linear-gradient(135deg, #FF0000 0%, #C41E3A 100%);
             color: #fff;
@@ -394,7 +292,6 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
-            font-family: 'Poppins', sans-serif;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -435,13 +332,38 @@
             justify-content: center;
         }
 
-        .btn-group {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
+        input, textarea, select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        /* ===== LOGIN SECTION ===== */
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #FF0000;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        /* Login Card */
         .login-wrapper {
             display: flex;
             justify-content: center;
@@ -473,46 +395,19 @@
             margin-bottom: 2rem;
         }
 
-        .login-card .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .login-card .btn {
-            width: 100%;
-            justify-content: center;
-            padding: 1rem;
-            font-size: 1rem;
-            margin-top: 0.5rem;
-        }
-
         .forgot-password {
             text-align: center;
             margin-top: 1.2rem;
             color: #888;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: color 0.3s;
         }
 
         .forgot-password:hover {
             color: #FF0000;
         }
 
-        /* ===== DASHBOARD ===== */
-        .dashboard-header {
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-header h1 {
-            font-size: 1.6rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .dashboard-header p {
-            color: #888;
-            font-size: 0.9rem;
-        }
-
+        /* Dashboard Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -540,17 +435,6 @@
             background: linear-gradient(90deg, #FF0000, #DC143C);
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.15);
-            border-color: rgba(255,0,0,0.2);
-        }
-
-        .stat-card .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
-        }
-
         .stat-card .stat-number {
             font-size: 2rem;
             font-weight: 700;
@@ -563,6 +447,7 @@
             margin-top: 0.2rem;
         }
 
+        /* Recent Activity */
         .recent-activity {
             background: rgba(255,255,255,0.04);
             border-radius: 14px;
@@ -612,7 +497,7 @@
             font-size: 0.78rem;
         }
 
-        /* ===== ADD MOVIE ===== */
+        /* TMDB Search & Movie Form (NH BOX style) */
         .section-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -630,10 +515,6 @@
             display: flex;
             gap: 0.6rem;
             margin-bottom: 1.5rem;
-        }
-
-        .search-tmdb-container input {
-            flex: 1;
         }
 
         .tmdb-results {
@@ -672,21 +553,20 @@
             object-fit: cover;
         }
 
-        .tmdb-result-card .tmdb-card-info {
+        .tmdb-card-info {
             padding: 0.6rem;
         }
 
-        .tmdb-result-card .tmdb-card-info p {
+        .tmdb-card-info p {
             font-size: 0.8rem;
             font-weight: 600;
             line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
             overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .tmdb-result-card .tmdb-card-info small {
+        .tmdb-card-info small {
             color: #888;
             font-size: 0.75rem;
         }
@@ -697,11 +577,7 @@
             gap: 1rem;
         }
 
-        .movie-form .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .language-group {
+        .full-width {
             grid-column: 1 / -1;
         }
 
@@ -736,12 +612,7 @@
             accent-color: #FF0000;
         }
 
-        .language-checkboxes input[type="checkbox"]:checked + span {
-            color: #FF0000;
-        }
-
         .links-section {
-            grid-column: 1 / -1;
             background: rgba(255,0,0,0.04);
             border: 1px solid rgba(255,0,0,0.1);
             border-radius: 12px;
@@ -755,7 +626,6 @@
         }
 
         .category-row {
-            grid-column: 1 / -1;
             display: flex;
             gap: 0.6rem;
             align-items: flex-end;
@@ -766,9 +636,7 @@
             margin-bottom: 0;
         }
 
-        /* ===== CAST SECTION ===== */
         .cast-section-form {
-            grid-column: 1 / -1;
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
             padding: 1.2rem;
@@ -810,29 +678,23 @@
             border: 2px solid rgba(255,0,0,0.3);
         }
 
-        .cast-member .cast-info {
+        .cast-info {
             flex: 1;
         }
 
-        .cast-member .cast-info .cast-name {
+        .cast-name {
             font-weight: 600;
             font-size: 0.9rem;
         }
 
-        .cast-member .cast-info .cast-character {
+        .cast-character {
             font-size: 0.8rem;
             color: #888;
         }
 
-        .cast-member .cast-actions {
+        .cast-actions {
             display: flex;
             gap: 0.3rem;
-        }
-
-        .cast-member .cast-actions button {
-            padding: 0.35rem 0.6rem;
-            font-size: 0.75rem;
-            border-radius: 6px;
         }
 
         .add-cast-manual {
@@ -847,7 +709,85 @@
             margin-bottom: 0;
         }
 
-        /* ===== EDIT MOVIES (Grid) ===== */
+        /* User & Channel Management */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .users-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #FF0000;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: rgba(255,0,0,0.1);
+        }
+
+        .users-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(0,255,0,0.1);
+            color: #00ff00;
+        }
+
+        .status-blocked {
+            background: rgba(255,0,0,0.1);
+            color: #ff4444;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .item-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .item-card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+        }
+
+        .item-body {
+            padding: 0.8rem;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
         .filter-bar {
             display: flex;
             gap: 0.8rem;
@@ -869,11 +809,10 @@
         }
 
         .movie-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
@@ -905,14 +844,9 @@
         .movie-card-info .meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.8rem;
             color: #888;
             margin-bottom: 0.6rem;
-        }
-
-        .movie-card-info .rating {
-            color: #FFD700;
         }
 
         .movie-card-actions {
@@ -920,82 +854,7 @@
             gap: 0.4rem;
         }
 
-        .movie-card-actions button {
-            flex: 1;
-            padding: 0.45rem;
-            font-size: 0.78rem;
-            border-radius: 6px;
-        }
-
-        /* ===== USER MANAGEMENT ===== */
-        .users-container {
-            overflow-x: auto;
-        }
-
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .users-table thead {
-            background: rgba(255,0,0,0.1);
-        }
-
-        .users-table th {
-            padding: 1rem;
-            text-align: left;
-            font-size: 0.85rem;
-            color: #FF0000;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .users-table td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-            font-size: 0.9rem;
-        }
-
-        .users-table tr:hover td {
-            background: rgba(255,0,0,0.04);
-        }
-
-        .users-table img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255,0,0,0.2);
-        }
-
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-active {
-            background: rgba(0,255,0,0.1);
-            color: #00ff00;
-        }
-
-        .status-blocked {
-            background: rgba(255,0,0,0.1);
-            color: #ff4444;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 0.4rem;
-        }
-
-        /* ===== NOTIFICATIONS ===== */
+        /* Notifications */
         .notif-form {
             background: rgba(255,255,255,0.04);
             border-radius: 14px;
@@ -1004,23 +863,11 @@
             margin-bottom: 2rem;
         }
 
-        .notif-form .form-group {
-            margin-bottom: 1rem;
-        }
-
         .char-count {
             text-align: right;
             font-size: 0.75rem;
             color: #666;
             margin-top: 0.3rem;
-        }
-
-        .notif-history {
-            margin-top: 1rem;
-        }
-
-        .notif-history h3 {
-            margin-bottom: 1rem;
         }
 
         .notif-item {
@@ -1031,24 +878,24 @@
             border-left: 3px solid #FF0000;
         }
 
-        .notif-item .notif-title {
+        .notif-title {
             font-weight: 600;
             font-size: 0.95rem;
         }
 
-        .notif-item .notif-message {
+        .notif-message {
             font-size: 0.85rem;
             color: #aaa;
             margin-top: 0.3rem;
         }
 
-        .notif-item .notif-time {
+        .notif-time {
             font-size: 0.75rem;
             color: #666;
             margin-top: 0.5rem;
         }
 
-        /* ===== SETTINGS ===== */
+        /* Settings */
         .settings-card {
             background: rgba(255,255,255,0.04);
             border-radius: 14px;
@@ -1080,15 +927,11 @@
             color: #ccc;
         }
 
-        /* ===== LOADING ===== */
+        /* Loading Spinner */
         .loading-spinner {
             display: none;
             text-align: center;
             padding: 2rem;
-        }
-
-        .loading-spinner.show {
-            display: block;
         }
 
         .spinner {
@@ -1105,7 +948,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ===== TOAST ===== */
+        /* Toast */
         .toast-container {
             position: fixed;
             top: 80px;
@@ -1144,7 +987,6 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ===== EMPTY STATE ===== */
         .empty-state {
             text-align: center;
             padding: 3rem 1rem;
@@ -1157,67 +999,7 @@
             color: #444;
         }
 
-        .empty-state p {
-            font-size: 0.95rem;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .movie-form {
-                grid-template-columns: 1fr;
-            }
-
-            .movies-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .add-cast-manual {
-                grid-template-columns: 1fr;
-            }
-
-            .filter-bar {
-                flex-direction: column;
-            }
-
-            .filter-bar input,
-            .filter-bar select {
-                min-width: 100%;
-            }
-
-            .users-table th:nth-child(3),
-            .users-table td:nth-child(3) {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .movies-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.6rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .login-card {
-                padding: 1.5rem 1.2rem;
-            }
-
-            header {
-                padding: 0.6rem 0.8rem;
-            }
-
-            .logo {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* ===== EDIT MOVIE MODAL ===== */
+        /* Modals */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1280,17 +1062,13 @@
             grid-column: 1 / -1;
         }
 
-        @media (max-width: 600px) {
-            .modal-form {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== CONFIRMATION DIALOG ===== */
         .confirm-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.85);
             z-index: 3000;
             justify-content: center;
@@ -1329,27 +1107,112 @@
             justify-content: center;
         }
 
-        .confirm-buttons button {
-            min-width: 100px;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .movie-form {
+                grid-template-columns: 1fr;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .add-cast-manual {
+                grid-template-columns: 1fr;
+            }
+            .filter-bar {
+                flex-direction: column;
+            }
+            .filter-bar input,
+            .filter-bar select {
+                min-width: 100%;
+            }
+            .users-table th:nth-child(3),
+            .users-table td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .login-card {
+                padding: 1.5rem 1.2rem;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Device Request Card */
+        .device-card {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .device-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skip-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #FF0000 0%, #C41E3A 100%);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(255, 0, 0, 0.45);
+            z-index: 997;
+            transition: all 0.3s ease;
+        }
+
+        .skip-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 0, 0, 0.65);
+        }
+
+        .skip-button.hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+    <!-- HEADER -->
     <header>
         <div class="header-left">
-            <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle Menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="logo">STAN MIN TV <span>ADMIN</span></div>
+            <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <div class="logo">STANY MIN <span>ADMIN</span></div>
         </div>
         <div class="header-right">
             <div class="status-indicator">
                 <span class="status-dot" id="statusDot"></span>
                 <span id="statusText">Connecting...</span>
             </div>
-            <button class="header-dots" onclick="toggleDotsMenu()" aria-label="More Options">
+            <button class="header-dots" onclick="toggleDotsMenu()">
                 <i class="fas fa-ellipsis-vertical"></i>
                 <div class="dots-menu" id="dotsMenu">
                     <a href="#" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
@@ -1360,256 +1223,161 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR OVERLAY ===== -->
+    <!-- SIDEBAR OVERLAY -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- ===== SIDEBAR ===== -->
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">NH BOX</div>
-            <p>Admin Control Panel</p>
+            <div class="sidebar-logo">STANY MIN</div>
+            <p>Admin Panel</p>
         </div>
         <nav>
-            <a href="#" class="active" data-section="dashboard" onclick="navigateTo('dashboard')">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-            </a>
-            <a href="#" data-section="addMovie" onclick="navigateTo('addMovie')">
-                <i class="fas fa-plus-circle"></i> Add Movie
-            </a>
-            <a href="#" data-section="editMovies" onclick="navigateTo('editMovies')">
-                <i class="fas fa-edit"></i> Edit Movies
-            </a>
+            <a href="#" data-section="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="#" data-section="users" onclick="navigateTo('users')"><i class="fas fa-users"></i> Users</a>
+            <a href="#" data-section="channels" onclick="navigateTo('channels')"><i class="fas fa-tv"></i> Live Channels</a>
+            <a href="#" data-section="movies" onclick="navigateTo('movies')"><i class="fas fa-film"></i> Movies</a>
+            <a href="#" data-section="addMovie" onclick="navigateTo('addMovie')"><i class="fas fa-plus-circle"></i> Add Movie</a>
             <div class="sidebar-divider"></div>
-            <a href="#" data-section="userManagement" onclick="navigateTo('userManagement')">
-                <i class="fas fa-users"></i> User Management
-            </a>
-            <a href="#" data-section="notifications" onclick="navigateTo('notifications')">
-                <i class="fas fa-bell"></i> Notifications
-            </a>
+            <a href="#" data-section="categories" onclick="navigateTo('categories')"><i class="fas fa-layer-group"></i> Categories</a>
+            <a href="#" data-section="devices" onclick="navigateTo('devices')"><i class="fas fa-mobile-alt"></i> Device Requests</a>
+            <a href="#" data-section="notifications" onclick="navigateTo('notifications')"><i class="fas fa-bell"></i> Notifications</a>
             <div class="sidebar-divider"></div>
-            <a href="#" data-section="login" onclick="navigateTo('login')">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </a>
-            <a href="#" data-section="settings" onclick="navigateTo('settings')">
-                <i class="fas fa-cog"></i> Settings
-            </a>
+            <a href="#" data-section="settings" onclick="navigateTo('settings')"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#" data-section="login" onclick="navigateTo('login')"><i class="fas fa-sign-in-alt"></i> Login</a>
         </nav>
     </div>
 
-    <!-- ===== TOAST CONTAINER ===== -->
+    <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- ===== CONFIRMATION DIALOG ===== -->
+    <!-- CONFIRM DIALOG -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-box">
             <i class="fas fa-exclamation-triangle"></i>
             <p id="confirmMessage">Are you sure?</p>
             <div class="confirm-buttons">
                 <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
-                <button class="btn btn-danger" id="confirmAction" onclick="">Confirm</button>
+                <button class="btn btn-danger" id="confirmAction">Confirm</button>
             </div>
         </div>
     </div>
 
-    <!-- ===== EDIT MOVIE MODAL ===== -->
+    <!-- EDIT MOVIE MODAL (used for edit) -->
     <div class="modal-overlay" id="editModal">
         <div class="modal-box">
-            <h2>
-                <span><i class="fas fa-edit"></i> Edit Movie</span>
-                <button class="modal-close" onclick="closeEditModal()">&times;</button>
-            </h2>
+            <h2><span><i class="fas fa-edit"></i> Edit Movie</span><button class="modal-close" onclick="closeEditModal()">&times;</button></h2>
             <div class="modal-form" id="editMovieForm">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="editTitle">
-                </div>
-                <div class="form-group">
-                    <label>Release Year</label>
-                    <input type="number" id="editYear">
-                </div>
-                <div class="form-group">
-                    <label>Rating</label>
-                    <input type="number" id="editRating" step="0.1" min="0" max="10">
-                </div>
-                <div class="form-group">
-                    <label>Logo URL</label>
-                    <input type="url" id="editLogoUrl">
-                </div>
-                <div class="form-group full-width">
-                    <label>Poster URL</label>
-                    <input type="url" id="editPosterUrl">
-                </div>
-                <div class="form-group full-width">
-                    <label>Backdrop URL</label>
-                    <input type="url" id="editBackdropUrl">
-                </div>
-                <div class="form-group full-width">
-                    <label>Storyline</label>
-                    <textarea id="editStoryline" rows="3"></textarea>
-                </div>
-                <div class="form-group full-width">
-                    <label>Trailer URL</label>
-                    <input type="url" id="editTrailerUrl">
-                </div>
-                <div class="form-group">
-                    <label>1080p Link</label>
-                    <input type="url" id="editLink1080">
-                </div>
-                <div class="form-group">
-                    <label>720p Link</label>
-                    <input type="url" id="editLink720">
-                </div>
-                <div class="form-group">
-                    <label>480p Link</label>
-                    <input type="url" id="editLink480">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="editCategory"></select>
-                </div>
-                <div class="full-width" style="margin-top:0.5rem;">
-                    <button class="btn btn-block" onclick="saveEditedMovie()">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
-                </div>
+                <!-- dynamic fields will be injected by JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content">
-
-        <!-- LOADING -->
-        <div class="loading-spinner" id="globalLoading">
-            <div class="spinner"></div>
-            <p style="margin-top:1rem;color:#888;">Loading...</p>
+    <!-- EDIT CHANNEL MODAL -->
+    <div class="modal-overlay" id="editChannelModal">
+        <div class="modal-box">
+            <h2><span><i class="fas fa-edit"></i> Edit Channel</span><button class="modal-close" onclick="closeEditChannelModal()">&times;</button></h2>
+            <div class="modal-form" id="editChannelForm"></div>
         </div>
+    </div>
 
-        <!-- ===== DASHBOARD ===== -->
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- LOADING SPINNER (global) -->
+        <div class="loading-spinner" id="globalLoading"><div class="spinner"></div><p style="margin-top:1rem;">Loading...</p></div>
+
+        <!-- DASHBOARD -->
         <div class="content-section active" id="sectionDashboard">
             <div class="dashboard-header">
                 <h1>Dashboard</h1>
-                <p>Welcome back, Admin! Here's your overview.</p>
+                <p>Welcome back, Admin!</p>
             </div>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🎬</div>
-                    <div class="stat-number" id="statMovies">0</div>
-                    <div class="stat-label">Total Movies</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-number" id="statUsers">0</div>
-                    <div class="stat-label">Total Users</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📂</div>
-                    <div class="stat-number" id="statCategories">0</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🔔</div>
-                    <div class="stat-number" id="statNotifs">0</div>
-                    <div class="stat-label">Notifications Sent</div>
-                </div>
+                <div class="stat-card"><div class="stat-number" id="statMovies">0</div><div class="stat-label">Total Movies</div></div>
+                <div class="stat-card"><div class="stat-number" id="statChannels">0</div><div class="stat-label">Live Channels</div></div>
+                <div class="stat-card"><div class="stat-number" id="statUsers">0</div><div class="stat-label">Total Users</div></div>
+                <div class="stat-card"><div class="stat-number" id="statCategories">0</div><div class="stat-label">Categories</div></div>
             </div>
             <div class="recent-activity">
                 <h3><i class="fas fa-clock" style="color:#FF0000;margin-right:0.5rem;"></i>Recent Activity</h3>
-                <div id="activityList">
-                    <div class="empty-state">
-                        <i class="fas fa-info-circle"></i>
-                        <p>No recent activity</p>
-                    </div>
-                </div>
+                <div id="activityList"><div class="empty-state"><i class="fas fa-info-circle"></i><p>No recent activity</p></div></div>
             </div>
         </div>
 
-        <!-- ===== LOGIN ===== -->
+        <!-- LOGIN -->
         <div class="content-section" id="sectionLogin">
             <div class="login-wrapper">
                 <div class="login-card">
                     <h2><i class="fas fa-shield-alt"></i> Admin Login</h2>
                     <p class="subtitle">Sign in to access the admin panel</p>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="admin@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="loginPassword" placeholder="Enter password">
-                    </div>
-                    <button class="btn btn-block" onclick="adminLogin()">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
+                    <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="admin@example.com"></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
+                    <button class="btn btn-block" onclick="adminLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
                     <p class="forgot-password" onclick="forgotPassword()">Forgot Password?</p>
                 </div>
             </div>
         </div>
 
-        <!-- ===== ADD MOVIE ===== -->
+        <!-- USERS MANAGEMENT -->
+        <div class="content-section" id="sectionUsers">
+            <h2 class="section-title"><i class="fas fa-users"></i> User Management</h2>
+            <div class="loading-spinner" id="usersLoading"><div class="spinner"></div></div>
+            <div class="users-container">
+                <table class="users-table">
+                    <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CHANNELS MANAGEMENT -->
+        <div class="content-section" id="sectionChannels">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <h2 class="section-title"><i class="fas fa-tv"></i> Live Channels</h2>
+                <button class="btn btn-p btn-sm" onclick="openAddChannelModal()"><i class="fas fa-plus"></i> Add Channel</button>
+            </div>
+            <div class="grid" id="channelsGrid"></div>
+        </div>
+
+        <!-- MOVIES MANAGEMENT (list view) -->
+        <div class="content-section" id="sectionMovies">
+            <h2 class="section-title"><i class="fas fa-film"></i> Movies</h2>
+            <div class="filter-bar">
+                <input type="text" id="filterSearch" placeholder="Search movies..." oninput="filterMovies()">
+                <select id="filterCategory" onchange="filterMovies()"><option value="">All Categories</option></select>
+                <select id="sortBy" onchange="filterMovies()">
+                    <option value="date_desc">Newest First</option>
+                    <option value="title_asc">Title A-Z</option>
+                    <option value="rating_desc">Highest Rated</option>
+                </select>
+            </div>
+            <div class="loading-spinner" id="moviesLoading"><div class="spinner"></div></div>
+            <div id="moviesGrid" class="movies-grid"></div>
+        </div>
+
+        <!-- ADD MOVIE (with TMDB autofill) -->
         <div class="content-section" id="sectionAddMovie">
             <h2 class="section-title"><i class="fas fa-plus-circle"></i> Add New Movie</h2>
-
-            <!-- TMDB Search -->
             <div class="search-tmdb-container">
-                <input type="text" id="tmdbSearchInput" placeholder="Search movie on TMDB..." onkeypress="if(event.key==='Enter')searchTMDB()">
+                <input type="text" id="tmdbSearchInput" placeholder="Search movie on TMDB...">
                 <button class="btn" onclick="searchTMDB()"><i class="fas fa-search"></i> Search</button>
             </div>
-
-            <div class="loading-spinner" id="tmdbLoading">
-                <div class="spinner"></div>
-                <p style="margin-top:0.5rem;color:#888;font-size:0.85rem;">Searching TMDB...</p>
-            </div>
-
+            <div class="loading-spinner" id="tmdbLoading"><div class="spinner"></div></div>
             <div class="tmdb-results" id="tmdbResults"></div>
-
-            <!-- Movie Form -->
             <form id="movieForm" onsubmit="saveMovie(event)">
                 <div class="movie-form">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" id="movieTitle" placeholder="Movie Title" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Release Year</label>
-                        <input type="number" id="releaseYear" placeholder="Year" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Rating</label>
-                        <input type="number" id="movieRating" placeholder="Rating" readonly step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label>Runtime (min)</label>
-                        <input type="number" id="movieRuntime" placeholder="Runtime" readonly>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Logo URL</label>
-                        <input type="url" id="logoUrl" placeholder="Logo image URL (manual)">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Poster URL</label>
-                        <input type="url" id="posterUrl" placeholder="Poster URL" readonly>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Backdrop URL</label>
-                        <input type="url" id="backdropUrl" placeholder="Backdrop URL" readonly>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Storyline</label>
-                        <textarea id="storyline" placeholder="Movie storyline/overview" readonly rows="3"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Genres</label>
-                        <input type="text" id="movieGenres" placeholder="Genres" readonly>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Trailer URL</label>
-                        <input type="url" id="trailerUrl" placeholder="YouTube trailer URL" readonly>
-                    </div>
-
+                    <div class="form-group"><label>Title</label><input type="text" id="movieTitle" placeholder="Movie Title" readonly></div>
+                    <div class="form-group"><label>Release Year</label><input type="number" id="releaseYear" placeholder="Year" readonly></div>
+                    <div class="form-group"><label>Rating</label><input type="number" id="movieRating" placeholder="Rating" step="0.1" readonly></div>
+                    <div class="form-group"><label>Runtime (min)</label><input type="number" id="movieRuntime" placeholder="Runtime" readonly></div>
+                    <div class="form-group full-width"><label>Poster URL</label><input type="url" id="posterUrl" placeholder="Poster URL" readonly></div>
+                    <div class="form-group full-width"><label>Backdrop URL</label><input type="url" id="backdropUrl" placeholder="Backdrop URL" readonly></div>
+                    <div class="form-group full-width"><label>Storyline</label><textarea id="storyline" placeholder="Storyline" readonly rows="3"></textarea></div>
+                    <div class="form-group full-width"><label>Genres</label><input type="text" id="movieGenres" placeholder="Genres" readonly></div>
+                    <div class="form-group full-width"><label>Trailer URL</label><input type="url" id="trailerUrl" placeholder="Trailer URL" readonly></div>
                     <!-- Languages -->
-                    <div class="language-group">
-                        <label style="font-size:0.9rem;font-weight:600;color:#ccc;margin-bottom:0.5rem;display:block;">Languages</label>
+                    <div class="language-group full-width">
+                        <label>Languages</label>
                         <div class="language-checkboxes" id="languageCheckboxes">
                             <label><input type="checkbox" value="English"><span>English</span></label>
                             <label><input type="checkbox" value="Hindi"><span>Hindi</span></label>
@@ -1627,310 +1395,178 @@
                             <label><input type="checkbox" value="French"><span>French</span></label>
                         </div>
                     </div>
-
                     <!-- Download Links -->
-                    <div class="links-section">
+                    <div class="links-section full-width">
                         <h4><i class="fas fa-link"></i> Download Links</h4>
-                        <div class="form-group">
-                            <label>1080p Link</label>
-                            <input type="url" id="link1080p" placeholder="https://... (1080p)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>720p Link</label>
-                            <input type="url" id="link720p" placeholder="https://... (720p)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>480p Link</label>
-                            <input type="url" id="link480p" placeholder="https://... (480p)" required>
-                        </div>
+                        <div class="form-group"><label>1080p Link (Stream URL)</label><input type="url" id="link1080p" placeholder="https://... (1080p)" required></div>
+                        <div class="form-group"><label>720p Link</label><input type="url" id="link720p" placeholder="https://... (720p)"></div>
+                        <div class="form-group"><label>480p Link</label><input type="url" id="link480p" placeholder="https://... (480p)"></div>
                     </div>
-
                     <!-- Category -->
-                    <div class="category-row">
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select id="categorySelect">
-                                <option value="">Select Category</option>
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-secondary" onclick="createNewCategory()" style="margin-bottom:0;height:44px;">
-                            <i class="fas fa-plus"></i> New
-                        </button>
+                    <div class="category-row full-width">
+                        <div class="form-group"><label>Category</label><select id="categorySelect"><option value="">Select Category</option></select></div>
+                        <button type="button" class="btn btn-secondary" onclick="createNewCategory()" style="margin-bottom:0;"><i class="fas fa-plus"></i> New</button>
                     </div>
-
                     <!-- Cast -->
-                    <div class="cast-section-form">
-                        <h4>
-                            <span><i class="fas fa-users" style="color:#FF0000;"></i> Cast</span>
-                            <button type="button" class="btn btn-sm btn-secondary" onclick="toggleManualCast()">
-                                <i class="fas fa-plus"></i> Add Manual
-                            </button>
-                        </h4>
+                    <div class="cast-section-form full-width">
+                        <h4><span><i class="fas fa-users"></i> Cast</span><button type="button" class="btn btn-sm btn-secondary" onclick="toggleManualCast()"><i class="fas fa-plus"></i> Add Manual</button></h4>
                         <div class="cast-list" id="castContainer"></div>
                         <div class="add-cast-manual" id="manualCastForm" style="display:none;">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <input type="text" id="manualCastName" placeholder="Actor Name">
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <input type="text" id="manualCastCharacter" placeholder="Character">
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <input type="url" id="manualCastImage" placeholder="Image URL">
-                            </div>
+                            <input type="text" id="manualCastName" placeholder="Actor Name">
+                            <input type="text" id="manualCastCharacter" placeholder="Character">
+                            <input type="url" id="manualCastImage" placeholder="Image URL">
                             <button type="button" class="btn btn-sm" onclick="addManualCast()">Add</button>
                         </div>
                     </div>
-
-                    <!-- Submit -->
-                    <div class="full-width" style="margin-top:1rem;">
-                        <button type="submit" class="btn btn-block" id="saveMovieBtn">
-                            <i class="fas fa-save"></i> Save Movie
-                        </button>
-                    </div>
+                    <div class="full-width"><button type="submit" class="btn btn-block" id="saveMovieBtn"><i class="fas fa-save"></i> Save Movie</button></div>
                 </div>
             </form>
         </div>
 
-        <!-- ===== EDIT MOVIES ===== -->
-        <div class="content-section" id="sectionEditMovies">
-            <h2 class="section-title"><i class="fas fa-edit"></i> Edit Movies</h2>
-            <div class="filter-bar">
-                <input type="text" id="filterSearch" placeholder="Search movies..." oninput="filterMovies()">
-                <select id="filterCategory" onchange="filterMovies()">
-                    <option value="">All Categories</option>
-                </select>
-                <select id="sortBy" onchange="filterMovies()">
-                    <option value="date_desc">Newest First</option>
-                    <option value="date_asc">Oldest First</option>
-                    <option value="title_asc">Title A-Z</option>
-                    <option value="title_desc">Title Z-A</option>
-                    <option value="rating_desc">Highest Rated</option>
-                    <option value="rating_asc">Lowest Rated</option>
-                </select>
+        <!-- CATEGORIES MANAGEMENT -->
+        <div class="content-section" id="sectionCategories">
+            <h2 class="section-title"><i class="fas fa-layer-group"></i> Categories</h2>
+            <div class="category-manager" style="background:rgba(255,255,255,0.04); padding:20px; border-radius:10px; margin-bottom:20px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><h4>Add New Category</h4><input id="newCategoryName" class="input-box" placeholder="Category Name"><button class="btn btn-p" onclick="addCategory()" style="margin-top:10px;">Add Category</button></div>
+                    <div><h4>Existing Categories</h4><div id="categoryList"></div><button class="btn btn-sm btn-secondary" onclick="saveCategoryOrder()">Save Order</button></div>
+                </div>
             </div>
-            <div class="loading-spinner" id="moviesLoading">
-                <div class="spinner"></div>
-                <p style="margin-top:0.5rem;color:#888;">Loading movies...</p>
-            </div>
-            <div id="moviesGrid" class="movies-grid"></div>
-        </div>
-
-        <!-- ===== USER MANAGEMENT ===== -->
-        <div class="content-section" id="sectionUserManagement">
-            <h2 class="section-title"><i class="fas fa-users"></i> User Management</h2>
-            <div class="loading-spinner" id="usersLoading">
-                <div class="spinner"></div>
-                <p style="margin-top:0.5rem;color:#888;">Loading users...</p>
-            </div>
-            <div class="users-container">
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Photo</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                    </tbody>
-                </table>
+            <div class="category-manager" style="background:rgba(255,255,255,0.04); padding:20px; border-radius:10px;">
+                <h4>Category Assignment</h4>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div><h5>Assign to Channels</h5><select id="assignChannelSelect" class="select-modern"></select><div id="assignChannelCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignChannelCategories()">Assign</button></div>
+                    <div><h5>Assign to Movies</h5><select id="assignMovieSelect" class="select-modern"></select><div id="assignMovieCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignMovieCategories()">Assign</button></div>
+                </div>
             </div>
         </div>
 
-        <!-- ===== NOTIFICATIONS ===== -->
+        <!-- DEVICE REQUESTS -->
+        <div class="content-section" id="sectionDevices">
+            <h2 class="section-title"><i class="fas fa-mobile-alt"></i> Device Requests</h2>
+            <div id="devicesList"></div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
         <div class="content-section" id="sectionNotifications">
             <h2 class="section-title"><i class="fas fa-bell"></i> Push Notifications</h2>
             <div class="notif-form">
-                <div class="form-group">
-                    <label>Notification Title</label>
-                    <input type="text" id="notifTitle" placeholder="Enter title..." maxlength="50" oninput="updateCharCount('notifTitle', 'titleCount', 50)">
-                    <div class="char-count"><span id="titleCount">0</span>/50</div>
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea id="notifMessage" placeholder="Enter notification message..." maxlength="120" rows="3" oninput="updateCharCount('notifMessage', 'msgCount', 120)"></textarea>
-                    <div class="char-count"><span id="msgCount">0</span>/120</div>
-                </div>
-                <div class="form-group">
-                    <label>Image URL (optional)</label>
-                    <input type="url" id="notifImage" placeholder="https://...">
-                </div>
-                <div class="form-group">
-                    <label>Action URL (optional)</label>
-                    <input type="url" id="notifActionUrl" placeholder="https://...">
-                </div>
-                <button class="btn btn-block" onclick="sendPushNotification()">
-                    <i class="fas fa-paper-plane"></i> Send to All Users
-                </button>
+                <div class="form-group"><label>Title</label><input type="text" id="notifTitle" maxlength="50" oninput="updateCharCount('notifTitle','titleCount',50)"><div class="char-count"><span id="titleCount">0</span>/50</div></div>
+                <div class="form-group"><label>Message</label><textarea id="notifMessage" rows="3" maxlength="120" oninput="updateCharCount('notifMessage','msgCount',120)"></textarea><div class="char-count"><span id="msgCount">0</span>/120</div></div>
+                <div class="form-group"><label>Image URL (optional)</label><input type="url" id="notifImage"></div>
+                <div class="form-group"><label>Action URL (optional)</label><input type="url" id="notifActionUrl"></div>
+                <button class="btn btn-block" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> Send to All Users</button>
             </div>
-
-            <div class="notif-history">
-                <h3><i class="fas fa-history" style="color:#FF0000;margin-right:0.5rem;"></i>Notification History</h3>
-                <div id="notificationHistory"></div>
-            </div>
+            <h3>Notification History</h3>
+            <div id="notificationHistory"></div>
         </div>
 
-        <!-- ===== SETTINGS ===== -->
+        <!-- SETTINGS -->
         <div class="content-section" id="sectionSettings">
             <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
             <div class="settings-card">
                 <h3><i class="fas fa-database"></i> Database</h3>
-                <div class="setting-item">
-                    <label>Firebase Status</label>
-                    <div class="status-indicator">
-                        <span class="status-dot" id="settingsStatusDot"></span>
-                        <span id="settingsStatusText">Checking...</span>
-                    </div>
-                </div>
-                <div class="setting-item">
-                    <label>Project ID</label>
-                    <span style="color:#888;font-size:0.85rem;">jjjj-93ab1</span>
-                </div>
+                <div class="setting-item"><label>Firebase Status</label><div class="status-indicator"><span class="status-dot" id="settingsStatusDot"></span><span id="settingsStatusText">Checking...</span></div></div>
+                <div class="setting-item"><label>Project ID</label><span style="color:#888;">stanyappstore</span></div>
             </div>
             <div class="settings-card">
                 <h3><i class="fas fa-user-shield"></i> Admin Account</h3>
-                <div class="setting-item">
-                    <label>Logged in as</label>
-                    <span id="settingsEmail" style="color:#888;font-size:0.85rem;">Not logged in</span>
-                </div>
-                <div class="setting-item">
-                    <label>Change Password</label>
-                    <button class="btn btn-sm btn-secondary" onclick="changePassword()">Change</button>
-                </div>
+                <div class="setting-item"><label>Logged in as</label><span id="settingsEmail">Not logged in</span></div>
+                <div class="setting-item"><label>Change Password</label><button class="btn btn-sm btn-secondary" onclick="changePassword()">Change</button></div>
             </div>
             <div class="settings-card">
                 <h3><i class="fas fa-palette"></i> TMDB API</h3>
-                <div class="setting-item">
-                    <label>API Key</label>
-                    <span style="color:#888;font-size:0.8rem;">2e211d...9bc3</span>
-                </div>
+                <div class="setting-item"><label>API Key</label><span style="color:#888;">2e211d...9bc3</span></div>
             </div>
             <div class="settings-card">
                 <h3><i class="fas fa-trash-alt"></i> Danger Zone</h3>
-                <div class="setting-item">
-                    <label>Clear All Movies</label>
-                    <button class="btn btn-sm btn-danger" onclick="clearAllMovies()">Clear</button>
-                </div>
-                <div class="setting-item">
-                    <label>Clear Notification History</label>
-                    <button class="btn btn-sm btn-danger" onclick="clearNotifHistory()">Clear</button>
-                </div>
+                <div class="setting-item"><label>Clear All Movies</label><button class="btn btn-sm btn-danger" onclick="clearAllMovies()">Clear</button></div>
+                <div class="setting-item"><label>Clear All Channels</label><button class="btn btn-sm btn-danger" onclick="clearAllChannels()">Clear</button></div>
+                <div class="setting-item"><label>Clear Notification History</label><button class="btn btn-sm btn-danger" onclick="clearNotifHistory()">Clear</button></div>
             </div>
         </div>
-
     </div>
 
-    <!-- ===== SKIP BUTTON ===== -->
-    <button class="skip-button" id="skipButton" onclick="skipLogin()">
-        <i class="fas fa-forward"></i> Skip Login & Continue
-    </button>
+    <!-- SKIP BUTTON (when not logged in) -->
+    <button class="skip-button" id="skipButton" onclick="skipLogin()"><i class="fas fa-forward"></i> Skip Login & Continue</button>
 
     <script>
         // ===================================================
-        // FIREBASE CONFIGURATION & INITIALIZATION
+        // FIREBASE CONFIG (STANY MIN TV) – same as user app
         // ===================================================
         const firebaseConfig = {
-  "apiKey": "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
-  "authDomain": "stanyappstore.firebaseapp.com",
-  "projectId": "stanyappstore",
-  "storageBucket": "stanyappstore.firebasestorage.app",
-  "messagingSenderId": "735017831251",
-  "appId": "1:735017831251:web:9fa4184ef141349fb9afa6",
-  "measurementId": "G-EM3RTMBKTN"
-}
-
+            apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
+            authDomain: "stanyappstore.firebaseapp.com",
+            projectId: "stanyappstore",
+            storageBucket: "stanyappstore.firebasestorage.app",
+            messagingSenderId: "735017831251",
+            appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
+        };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
         const auth = firebase.auth();
+        const db = firebase.database();
 
         // ===================================================
-        // GLOBAL STATE
+        // GLOBALS
         // ===================================================
         const TMDB_API_KEY = '2e211dfda888f7cc55ce433d743f9bc3';
         const TMDB_IMG_BASE = 'https://image.tmdb.org/t/p/';
-
         let isLoggedIn = false;
         let currentUser = null;
         let castArray = [];
         let allMoviesCache = {};
+        let allChannelsCache = {};
         let currentEditingMovieId = null;
+        let currentEditingChannelId = null;
         let confirmCallback = null;
+        let categories = [];
 
         // ===================================================
-        // INITIALIZATION
+        // AUTH & INIT
         // ===================================================
-        window.addEventListener('DOMContentLoaded', () => {
-            initFirebaseStatus();
-            checkAuthState();
-            loadCategories();
-            loadDashboardStats();
-
-            // Close dots menu on outside click
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.header-dots')) {
-                    document.getElementById('dotsMenu').classList.remove('show');
-                }
-            });
-        });
-
-        // ===================================================
-        // FIREBASE STATUS
-        // ===================================================
-        function initFirebaseStatus() {
-            const connectedRef = database.ref('.info/connected');
-            connectedRef.on('value', (snapshot) => {
-                const connected = snapshot.val() === true;
-                updateStatusIndicator(connected);
-            });
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+            toast.innerHTML = `<i class="fas ${iconMap[type] || iconMap.info}"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                toast.style.transition = 'all 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
         }
 
-        function updateStatusIndicator(connected) {
-            const dots = [document.getElementById('statusDot'), document.getElementById('settingsStatusDot')];
-            const texts = [document.getElementById('statusText'), document.getElementById('settingsStatusText')];
+        function formatTime(timestamp) {
+            if (!timestamp) return 'Unknown';
+            const diff = Date.now() - timestamp;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'Just now';
+            if (mins < 60) return `${mins}m ago`;
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            if (days < 7) return `${days}d ago`;
+            return new Date(timestamp).toLocaleDateString();
+        }
 
-            dots.forEach(dot => {
-                if (dot) {
-                    dot.style.backgroundColor = connected ? '#00ff00' : '#ff0000';
-                    dot.style.boxShadow = connected ? '0 0 8px rgba(0,255,0,0.5)' : '0 0 8px rgba(255,0,0,0.5)';
-                }
-            });
-            texts.forEach(text => {
-                if (text) text.textContent = connected ? 'Connected' : 'Disconnected';
-            });
+        async function logActivity(type, message) {
+            try {
+                await db.ref('activity_log').push({ type, message, timestamp: Date.now(), user: currentUser?.email || 'admin' });
+            } catch (e) { console.warn(e); }
         }
 
         // ===================================================
-        // AUTHENTICATION
+        // AUTH FUNCTIONS
         // ===================================================
-        function checkAuthState() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    isLoggedIn = true;
-                    currentUser = user;
-                    document.getElementById('skipButton').classList.add('hidden');
-                    document.getElementById('settingsEmail').textContent = user.email;
-                    showToast('Welcome back, ' + (user.email || 'Admin'), 'success');
-                } else {
-                    isLoggedIn = false;
-                    currentUser = null;
-                    document.getElementById('settingsEmail').textContent = 'Not logged in';
-                }
-            });
-        }
-
         async function adminLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-
-            if (!email || !password) {
-                showToast('Please enter email and password', 'error');
-                return;
-            }
-
+            if (!email || !password) { showToast('Please enter email and password', 'error'); return; }
             try {
-                const result = await auth.signInWithEmailAndPassword(email, password);
+                await auth.signInWithEmailAndPassword(email, password);
                 showToast('Login successful!', 'success');
                 document.getElementById('skipButton').classList.add('hidden');
                 navigateTo('dashboard');
@@ -1942,93 +1578,64 @@
         async function handleLogout() {
             try {
                 await auth.signOut();
-                showToast('Logged out successfully', 'success');
+                showToast('Logged out', 'success');
                 navigateTo('login');
                 document.getElementById('skipButton').classList.remove('hidden');
-            } catch (error) {
-                showToast('Logout failed: ' + error.message, 'error');
-            }
+            } catch (e) { showToast(e.message, 'error'); }
         }
 
         function skipLogin() {
             document.getElementById('skipButton').classList.add('hidden');
-            showToast('Continuing without login', 'success');
+            showToast('Continuing without login (read-only)', 'success');
             navigateTo('dashboard');
         }
 
         async function forgotPassword() {
             const email = document.getElementById('loginEmail').value.trim();
-            if (!email) {
-                showToast('Enter your email first', 'error');
-                return;
-            }
+            if (!email) { showToast('Enter your email', 'error'); return; }
             try {
                 await auth.sendPasswordResetEmail(email);
-                showToast('Password reset email sent!', 'success');
-            } catch (error) {
-                showToast('Error: ' + error.message, 'error');
-            }
+                showToast('Password reset email sent', 'success');
+            } catch (e) { showToast(e.message, 'error'); }
         }
 
         async function changePassword() {
-            if (!currentUser) {
-                showToast('Please login first', 'error');
-                return;
-            }
+            if (!currentUser) { showToast('Please login first', 'error'); return; }
             const newPass = prompt('Enter new password (min 6 chars):');
             if (newPass && newPass.length >= 6) {
                 try {
                     await currentUser.updatePassword(newPass);
                     showToast('Password updated!', 'success');
-                } catch (error) {
-                    showToast('Error: ' + error.message, 'error');
-                }
-            } else if (newPass) {
-                showToast('Password must be at least 6 characters', 'error');
-            }
+                } catch (e) { showToast(e.message, 'error'); }
+            } else if (newPass) showToast('Min 6 characters', 'error');
         }
 
         // ===================================================
         // NAVIGATION
         // ===================================================
         function navigateTo(section) {
-            // Hide all sections
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-
-            // Map section name to element ID
             const sectionMap = {
-                'dashboard': 'sectionDashboard',
-                'addMovie': 'sectionAddMovie',
-                'editMovies': 'sectionEditMovies',
-                'userManagement': 'sectionUserManagement',
-                'notifications': 'sectionNotifications',
-                'login': 'sectionLogin',
-                'settings': 'sectionSettings'
+                dashboard: 'sectionDashboard', users: 'sectionUsers', channels: 'sectionChannels',
+                movies: 'sectionMovies', addMovie: 'sectionAddMovie', categories: 'sectionCategories',
+                devices: 'sectionDevices', notifications: 'sectionNotifications', login: 'sectionLogin',
+                settings: 'sectionSettings'
             };
-
-            const targetId = sectionMap[section];
-            if (targetId) {
-                document.getElementById(targetId).classList.add('active');
-            }
-
-            // Update sidebar active state
-            document.querySelectorAll('.sidebar nav a').forEach(a => {
-                a.classList.toggle('active', a.dataset.section === section);
-            });
-
-            // Close sidebar on mobile
+            const target = document.getElementById(sectionMap[section]);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+            const activeSidebar = document.querySelector(`.sidebar nav a[data-section="${section}"]`);
+            if (activeSidebar) activeSidebar.classList.add('active');
             closeSidebar();
-
-            // Load data for specific sections
-            if (section === 'editMovies') loadAllMovies();
-            if (section === 'userManagement') loadUsers();
+            if (section === 'users') loadUsers();
+            if (section === 'channels') loadChannels();
+            if (section === 'movies') loadAllMovies();
+            if (section === 'categories') loadCategoriesPage();
+            if (section === 'devices') loadDeviceRequests();
             if (section === 'notifications') loadNotificationHistory();
             if (section === 'dashboard') loadDashboardStats();
         }
 
-        // ===================================================
-        // SIDEBAR
-        // ===================================================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -2039,661 +1646,8 @@
             document.getElementById('sidebarOverlay').classList.remove('active');
         }
 
-        // ===================================================
-        // DOTS MENU
-        // ===================================================
         function toggleDotsMenu() {
             document.getElementById('dotsMenu').classList.toggle('show');
-        }
-
-        // ===================================================
-        // TMDB SEARCH
-        // ===================================================
-        async function searchTMDB() {
-            const query = document.getElementById('tmdbSearchInput').value.trim();
-            if (!query) {
-                showToast('Enter a movie name to search', 'error');
-                return;
-            }
-
-            document.getElementById('tmdbLoading').classList.add('show');
-            document.getElementById('tmdbResults').innerHTML = '';
-
-            try {
-                const url = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                document.getElementById('tmdbLoading').classList.remove('show');
-
-                if (data.results && data.results.length > 0) {
-                    renderTMDBResults(data.results);
-                } else {
-                    document.getElementById('tmdbResults').innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No movies found</p></div>';
-                }
-            } catch (error) {
-                document.getElementById('tmdbLoading').classList.remove('show');
-                showToast('TMDB search failed: ' + error.message, 'error');
-            }
-        }
-
-        function renderTMDBResults(results) {
-            const container = document.getElementById('tmdbResults');
-            container.innerHTML = results.map(movie => {
-                const poster = movie.poster_path
-                    ? `${TMDB_IMG_BASE}w300${movie.poster_path}`
-                    : 'https://via.placeholder.com/300x450/1a1a1a/666?text=No+Poster';
-                const year = movie.release_date ? movie.release_date.substring(0, 4) : 'N/A';
-                return `
-                    <div class="tmdb-result-card" onclick="selectTMDBMovie(${movie.id}, this)">
-                        <img src="${poster}" alt="${movie.title}" loading="lazy">
-                        <div class="tmdb-card-info">
-                            <p>${movie.title}</p>
-                            <small>${year} · ⭐ ${movie.vote_average?.toFixed(1) || 'N/A'}</small>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function selectTMDBMovie(movieId, element) {
-            // Highlight selected
-            document.querySelectorAll('.tmdb-result-card').forEach(c => c.classList.remove('selected'));
-            if (element) element.classList.add('selected');
-
-            showToast('Fetching movie details...', 'success');
-
-            try {
-                // Fetch movie details
-                const detailRes = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`);
-                const detail = await detailRes.json();
-
-                // Fetch credits
-                const creditsRes = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${TMDB_API_KEY}`);
-                const credits = await creditsRes.json();
-
-                // Fetch videos (trailers)
-                const videosRes = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${TMDB_API_KEY}`);
-                const videos = await videosRes.json();
-
-                // Fill form
-                document.getElementById('movieTitle').value = detail.title || '';
-                document.getElementById('releaseYear').value = detail.release_date ? detail.release_date.substring(0, 4) : '';
-                document.getElementById('movieRating').value = detail.vote_average?.toFixed(1) || '';
-                document.getElementById('movieRuntime').value = detail.runtime || '';
-                document.getElementById('posterUrl').value = detail.poster_path ? `${TMDB_IMG_BASE}w500${detail.poster_path}` : '';
-                document.getElementById('backdropUrl').value = detail.backdrop_path ? `${TMDB_IMG_BASE}original${detail.backdrop_path}` : '';
-                document.getElementById('storyline').value = detail.overview || '';
-                document.getElementById('movieGenres').value = detail.genres ? detail.genres.map(g => g.name).join(', ') : '';
-
-                // Trailer
-                const trailer = videos.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-                document.getElementById('trailerUrl').value = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
-
-                // Cast
-                castArray = [];
-                if (credits.cast && credits.cast.length > 0) {
-                    castArray = credits.cast.slice(0, 10).map(actor => ({
-                        name: actor.name,
-                        character: actor.character,
-                        profile_image: actor.profile_path ? `${TMDB_IMG_BASE}w185${actor.profile_path}` : 'https://via.placeholder.com/185x278/1a1a1a/666?text=No+Image'
-                    }));
-                }
-                renderCastList();
-
-                showToast('Movie details loaded!', 'success');
-            } catch (error) {
-                showToast('Failed to fetch details: ' + error.message, 'error');
-            }
-        }
-
-        // ===================================================
-        // CAST MANAGEMENT
-        // ===================================================
-        function renderCastList() {
-            const container = document.getElementById('castContainer');
-            if (castArray.length === 0) {
-                container.innerHTML = '<div class="empty-state" style="padding:1rem;"><p style="font-size:0.85rem;color:#666;">No cast members added</p></div>';
-                return;
-            }
-
-            container.innerHTML = castArray.map((actor, index) => `
-                <div class="cast-member">
-                    <img src="${actor.profile_image}" alt="${actor.name}" onerror="this.src='https://via.placeholder.com/50/1a1a1a/666?text=?'">
-                    <div class="cast-info">
-                        <div class="cast-name">${actor.name}</div>
-                        <div class="cast-character">${actor.character}</div>
-                    </div>
-                    <div class="cast-actions">
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="editCastMember(${index})"><i class="fas fa-pen"></i></button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeCastMember(${index})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function editCastMember(index) {
-            const actor = castArray[index];
-            const newName = prompt('Actor Name:', actor.name);
-            if (newName === null) return;
-            const newCharacter = prompt('Character:', actor.character);
-            if (newCharacter === null) return;
-            const newImage = prompt('Image URL:', actor.profile_image);
-
-            castArray[index] = {
-                name: newName || actor.name,
-                character: newCharacter || actor.character,
-                profile_image: newImage || actor.profile_image
-            };
-            renderCastList();
-            showToast('Cast member updated', 'success');
-        }
-
-        function removeCastMember(index) {
-            castArray.splice(index, 1);
-            renderCastList();
-            showToast('Cast member removed', 'success');
-        }
-
-        function toggleManualCast() {
-            const form = document.getElementById('manualCastForm');
-            form.style.display = form.style.display === 'none' ? 'grid' : 'none';
-        }
-
-        function addManualCast() {
-            const name = document.getElementById('manualCastName').value.trim();
-            const character = document.getElementById('manualCastCharacter').value.trim();
-            const image = document.getElementById('manualCastImage').value.trim();
-
-            if (!name) {
-                showToast('Enter actor name', 'error');
-                return;
-            }
-
-            castArray.push({
-                name: name,
-                character: character || 'Unknown',
-                profile_image: image || 'https://via.placeholder.com/185x278/1a1a1a/666?text=No+Image'
-            });
-
-            document.getElementById('manualCastName').value = '';
-            document.getElementById('manualCastCharacter').value = '';
-            document.getElementById('manualCastImage').value = '';
-
-            renderCastList();
-            showToast('Cast member added', 'success');
-        }
-
-        // ===================================================
-        // CATEGORIES
-        // ===================================================
-        async function loadCategories() {
-            try {
-                const snapshot = await database.ref('categories').once('value');
-                const categories = snapshot.val();
-                const selects = [
-                    document.getElementById('categorySelect'),
-                    document.getElementById('filterCategory'),
-                    document.getElementById('editCategory')
-                ];
-
-                selects.forEach(sel => {
-                    if (!sel) return;
-                    const isFilter = sel.id === 'filterCategory';
-                    sel.innerHTML = isFilter
-                        ? '<option value="">All Categories</option>'
-                        : '<option value="">Select Category</option>';
-
-                    if (categories) {
-                        Object.keys(categories).forEach(key => {
-                            const opt = document.createElement('option');
-                            opt.value = categories[key].name;
-                            opt.textContent = categories[key].name;
-                            sel.appendChild(opt);
-                        });
-                    }
-                });
-            } catch (error) {
-                console.error('Load categories error:', error);
-            }
-        }
-
-        async function createNewCategory() {
-            const categoryName = prompt('Enter new category name:');
-            if (!categoryName || !categoryName.trim()) return;
-
-            try {
-                await database.ref('categories').push({ name: categoryName.trim() });
-                await loadCategories();
-                // Select the new category
-                document.getElementById('categorySelect').value = categoryName.trim();
-                showToast('Category "' + categoryName.trim() + '" created!', 'success');
-            } catch (error) {
-                showToast('Failed to create category: ' + error.message, 'error');
-            }
-        }
-
-        // ===================================================
-        // SAVE MOVIE
-        // ===================================================
-        function getSelectedLanguages() {
-            const checkboxes = document.querySelectorAll('#languageCheckboxes input[type="checkbox"]:checked');
-            return Array.from(checkboxes).map(cb => cb.value);
-        }
-
-        async function saveMovie(event) {
-            event.preventDefault();
-
-            const title = document.getElementById('movieTitle').value.trim();
-            if (!title) {
-                showToast('Please search and select a movie from TMDB first', 'error');
-                return;
-            }
-
-            const link1080 = document.getElementById('link1080p').value.trim();
-            const link720 = document.getElementById('link720p').value.trim();
-            const link480 = document.getElementById('link480p').value.trim();
-
-            if (!link1080 || !link720 || !link480) {
-                showToast('Please provide all download links', 'error');
-                return;
-            }
-
-            const movieData = {
-                title: title,
-                logo_url: document.getElementById('logoUrl').value.trim(),
-                poster_url: document.getElementById('posterUrl').value.trim(),
-                backdrop_url: document.getElementById('backdropUrl').value.trim(),
-                release_year: parseInt(document.getElementById('releaseYear').value) || 0,
-                rating: parseFloat(document.getElementById('movieRating').value) || 0,
-                runtime: parseInt(document.getElementById('movieRuntime').value) || 0,
-                storyline: document.getElementById('storyline').value.trim(),
-                genres: document.getElementById('movieGenres').value.split(',').map(g => g.trim()).filter(g => g),
-                language: getSelectedLanguages(),
-                movie_links: {
-                    "1080p": link1080,
-                    "720p": link720,
-                    "480p": link480
-                },
-                categories: document.getElementById('categorySelect').value ? [document.getElementById('categorySelect').value] : [],
-                cast: castArray,
-                trailer_url: document.getElementById('trailerUrl').value.trim(),
-                created_at: Date.now()
-            };
-
-            try {
-                document.getElementById('saveMovieBtn').disabled = true;
-                document.getElementById('saveMovieBtn').innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto;"></div>';
-
-                const movieRef = database.ref('movies').push();
-                await movieRef.set(movieData);
-
-                // Log activity
-                await logActivity('movie_added', `Added movie: ${title}`);
-
-                showToast('Movie saved successfully!', 'success');
-                clearMovieForm();
-            } catch (error) {
-                showToast('Failed to save: ' + error.message, 'error');
-            } finally {
-                document.getElementById('saveMovieBtn').disabled = false;
-                document.getElementById('saveMovieBtn').innerHTML = '<i class="fas fa-save"></i> Save Movie';
-            }
-        }
-
-        function clearMovieForm() {
-            document.getElementById('movieForm').reset();
-            document.getElementById('tmdbResults').innerHTML = '';
-            castArray = [];
-            renderCastList();
-            document.querySelectorAll('#languageCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-        }
-
-        // ===================================================
-        // EDIT MOVIES
-        // ===================================================
-        async function loadAllMovies() {
-            document.getElementById('moviesLoading').classList.add('show');
-            document.getElementById('moviesGrid').innerHTML = '';
-
-            try {
-                const snapshot = await database.ref('movies').once('value');
-                allMoviesCache = snapshot.val() || {};
-                document.getElementById('moviesLoading').classList.remove('show');
-                filterMovies();
-            } catch (error) {
-                document.getElementById('moviesLoading').classList.remove('show');
-                showToast('Failed to load movies: ' + error.message, 'error');
-            }
-        }
-
-        function filterMovies() {
-            const searchTerm = document.getElementById('filterSearch').value.toLowerCase().trim();
-            const category = document.getElementById('filterCategory').value;
-            const sortBy = document.getElementById('sortBy').value;
-
-            let moviesArray = Object.keys(allMoviesCache).map(id => ({
-                id: id,
-                ...allMoviesCache[id]
-            }));
-
-            // Filter by search
-            if (searchTerm) {
-                moviesArray = moviesArray.filter(m =>
-                    m.title && m.title.toLowerCase().includes(searchTerm)
-                );
-            }
-
-            // Filter by category
-            if (category) {
-                moviesArray = moviesArray.filter(m =>
-                    m.categories && m.categories.includes(category)
-                );
-            }
-
-            // Sort
-            switch (sortBy) {
-                case 'date_desc':
-                    moviesArray.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-                    break;
-                case 'date_asc':
-                    moviesArray.sort((a, b) => (a.created_at || 0) - (b.created_at || 0));
-                    break;
-                case 'title_asc':
-                    moviesArray.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-                    break;
-                case 'title_desc':
-                    moviesArray.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
-                    break;
-                case 'rating_desc':
-                    moviesArray.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-                    break;
-                case 'rating_asc':
-                    moviesArray.sort((a, b) => (a.rating || 0) - (b.rating || 0));
-                    break;
-            }
-
-            renderMoviesGrid(moviesArray);
-        }
-
-        function renderMoviesGrid(movies) {
-            const grid = document.getElementById('moviesGrid');
-
-            if (movies.length === 0) {
-                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-film"></i><p>No movies found</p></div>';
-                return;
-            }
-
-            grid.innerHTML = movies.map(movie => {
-                const poster = movie.poster_url || 'https://via.placeholder.com/300x450/1a1a1a/666?text=No+Poster';
-                return `
-                    <div class="movie-card">
-                        <img src="${poster}" alt="${movie.title || 'Movie'}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/1a1a1a/666?text=Error'">
-                        <div class="movie-card-info">
-                            <h3>${movie.title || 'Untitled'}</h3>
-                            <div class="meta">
-                                <span>${movie.release_year || 'N/A'}</span>
-                                <span class="rating">⭐ ${movie.rating?.toFixed(1) || '0'}</span>
-                            </div>
-                            <div class="movie-card-actions">
-                                <button class="btn btn-sm btn-secondary" onclick="openEditModal('${movie.id}')">
-                                    <i class="fas fa-pen"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="confirmDeleteMovie('${movie.id}', '${(movie.title || '').replace(/'/g, "\\'")}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Edit Modal
-        async function openEditModal(movieId) {
-            currentEditingMovieId = movieId;
-
-            try {
-                const snapshot = await database.ref(`movies/${movieId}`).once('value');
-                const movie = snapshot.val();
-                if (!movie) {
-                    showToast('Movie not found', 'error');
-                    return;
-                }
-
-                document.getElementById('editTitle').value = movie.title || '';
-                document.getElementById('editYear').value = movie.release_year || '';
-                document.getElementById('editRating').value = movie.rating || '';
-                document.getElementById('editLogoUrl').value = movie.logo_url || '';
-                document.getElementById('editPosterUrl').value = movie.poster_url || '';
-                document.getElementById('editBackdropUrl').value = movie.backdrop_url || '';
-                document.getElementById('editStoryline').value = movie.storyline || '';
-                document.getElementById('editTrailerUrl').value = movie.trailer_url || '';
-                document.getElementById('editLink1080').value = movie.movie_links?.['1080p'] || '';
-                document.getElementById('editLink720').value = movie.movie_links?.['720p'] || '';
-                document.getElementById('editLink480').value = movie.movie_links?.['480p'] || '';
-
-                // Set category
-                const editCat = document.getElementById('editCategory');
-                if (movie.categories && movie.categories.length > 0) {
-                    editCat.value = movie.categories[0];
-                } else {
-                    editCat.value = '';
-                }
-
-                document.getElementById('editModal').classList.add('show');
-            } catch (error) {
-                showToast('Failed to load movie: ' + error.message, 'error');
-            }
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('show');
-            currentEditingMovieId = null;
-        }
-
-        async function saveEditedMovie() {
-            if (!currentEditingMovieId) return;
-
-            const updatedData = {
-                title: document.getElementById('editTitle').value.trim(),
-                release_year: parseInt(document.getElementById('editYear').value) || 0,
-                rating: parseFloat(document.getElementById('editRating').value) || 0,
-                logo_url: document.getElementById('editLogoUrl').value.trim(),
-                poster_url: document.getElementById('editPosterUrl').value.trim(),
-                backdrop_url: document.getElementById('editBackdropUrl').value.trim(),
-                storyline: document.getElementById('editStoryline').value.trim(),
-                trailer_url: document.getElementById('editTrailerUrl').value.trim(),
-                movie_links: {
-                    "1080p": document.getElementById('editLink1080').value.trim(),
-                    "720p": document.getElementById('editLink720').value.trim(),
-                    "480p": document.getElementById('editLink480').value.trim()
-                },
-                categories: document.getElementById('editCategory').value ? [document.getElementById('editCategory').value] : [],
-                updated_at: Date.now()
-            };
-
-            try {
-                await database.ref(`movies/${currentEditingMovieId}`).update(updatedData);
-                showToast('Movie updated successfully!', 'success');
-                await logActivity('movie_updated', `Updated movie: ${updatedData.title}`);
-                closeEditModal();
-                loadAllMovies();
-            } catch (error) {
-                showToast('Failed to update: ' + error.message, 'error');
-            }
-        }
-
-        // Delete Movie
-        function confirmDeleteMovie(movieId, movieTitle) {
-            showConfirm(`Are you sure you want to delete "${movieTitle}"?`, async () => {
-                try {
-                    await database.ref(`movies/${movieId}`).remove();
-                    showToast('Movie deleted!', 'success');
-                    await logActivity('movie_deleted', `Deleted movie: ${movieTitle}`);
-                    loadAllMovies();
-                } catch (error) {
-                    showToast('Failed to delete: ' + error.message, 'error');
-                }
-            });
-        }
-
-        // ===================================================
-        // USER MANAGEMENT
-        // ===================================================
-        async function loadUsers() {
-            document.getElementById('usersLoading').classList.add('show');
-            document.getElementById('usersTableBody').innerHTML = '';
-
-            try {
-                const snapshot = await database.ref('users').once('value');
-                const users = snapshot.val();
-                document.getElementById('usersLoading').classList.remove('show');
-
-                if (!users) {
-                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#666;">No users found</td></tr>';
-                    return;
-                }
-
-                renderUsersTable(users);
-            } catch (error) {
-                document.getElementById('usersLoading').classList.remove('show');
-                showToast('Failed to load users: ' + error.message, 'error');
-            }
-        }
-
-        function renderUsersTable(users) {
-            const tbody = document.getElementById('usersTableBody');
-            tbody.innerHTML = '';
-
-            Object.keys(users).forEach(userId => {
-                const user = users[userId];
-                const photo = user.photo_url || 'https://via.placeholder.com/40/1a1a1a/666?text=?';
-                const status = user.status || 'active';
-                const statusClass = status === 'active' ? 'status-active' : 'status-blocked';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><img src="${photo}" alt="" onerror="this.src='https://via.placeholder.com/40/1a1a1a/666?text=?'"></td>
-                    <td>${user.display_name || 'Unknown'}</td>
-                    <td>${user.email || 'N/A'}</td>
-                    <td><span class="status-badge ${statusClass}">${status}</span></td>
-                    <td>
-                        <div class="user-actions">
-                            <button class="btn btn-sm btn-secondary" onclick="toggleUserStatus('${userId}', '${status}')">
-                                <i class="fas fa-${status === 'active' ? 'ban' : 'check'}"></i>
-                                ${status === 'active' ? 'Block' : 'Unblock'}
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteUser('${userId}', '${(user.display_name || 'this user').replace(/'/g, "\\'")}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        async function toggleUserStatus(userId, currentStatus) {
-            const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
-            try {
-                await database.ref(`users/${userId}`).update({ status: newStatus });
-                showToast(`User ${newStatus === 'active' ? 'unblocked' : 'blocked'}`, 'success');
-                loadUsers();
-            } catch (error) {
-                showToast('Failed: ' + error.message, 'error');
-            }
-        }
-
-        function confirmDeleteUser(userId, userName) {
-            showConfirm(`Delete user "${userName}"? This cannot be undone.`, async () => {
-                try {
-                    await database.ref(`users/${userId}`).remove();
-                    showToast('User deleted', 'success');
-                    loadUsers();
-                } catch (error) {
-                    showToast('Failed to delete user: ' + error.message, 'error');
-                }
-            });
-        }
-
-        // ===================================================
-        // NOTIFICATIONS
-        // ===================================================
-        function updateCharCount(inputId, countId, max) {
-            const len = document.getElementById(inputId).value.length;
-            const countEl = document.getElementById(countId);
-            countEl.textContent = len;
-            countEl.style.color = len >= max ? '#ff4444' : '#666';
-        }
-
-        async function sendPushNotification() {
-            const title = document.getElementById('notifTitle').value.trim();
-            const message = document.getElementById('notifMessage').value.trim();
-            const image = document.getElementById('notifImage').value.trim();
-            const url = document.getElementById('notifActionUrl').value.trim();
-
-            if (!title || !message) {
-                showToast('Title and message are required', 'error');
-                return;
-            }
-
-            // Save to notification history
-            const notifData = {
-                title: title,
-                message: message,
-                image: image,
-                url: url,
-                timestamp: Date.now(),
-                sent_by: currentUser ? currentUser.email : 'admin'
-            };
-
-            try {
-                await database.ref('notification_history').push(notifData);
-                await logActivity('notification_sent', `Sent notification: ${title}`);
-
-                showToast('Notification saved to history!', 'success');
-
-                // Clear form
-                document.getElementById('notifTitle').value = '';
-                document.getElementById('notifMessage').value = '';
-                document.getElementById('notifImage').value = '';
-                document.getElementById('notifActionUrl').value = '';
-                document.getElementById('titleCount').textContent = '0';
-                document.getElementById('msgCount').textContent = '0';
-
-                loadNotificationHistory();
-            } catch (error) {
-                showToast('Failed: ' + error.message, 'error');
-            }
-        }
-
-        async function loadNotificationHistory() {
-            try {
-                const snapshot = await database.ref('notification_history').limitToLast(20).once('value');
-                const notifs = snapshot.val();
-                const container = document.getElementById('notificationHistory');
-
-                if (!notifs) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No notifications sent yet</p></div>';
-                    return;
-                }
-
-                const notifsArray = Object.keys(notifs).map(key => ({
-                    id: key,
-                    ...notifs[key]
-                })).reverse();
-
-                container.innerHTML = notifsArray.map(n => `
-                    <div class="notif-item">
-                        <div class="notif-title">${n.title}</div>
-                        <div class="notif-message">${n.message}</div>
-                        <div class="notif-time">${formatTime(n.timestamp)} · ${n.sent_by || 'admin'}</div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Load notif history error:', error);
-            }
         }
 
         // ===================================================
@@ -2701,191 +1655,623 @@
         // ===================================================
         async function loadDashboardStats() {
             try {
-                // Movies count
-                const moviesSnap = await database.ref('movies').once('value');
-                const moviesCount = moviesSnap.exists() ? Object.keys(moviesSnap.val()).length : 0;
-                animateNumber('statMovies', moviesCount);
-
-                // Users count
-                const usersSnap = await database.ref('users').once('value');
-                const usersCount = usersSnap.exists() ? Object.keys(usersSnap.val()).length : 0;
-                animateNumber('statUsers', usersCount);
-
-                // Categories count
-                const catsSnap = await database.ref('categories').once('value');
-                const catsCount = catsSnap.exists() ? Object.keys(catsSnap.val()).length : 0;
-                animateNumber('statCategories', catsCount);
-
-                // Notifications count
-                const notifsSnap = await database.ref('notification_history').once('value');
-                const notifsCount = notifsSnap.exists() ? Object.keys(notifsSnap.val()).length : 0;
-                animateNumber('statNotifs', notifsCount);
-
-                // Load activity
-                loadRecentActivity();
-            } catch (error) {
-                console.error('Dashboard stats error:', error);
-            }
-        }
-
-        function animateNumber(elementId, target) {
-            const el = document.getElementById(elementId);
-            const duration = 800;
-            const start = parseInt(el.textContent) || 0;
-            const increment = target - start;
-            const startTime = performance.now();
-
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3); // ease out cubic
-                el.textContent = Math.round(start + increment * eased);
-                if (progress < 1) requestAnimationFrame(update);
-            }
-
-            requestAnimationFrame(update);
-        }
-
-        async function loadRecentActivity() {
-            try {
-                const snapshot = await database.ref('activity_log').limitToLast(8).once('value');
-                const activities = snapshot.val();
-                const container = document.getElementById('activityList');
-
-                if (!activities) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>No recent activity</p></div>';
-                    return;
-                }
-
-                const actArray = Object.values(activities).reverse();
-
-                const iconMap = {
-                    'movie_added': 'fa-plus',
-                    'movie_updated': 'fa-pen',
-                    'movie_deleted': 'fa-trash',
-                    'notification_sent': 'fa-bell'
-                };
-
-                container.innerHTML = actArray.map(act => `
+                const moviesSnap = await db.ref('movies').once('value');
+                const channelsSnap = await db.ref('channels').once('value');
+                const usersSnap = await db.ref('users').once('value');
+                const catsSnap = await db.ref('genres').once('value');
+                document.getElementById('statMovies').innerText = moviesSnap.exists() ? Object.keys(moviesSnap.val()).length : 0;
+                document.getElementById('statChannels').innerText = channelsSnap.exists() ? Object.keys(channelsSnap.val()).length : 0;
+                document.getElementById('statUsers').innerText = usersSnap.exists() ? Object.keys(usersSnap.val()).length : 0;
+                document.getElementById('statCategories').innerText = catsSnap.exists() ? Object.keys(catsSnap.val()).length : 0;
+                const actSnap = await db.ref('activity_log').limitToLast(8).once('value');
+                const acts = actSnap.val();
+                const actDiv = document.getElementById('activityList');
+                if (!acts) { actDiv.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>No recent activity</p></div>'; return; }
+                const actArray = Object.values(acts).reverse();
+                actDiv.innerHTML = actArray.map(a => `
                     <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas ${iconMap[act.type] || 'fa-circle'}"></i>
-                        </div>
-                        <div class="activity-text">
-                            <p>${act.message}</p>
-                            <small>${formatTime(act.timestamp)}</small>
-                        </div>
+                        <div class="activity-icon"><i class="fas ${a.type === 'movie_added' ? 'fa-plus' : a.type === 'movie_updated' ? 'fa-pen' : a.type === 'movie_deleted' ? 'fa-trash' : 'fa-bell'}"></i></div>
+                        <div class="activity-text"><p>${a.message}</p><small>${formatTime(a.timestamp)}</small></div>
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Activity log error:', error);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        async function logActivity(type, message) {
+        // ===================================================
+        // USER MANAGEMENT
+        // ===================================================
+        async function loadUsers() {
+            document.getElementById('usersLoading').style.display = 'block';
             try {
-                await database.ref('activity_log').push({
-                    type: type,
-                    message: message,
-                    timestamp: Date.now(),
-                    user: currentUser ? currentUser.email : 'admin'
+                const snap = await db.ref('users').once('value');
+                const users = snap.val();
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+                if (!users) { tbody.innerHTML = '<tr><td colspan="5">No users found</td></tr>'; return; }
+                Object.keys(users).forEach(uid => {
+                    const u = users[uid];
+                    const status = u.status || 'active';
+                    const statusClass = status === 'active' ? 'status-active' : 'status-blocked';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><img src="${u.photo_url || 'https://via.placeholder.com/40'}" width="40" height="40" style="border-radius:50%;"></td>
+                            <td>${u.display_name || u.name || 'Unknown'}</td>
+                            <td>${u.email || ''}</td>
+                            <td><span class="status-badge ${statusClass}">${status}</span></td>
+                            <td><button class="btn btn-sm btn-secondary" onclick="toggleUserStatus('${uid}','${status}')">${status === 'active' ? 'Block' : 'Unblock'}</button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteUser('${uid}','${(u.display_name || u.name || '').replace(/'/g,"\\'")}')">Delete</button></td>
+                        </tr>
+                    `;
                 });
-            } catch (error) {
-                console.error('Log activity error:', error);
-            }
+            } catch (e) { showToast('Failed to load users', 'error'); }
+            document.getElementById('usersLoading').style.display = 'none';
         }
 
-        // ===================================================
-        // SETTINGS ACTIONS
-        // ===================================================
-        function clearAllMovies() {
-            showConfirm('DELETE ALL MOVIES? This action cannot be undone!', async () => {
-                try {
-                    await database.ref('movies').remove();
-                    showToast('All movies deleted', 'success');
-                    allMoviesCache = {};
-                } catch (error) {
-                    showToast('Failed: ' + error.message, 'error');
-                }
-            });
+        async function toggleUserStatus(uid, cur) {
+            const newStatus = cur === 'active' ? 'blocked' : 'active';
+            try {
+                await db.ref(`users/${uid}/status`).set(newStatus);
+                showToast(`User ${newStatus === 'active' ? 'unblocked' : 'blocked'}`, 'success');
+                loadUsers();
+            } catch (e) { showToast(e.message, 'error'); }
         }
 
-        function clearNotifHistory() {
-            showConfirm('Clear all notification history?', async () => {
-                try {
-                    await database.ref('notification_history').remove();
-                    showToast('Notification history cleared', 'success');
-                } catch (error) {
-                    showToast('Failed: ' + error.message, 'error');
-                }
+        function confirmDeleteUser(uid, name) {
+            showConfirm(`Delete user "${name}"? This cannot be undone.`, async () => {
+                await db.ref(`users/${uid}`).remove();
+                showToast('User deleted', 'success');
+                loadUsers();
             });
         }
 
         // ===================================================
-        // CONFIRMATION DIALOG
+        // CHANNEL MANAGEMENT
         // ===================================================
-        function showConfirm(message, callback) {
-            document.getElementById('confirmMessage').textContent = message;
-            confirmCallback = callback;
-            document.getElementById('confirmAction').onclick = () => {
-                closeConfirm();
-                if (confirmCallback) confirmCallback();
+        async function loadChannels() {
+            const snap = await db.ref('channels').once('value');
+            allChannelsCache = snap.val() || {};
+            const grid = document.getElementById('channelsGrid');
+            grid.innerHTML = '';
+            const channels = Object.keys(allChannelsCache).map(id => ({ id, ...allChannelsCache[id] }));
+            channels.sort((a,b) => (a.order || 999) - (b.order || 999));
+            channels.forEach(ch => {
+                grid.innerHTML += `
+                    <div class="item-card">
+                        <img src="${ch.posterURL || 'https://via.placeholder.com/150x100'}" class="item-img">
+                        <div class="item-body">
+                            <div class="item-title">${ch.name || 'Unnamed'}</div>
+                            <div class="item-actions">
+                                <button class="btn btn-sm btn-secondary" onclick="openEditChannelModal('${ch.id}')">Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="confirmDeleteChannel('${ch.id}','${ch.name.replace(/'/g,"\\'")}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAddChannelModal() {
+            currentEditingChannelId = null;
+            const modal = document.getElementById('editChannelModal');
+            document.getElementById('editChannelForm').innerHTML = `
+                <div class="form-group"><label>Name</label><input id="chName" class="input-box"></div>
+                <div class="form-group"><label>Stream URL (m3u8/mpd)</label><input id="chUrl" class="input-box"></div>
+                <div class="form-group"><label>Poster URL</label><input id="chPoster" class="input-box"></div>
+                <div class="form-group"><label>Description</label><textarea id="chDesc" rows="2"></textarea></div>
+                <div class="form-group"><label>Display Order</label><input type="number" id="chOrder" value="999"></div>
+                <div class="full-width"><button class="btn btn-p" onclick="saveChannel()">Save Channel</button></div>
+            `;
+            modal.classList.add('show');
+        }
+
+        function openEditChannelModal(id) {
+            const ch = allChannelsCache[id];
+            if (!ch) return;
+            currentEditingChannelId = id;
+            const modal = document.getElementById('editChannelModal');
+            document.getElementById('editChannelForm').innerHTML = `
+                <div class="form-group"><label>Name</label><input id="chName" class="input-box" value="${ch.name || ''}"></div>
+                <div class="form-group"><label>Stream URL</label><input id="chUrl" class="input-box" value="${ch.m3u8Link || ''}"></div>
+                <div class="form-group"><label>Poster URL</label><input id="chPoster" class="input-box" value="${ch.posterURL || ''}"></div>
+                <div class="form-group"><label>Description</label><textarea id="chDesc" rows="2">${ch.description || ''}</textarea></div>
+                <div class="form-group"><label>Display Order</label><input type="number" id="chOrder" value="${ch.order || 999}"></div>
+                <div class="full-width"><button class="btn btn-p" onclick="saveChannel()">Save Channel</button></div>
+            `;
+            modal.classList.add('show');
+        }
+
+        async function saveChannel() {
+            const data = {
+                name: document.getElementById('chName').value.trim(),
+                m3u8Link: document.getElementById('chUrl').value.trim(),
+                posterURL: document.getElementById('chPoster').value.trim(),
+                description: document.getElementById('chDesc').value.trim(),
+                order: parseInt(document.getElementById('chOrder').value) || 999,
+                type: 'channel',
+                updatedAt: Date.now()
             };
+            if (!data.name) { showToast('Channel name required', 'error'); return; }
+            try {
+                if (currentEditingChannelId) {
+                    await db.ref(`channels/${currentEditingChannelId}`).update(data);
+                    showToast('Channel updated', 'success');
+                } else {
+                    data.createdAt = Date.now();
+                    await db.ref('channels').push(data);
+                    showToast('Channel added', 'success');
+                }
+                closeEditChannelModal();
+                loadChannels();
+                await logActivity('channel_updated', `${currentEditingChannelId ? 'Updated' : 'Added'} channel: ${data.name}`);
+            } catch (e) { showToast(e.message, 'error'); }
+        }
+
+        function confirmDeleteChannel(id, name) {
+            showConfirm(`Delete channel "${name}"?`, async () => {
+                await db.ref(`channels/${id}`).remove();
+                showToast('Channel deleted', 'success');
+                loadChannels();
+                await logActivity('channel_deleted', `Deleted channel: ${name}`);
+            });
+        }
+
+        function closeEditChannelModal() {
+            document.getElementById('editChannelModal').classList.remove('show');
+            currentEditingChannelId = null;
+        }
+
+        // ===================================================
+        // MOVIE MANAGEMENT (with TMDB autofill)
+        // ===================================================
+        async function loadAllMovies() {
+            document.getElementById('moviesLoading').style.display = 'block';
+            const snap = await db.ref('movies').once('value');
+            allMoviesCache = snap.val() || {};
+            document.getElementById('moviesLoading').style.display = 'none';
+            filterMovies();
+        }
+
+        function filterMovies() {
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const sort = document.getElementById('sortBy').value;
+            let movies = Object.keys(allMoviesCache).map(id => ({ id, ...allMoviesCache[id] }));
+            if (search) movies = movies.filter(m => m.title && m.title.toLowerCase().includes(search));
+            if (category) movies = movies.filter(m => m.categories && m.categories.includes(category));
+            if (sort === 'date_desc') movies.sort((a,b) => (b.created_at || 0) - (a.created_at || 0));
+            else if (sort === 'title_asc') movies.sort((a,b) => (a.title || '').localeCompare(b.title || ''));
+            else if (sort === 'rating_desc') movies.sort((a,b) => (b.rating || 0) - (a.rating || 0));
+            const grid = document.getElementById('moviesGrid');
+            if (!movies.length) { grid.innerHTML = '<div class="empty-state"><i class="fas fa-film"></i><p>No movies found</p></div>'; return; }
+            grid.innerHTML = movies.map(m => `
+                <div class="movie-card">
+                    <img src="${m.posterURL || 'https://via.placeholder.com/300x450'}" onerror="this.src='https://via.placeholder.com/300x450'">
+                    <div class="movie-card-info">
+                        <h3>${m.title || 'Untitled'}</h3>
+                        <div class="meta"><span>${m.release_year || 'N/A'}</span><span>⭐ ${m.rating?.toFixed(1) || '0'}</span></div>
+                        <div class="movie-card-actions">
+                            <button class="btn btn-sm btn-secondary" onclick="openEditMovieModal('${m.id}')">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteMovie('${m.id}','${m.title.replace(/'/g,"\\'")}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function openEditMovieModal(id) {
+            const movie = allMoviesCache[id];
+            if (!movie) return;
+            currentEditingMovieId = id;
+            const editForm = document.getElementById('editMovieForm');
+            editForm.innerHTML = `
+                <div class="form-group"><label>Title</label><input id="editTitle" value="${movie.title || ''}"></div>
+                <div class="form-group"><label>Year</label><input id="editYear" value="${movie.release_year || ''}"></div>
+                <div class="form-group"><label>Rating</label><input id="editRating" value="${movie.rating || ''}"></div>
+                <div class="form-group"><label>Poster URL</label><input id="editPoster" value="${movie.posterURL || ''}"></div>
+                <div class="form-group"><label>Backdrop URL</label><input id="editBackdrop" value="${movie.backdrop_url || ''}"></div>
+                <div class="form-group full-width"><label>Storyline</label><textarea id="editStoryline" rows="3">${movie.storyline || ''}</textarea></div>
+                <div class="form-group"><label>Trailer URL</label><input id="editTrailer" value="${movie.trailer_url || ''}"></div>
+                <div class="form-group"><label>1080p Link (Stream URL)</label><input id="editLink1080" value="${movie.movie_links?.['1080p'] || ''}"></div>
+                <div class="form-group"><label>720p Link</label><input id="editLink720" value="${movie.movie_links?.['720p'] || ''}"></div>
+                <div class="form-group"><label>480p Link</label><input id="editLink480" value="${movie.movie_links?.['480p'] || ''}"></div>
+                <div class="form-group"><label>Category</label><select id="editCategory">${document.getElementById('categorySelect').innerHTML}</select></div>
+                <div class="full-width"><button class="btn btn-p" onclick="saveEditedMovie()">Save Changes</button></div>
+            `;
+            if (movie.categories && movie.categories.length) document.getElementById('editCategory').value = movie.categories[0];
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        async function saveEditedMovie() {
+            const updates = {
+                title: document.getElementById('editTitle').value,
+                release_year: parseInt(document.getElementById('editYear').value) || 0,
+                rating: parseFloat(document.getElementById('editRating').value) || 0,
+                posterURL: document.getElementById('editPoster').value,
+                backdrop_url: document.getElementById('editBackdrop').value,
+                storyline: document.getElementById('editStoryline').value,
+                trailer_url: document.getElementById('editTrailer').value,
+                movie_links: {
+                    "1080p": document.getElementById('editLink1080').value,
+                    "720p": document.getElementById('editLink720').value,
+                    "480p": document.getElementById('editLink480').value
+                },
+                categories: document.getElementById('editCategory').value ? [document.getElementById('editCategory').value] : []
+            };
+            try {
+                await db.ref(`movies/${currentEditingMovieId}`).update(updates);
+                showToast('Movie updated', 'success');
+                closeEditModal();
+                loadAllMovies();
+                await logActivity('movie_updated', `Updated movie: ${updates.title}`);
+            } catch (e) { showToast(e.message, 'error'); }
+        }
+
+        function confirmDeleteMovie(id, title) {
+            showConfirm(`Delete movie "${title}"?`, async () => {
+                await db.ref(`movies/${id}`).remove();
+                showToast('Movie deleted', 'success');
+                loadAllMovies();
+                await logActivity('movie_deleted', `Deleted movie: ${title}`);
+            });
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            currentEditingMovieId = null;
+        }
+
+        // ===================================================
+        // TMDB SEARCH (NH BOX logic)
+        // ===================================================
+        async function searchTMDB() {
+            const query = document.getElementById('tmdbSearchInput').value.trim();
+            if (!query) { showToast('Enter movie name', 'error'); return; }
+            document.getElementById('tmdbLoading').style.display = 'block';
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                document.getElementById('tmdbLoading').style.display = 'none';
+                const container = document.getElementById('tmdbResults');
+                if (!data.results || !data.results.length) { container.innerHTML = '<div class="empty-state">No results</div>'; return; }
+                container.innerHTML = data.results.map(m => `
+                    <div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)">
+                        <img src="${m.poster_path ? TMDB_IMG_BASE + 'w300' + m.poster_path : 'https://via.placeholder.com/300x450'}" onerror="this.src='https://via.placeholder.com/300x450'">
+                        <div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4) || 'N/A'}</small></div>
+                    </div>
+                `).join('');
+            } catch (e) { document.getElementById('tmdbLoading').style.display = 'none'; showToast('Search failed', 'error'); }
+        }
+
+        async function selectTMDBMovie(id, element) {
+            document.querySelectorAll('.tmdb-result-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            showToast('Fetching details...', 'success');
+            try {
+                const [details, credits, videos] = await Promise.all([
+                    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}`).then(r=>r.json()),
+                    fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}`).then(r=>r.json()),
+                    fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}`).then(r=>r.json())
+                ]);
+                document.getElementById('movieTitle').value = details.title || '';
+                document.getElementById('releaseYear').value = details.release_date?.substring(0,4) || '';
+                document.getElementById('movieRating').value = details.vote_average?.toFixed(1) || '';
+                document.getElementById('movieRuntime').value = details.runtime || '';
+                document.getElementById('posterUrl').value = details.poster_path ? TMDB_IMG_BASE + 'w500' + details.poster_path : '';
+                document.getElementById('backdropUrl').value = details.backdrop_path ? TMDB_IMG_BASE + 'original' + details.backdrop_path : '';
+                document.getElementById('storyline').value = details.overview || '';
+                document.getElementById('movieGenres').value = details.genres ? details.genres.map(g => g.name).join(', ') : '';
+                const trailer = videos.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                document.getElementById('trailerUrl').value = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+                castArray = (credits.cast || []).slice(0,10).map(actor => ({
+                    name: actor.name,
+                    character: actor.character,
+                    profile_image: actor.profile_path ? TMDB_IMG_BASE + 'w185' + actor.profile_path : 'https://via.placeholder.com/185x278'
+                }));
+                renderCastList();
+                showToast('Movie details loaded', 'success');
+            } catch (e) { showToast('Error loading details', 'error'); }
+        }
+
+        // Cast functions (as in NH BOX)
+        function renderCastList() {
+            const container = document.getElementById('castContainer');
+            if (!castArray.length) { container.innerHTML = '<div class="empty-state">No cast members</div>'; return; }
+            container.innerHTML = castArray.map((a,i) => `
+                <div class="cast-member">
+                    <img src="${a.profile_image}" onerror="this.src='https://via.placeholder.com/50'">
+                    <div class="cast-info"><div class="cast-name">${a.name}</div><div class="cast-character">${a.character||''}</div></div>
+                    <div class="cast-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="editCastMember(${i})"><i class="fas fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="removeCastMember(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function editCastMember(i) {
+            const a = castArray[i];
+            const n = prompt('Name', a.name); if (n !== null) a.name = n;
+            const c = prompt('Character', a.character); if (c !== null) a.character = c;
+            const img = prompt('Image URL', a.profile_image); if (img !== null) a.profile_image = img;
+            renderCastList();
+        }
+        function removeCastMember(i) { castArray.splice(i,1); renderCastList(); }
+        function toggleManualCast() {
+            document.getElementById('manualCastForm').style.display = document.getElementById('manualCastForm').style.display === 'none' ? 'grid' : 'none';
+        }
+        function addManualCast() {
+            const name = document.getElementById('manualCastName').value.trim();
+            if (!name) { showToast('Enter actor name', 'error'); return; }
+            castArray.push({
+                name,
+                character: document.getElementById('manualCastCharacter').value.trim(),
+                profile_image: document.getElementById('manualCastImage').value.trim() || 'https://via.placeholder.com/185x278'
+            });
+            document.getElementById('manualCastName').value = '';
+            document.getElementById('manualCastCharacter').value = '';
+            document.getElementById('manualCastImage').value = '';
+            renderCastList();
+            showToast('Cast added', 'success');
+        }
+
+        // Save movie (with proper fields for user app)
+        async function saveMovie(e) {
+            e.preventDefault();
+            const title = document.getElementById('movieTitle').value.trim();
+            if (!title) { showToast('Please search and select a movie from TMDB first', 'error'); return; }
+            const link1080 = document.getElementById('link1080p').value.trim();
+            if (!link1080) { showToast('1080p link (stream URL) is required', 'error'); return; }
+            const movieData = {
+                title,
+                posterURL: document.getElementById('posterUrl').value.trim(),
+                backdrop_url: document.getElementById('backdropUrl').value.trim(),
+                release_year: parseInt(document.getElementById('releaseYear').value) || 0,
+                rating: parseFloat(document.getElementById('movieRating').value) || 0,
+                runtime: parseInt(document.getElementById('movieRuntime').value) || 0,
+                storyline: document.getElementById('storyline').value.trim(),
+                genres: document.getElementById('movieGenres').value.split(',').map(g => g.trim()).filter(g => g),
+                language: Array.from(document.querySelectorAll('#languageCheckboxes input:checked')).map(cb => cb.value),
+                movie_links: {
+                    "1080p": link1080,
+                    "720p": document.getElementById('link720p').value.trim(),
+                    "480p": document.getElementById('link480p').value.trim()
+                },
+                categories: document.getElementById('categorySelect').value ? [document.getElementById('categorySelect').value] : [],
+                cast: castArray,
+                trailer_url: document.getElementById('trailerUrl').value.trim(),
+                created_at: Date.now()
+            };
+            try {
+                const saveBtn = document.getElementById('saveMovieBtn');
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:0 auto;"></div>';
+                await db.ref('movies').push(movieData);
+                showToast('Movie saved!', 'success');
+                await logActivity('movie_added', `Added movie: ${title}`);
+                document.getElementById('movieForm').reset();
+                castArray = []; renderCastList();
+                document.getElementById('tmdbResults').innerHTML = '';
+            } catch (err) { showToast('Save failed: ' + err.message, 'error'); }
+            finally { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Movie'; }
+        }
+
+        // ===================================================
+        // CATEGORIES MANAGEMENT
+        // ===================================================
+        async function loadCategoriesPage() {
+            const snap = await db.ref('genres').once('value');
+            categories = [];
+            const listDiv = document.getElementById('categoryList');
+            listDiv.innerHTML = '';
+            snap.forEach(c => {
+                const cat = { id: c.key, name: c.val().name };
+                categories.push(cat);
+                listDiv.innerHTML += `<div class="sortable-item" style="background:#222;padding:12px;margin-bottom:8px;border-radius:8px;display:flex;justify-content:space-between;"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${c.key}')"><i class="fas fa-trash"></i></button></div>`;
+            });
+            updateCategoryDropdowns();
+        }
+
+        async function addCategory() {
+            const name = document.getElementById('newCategoryName').value.trim();
+            if (!name) return showToast('Enter category name', 'error');
+            await db.ref('genres').push({ name });
+            document.getElementById('newCategoryName').value = '';
+            showToast('Category added', 'success');
+            loadCategoriesPage();
+        }
+
+        function deleteCategory(id) {
+            showConfirm('Delete category?', async () => {
+                await db.ref('genres/'+id).remove();
+                showToast('Category deleted', 'success');
+                loadCategoriesPage();
+            });
+        }
+
+        function saveCategoryOrder() { showToast('Order saved (not implemented)', 'info'); }
+
+        function updateCategoryDropdowns() {
+            const options = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            document.getElementById('categorySelect').innerHTML = '<option value="">Select Category</option>' + options;
+            document.getElementById('filterCategory').innerHTML = '<option value="">All Categories</option>' + options;
+            const multiHtml = categories.map(c => `<div class="multi-select-item"><input type="checkbox" value="${c.name}"><label>${c.name}</label></div>`).join('');
+            document.getElementById('assignChannelCategory').innerHTML = multiHtml;
+            document.getElementById('assignMovieCategory').innerHTML = multiHtml;
+            const chanSelect = document.getElementById('assignChannelSelect');
+            chanSelect.innerHTML = '<option>Select Channel</option>';
+            Object.values(allChannelsCache).forEach(ch => { chanSelect.innerHTML += `<option value="${ch.id}">${ch.name}</option>`; });
+            const movSelect = document.getElementById('assignMovieSelect');
+            movSelect.innerHTML = '<option>Select Movie</option>';
+            Object.values(allMoviesCache).forEach(m => { movSelect.innerHTML += `<option value="${m.id}">${m.title}</option>`; });
+        }
+
+        async function assignChannelCategories() {
+            const channelId = document.getElementById('assignChannelSelect').value;
+            const selected = Array.from(document.querySelectorAll('#assignChannelCategory input:checked')).map(cb => cb.value);
+            if (!channelId) return showToast('Select channel', 'error');
+            await db.ref(`channels/${channelId}/categories`).set(selected);
+            showToast('Categories assigned', 'success');
+        }
+
+        async function assignMovieCategories() {
+            const movieId = document.getElementById('assignMovieSelect').value;
+            const selected = Array.from(document.querySelectorAll('#assignMovieCategory input:checked')).map(cb => cb.value);
+            if (!movieId) return showToast('Select movie', 'error');
+            await db.ref(`movies/${movieId}/categories`).set(selected);
+            showToast('Categories assigned', 'success');
+        }
+
+        // ===================================================
+        // DEVICE REQUESTS
+        // ===================================================
+        async function loadDeviceRequests() {
+            const snap = await db.ref('deviceRequests').once('value');
+            const requests = snap.val();
+            const container = document.getElementById('devicesList');
+            container.innerHTML = '';
+            if (!requests) { container.innerHTML = '<div class="empty-state">No pending requests</div>'; return; }
+            Object.keys(requests).forEach(reqId => {
+                const r = requests[reqId];
+                if (r.status === 'pending') {
+                    container.innerHTML += `
+                        <div class="device-card">
+                            <div class="device-header"><div><b>${r.userName || 'User'}</b><div>${r.email}</div></div><div class="status-badge status-trial">PENDING</div></div>
+                            <div>Device: ${r.deviceId}</div>
+                            <div class="device-actions">
+                                <button class="btn btn-sm btn-p" onclick="approveDevice('${reqId}','${r.userUid}','${r.deviceId}')">Approve</button>
+                                <button class="btn btn-sm btn-danger" onclick="rejectDevice('${reqId}')">Reject</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        async function approveDevice(reqId, uid, deviceId) {
+            await db.ref(`deviceRequests/${reqId}`).update({ status: 'approved', deviceId });
+            await db.ref(`users/${uid}/activeDeviceId`).set(deviceId);
+            showToast('Device approved', 'success');
+            loadDeviceRequests();
+        }
+
+        async function rejectDevice(reqId) {
+            await db.ref(`deviceRequests/${reqId}`).update({ status: 'rejected' });
+            showToast('Device rejected', 'success');
+            loadDeviceRequests();
+        }
+
+        // ===================================================
+        // NOTIFICATIONS
+        // ===================================================
+        function updateCharCount(inputId, countId, max) {
+            const len = document.getElementById(inputId).value.length;
+            document.getElementById(countId).textContent = len;
+        }
+
+        async function sendPushNotification() {
+            const title = document.getElementById('notifTitle').value.trim();
+            const msg = document.getElementById('notifMessage').value.trim();
+            if (!title || !msg) { showToast('Title and message required', 'error'); return; }
+            const notifData = {
+                title, message: msg,
+                image: document.getElementById('notifImage').value,
+                url: document.getElementById('notifActionUrl').value,
+                timestamp: Date.now(),
+                sent_by: currentUser?.email || 'admin'
+            };
+            await db.ref('notification_history').push(notifData);
+            showToast('Notification saved', 'success');
+            document.getElementById('notifTitle').value = '';
+            document.getElementById('notifMessage').value = '';
+            document.getElementById('notifImage').value = '';
+            document.getElementById('notifActionUrl').value = '';
+            loadNotificationHistory();
+            await logActivity('notification_sent', `Sent: ${title}`);
+        }
+
+        async function loadNotificationHistory() {
+            const snap = await db.ref('notification_history').limitToLast(20).once('value');
+            const notifs = snap.val();
+            const container = document.getElementById('notificationHistory');
+            if (!notifs) { container.innerHTML = '<div class="empty-state">No notifications</div>'; return; }
+            container.innerHTML = Object.values(notifs).reverse().map(n => `
+                <div class="notif-item">
+                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-message">${n.message}</div>
+                    <div class="notif-time">${formatTime(n.timestamp)} · ${n.sent_by}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===================================================
+        // SETTINGS DANGER ACTIONS
+        // ===================================================
+        function clearAllMovies() { showConfirm('Delete ALL movies?', async () => { await db.ref('movies').remove(); showToast('All movies deleted', 'success'); loadAllMovies(); }); }
+        function clearAllChannels() { showConfirm('Delete ALL channels?', async () => { await db.ref('channels').remove(); showToast('All channels deleted', 'success'); loadChannels(); }); }
+        function clearNotifHistory() { showConfirm('Clear notification history?', async () => { await db.ref('notification_history').remove(); showToast('History cleared', 'success'); loadNotificationHistory(); }); }
+
+        // ===================================================
+        // CONFIRM DIALOG
+        // ===================================================
+        function showConfirm(msg, callback) {
+            document.getElementById('confirmMessage').innerText = msg;
+            confirmCallback = callback;
+            document.getElementById('confirmAction').onclick = () => { closeConfirm(); if (confirmCallback) confirmCallback(); };
             document.getElementById('confirmOverlay').classList.add('show');
         }
-
         function closeConfirm() {
             document.getElementById('confirmOverlay').classList.remove('show');
             confirmCallback = null;
         }
 
         // ===================================================
-        // TOAST NOTIFICATIONS
+        // FIREBASE CONNECTION STATUS
         // ===================================================
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            const iconMap = {
-                'success': 'fa-check-circle',
-                'error': 'fa-exclamation-circle',
-                'info': 'fa-info-circle'
-            };
-
-            toast.innerHTML = `<i class="fas ${iconMap[type] || iconMap.info}"></i> ${message}`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100px)';
-                toast.style.transition = 'all 0.4s ease';
-                setTimeout(() => toast.remove(), 400);
-            }, 3500);
-        }
-
-        // ===================================================
-        // UTILITY FUNCTIONS
-        // ===================================================
-        function formatTime(timestamp) {
-            if (!timestamp) return 'Unknown';
-            const diff = Date.now() - timestamp;
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
-
-            if (minutes < 1) return 'Just now';
-            if (minutes < 60) return `${minutes}m ago`;
-            if (hours < 24) return `${hours}h ago`;
-            if (days < 7) return `${days}d ago`;
-
-            const date = new Date(timestamp);
-            return date.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+        function initFirebaseStatus() {
+            db.ref('.info/connected').on('value', snap => {
+                const connected = snap.val() === true;
+                document.getElementById('statusDot').style.backgroundColor = connected ? '#00ff00' : '#ff0000';
+                document.getElementById('statusText').innerText = connected ? 'Connected' : 'Disconnected';
+                document.getElementById('settingsStatusDot').style.backgroundColor = connected ? '#00ff00' : '#ff0000';
+                document.getElementById('settingsStatusText').innerText = connected ? 'Connected' : 'Disconnected';
             });
         }
+
+        // ===================================================
+        // AUTH STATE
+        // ===================================================
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                isLoggedIn = true;
+                currentUser = user;
+                document.getElementById('settingsEmail').innerText = user.email;
+                document.getElementById('skipButton').classList.add('hidden');
+                // If on login page, switch to dashboard
+                if (document.getElementById('sectionLogin').classList.contains('active')) navigateTo('dashboard');
+            } else {
+                isLoggedIn = false;
+                currentUser = null;
+                document.getElementById('settingsEmail').innerText = 'Not logged in';
+                document.getElementById('skipButton').classList.remove('hidden');
+                navigateTo('login');
+            }
+        });
+
+        // ===================================================
+        // INITIALIZE
+        // ===================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            initFirebaseStatus();
+            // load categories for selectors
+            db.ref('genres').once('value', () => {
+                loadCategoriesPage();
+            });
+            // load channels and movies for other selectors
+            loadChannels();
+            loadAllMovies();
+            // load dashboard initially if logged in, else show login
+            if (!auth.currentUser) navigateTo('login');
+            else navigateTo('dashboard');
+        });
     </script>
 </body>
 </html>
