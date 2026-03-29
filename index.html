@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -58,6 +73,11 @@
     .status-trial { background: var(--warning); color: black; }
     .status-expired { background: var(--gray); color: white; }
     .status-new { background: var(--secondary); color: white; }
+    /* ✅ Added missing betting status classes */
+    .status-upcoming { background: var(--secondary); color: white; }
+    .status-completed { background: var(--gray); color: white; }
+    .status-successful { background: var(--success); color: white; }
+    .status-failed { background: var(--danger); color: white; }
     .input-box { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 0.9em; }
     .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0,230,118,0.2); }
     .btn { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 8px; transition: 0.2s; font-size: 0.9em; }
@@ -65,6 +85,8 @@
     .btn-d { background: var(--danger); color: white; }
     .btn-premium { background: var(--premium); color: black; }
     .btn-sm { width: auto; padding: 5px 10px; font-size: 0.75em; margin-top: 0; }
+    .btn-secondary { background: #555; color: white; }
+    .btn-danger { background: var(--danger); color: white; }
     .select-modern { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 8px; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'></path></svg>"); background-repeat: no-repeat; background-position: right 10px center; background-size: 10px; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
     .modal-box { background: #181818; width: 90%; max-width: 650px; padding: 20px; border-radius: 15px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; }
@@ -95,6 +117,9 @@
     .tmdb-result-card { background: #222; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
     .tmdb-result-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
     .tmdb-result-card.selected { border-color: var(--primary); }
+    .tmdb-card-info { padding: 5px; text-align: center; }
+    .tmdb-card-info p { font-size: 0.75em; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tmdb-card-info small { color: var(--gray); }
     .loading-spinner { text-align: center; padding: 20px; }
     .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -104,10 +129,42 @@
     .cast-info { flex: 1; }
     .cast-name { font-weight: bold; font-size: 0.85em; }
     .cast-character { font-size: 0.75em; color: #aaa; }
+    .cast-actions { display: flex; gap: 4px; }
     .language-checkboxes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-    .language-checkboxes label { display: flex; align-items: center; gap: 5px; background: #222; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; }
+    .language-checkboxes label { display: flex; align-items: center; gap: 5px; background: #222; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; }
+    .language-checkboxes input { cursor: pointer; }
     #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #222; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--primary); z-index: 3000; display: none; font-size: 0.85em; white-space: nowrap; }
-    @media (max-width: 480px) { .brand { font-size: 1em; } .top-bar { padding: 0 10px; height: 50px; } .menu-card { padding: 10px; min-height: 90px; } .menu-icon { font-size: 1.5em; } .menu-title { font-size: 0.8em; } .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .stat-number { font-size: 1.3em; } .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } .item-img { height: 80px; } .user-row { padding: 10px; } .user-status { font-size: 0.65em; } .btn-sm { padding: 4px 8px; font-size: 0.7em; } .modal-box { padding: 15px; } .filter-bar { flex-direction: column; } .filter-bar input, .filter-bar select { min-width: 100%; } }
+    .multi-select-container { background: #000; border: 1px solid #333; border-radius: 8px; max-height: 100px; overflow-y: auto; margin-bottom: 8px; }
+    .multi-select-item { padding: 6px 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85em; }
+    .multi-select-item input { cursor: pointer; }
+    .multi-select-item label { cursor: pointer; flex: 1; }
+    .sortable-item { background: #222; padding: 10px; margin-bottom: 5px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; cursor: grab; }
+    .sortable-item.dragging { opacity: 0.5; }
+    .channel-lock-item { background: #222; padding: 8px; margin-bottom: 5px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; }
+    .channel-lock-item input { cursor: pointer; }
+    .betting-tip-card { background: var(--card); padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); }
+    .empty-state { text-align: center; color: var(--gray); padding: 20px; font-size: 0.9em; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; margin-bottom: 4px; font-size: 0.85em; color: var(--gray); }
+    .full-width { grid-column: 1 / -1; }
+    .links-section h4 { margin-bottom: 8px; font-size: 0.9em; }
+    @media (max-width: 480px) { 
+        .brand { font-size: 1em; } 
+        .top-bar { padding: 0 10px; height: 50px; } 
+        .menu-card { padding: 10px; min-height: 90px; } 
+        .menu-icon { font-size: 1.5em; } 
+        .menu-title { font-size: 0.8em; } 
+        .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } 
+        .stat-number { font-size: 1.3em; } 
+        .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } 
+        .item-img { height: 80px; } 
+        .user-row { padding: 10px; } 
+        .user-status { font-size: 0.65em; } 
+        .btn-sm { padding: 4px 8px; font-size: 0.7em; } 
+        .modal-box { padding: 15px; } 
+        .filter-bar { flex-direction: column; } 
+        .filter-bar input, .filter-bar select { min-width: 100%; } 
+    }
 </style>
 </head>
 <body>
@@ -191,7 +248,7 @@
         <div class="category-manager"><h3 style="color:var(--premium); margin-bottom:15px;"><i class="fas fa-crown"></i> Premium Content</h3>
             <div class="trial-settings-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                 <div><h4>Free Trial Settings</h4><div class="form-group"><label>Trial Duration</label><input type="number" id="trialDuration" class="input-box" value="7"></div>
-                <label>Trial Unit</label><div class="trial-unit-selector" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;"><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('seconds')">Sec</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('minutes')">Min</button><button class="btn btn-sm btn-p" onclick="setTrialUnit('hours')">Hours</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('days')">Days</button></div>
+                <label>Trial Unit</label><div class="trial-unit-selector" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;"><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('seconds',event)">Sec</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('minutes',event)">Min</button><button class="btn btn-sm btn-p" onclick="setTrialUnit('hours',event)">Hours</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('days',event)">Days</button></div>
                 <button class="btn btn-premium" onclick="saveTrialSettings()">Save</button></div>
                 <div><h4>Auto Trial Assignment</h4><input type="date" id="autoTrialDate" class="input-box"><button class="btn btn-sm btn-p" onclick="assignTrialToDateUsers()">Assign to Date</button><button class="btn btn-sm" style="background:var(--danger);" onclick="massBlockExpired()">Block Expired</button></div>
             </div>
@@ -221,7 +278,13 @@
     <div id="tips" class="page-view"><div style="display:flex; justify-content:space-between;"><h3>Tips</h3><button class="btn btn-p btn-sm" onclick="openTipModal()">Add</button></div><div class="tips-grid" id="tipsGrid"></div></div>
 
     <!-- BETTING TIPS PAGE -->
-    <div id="bettingTips" class="page-view"><div class="category-manager"><h3>Betting Tips</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><form id="addBettingTipForm">...</form></div><div><div id="bettingTipsList"></div></div></div></div></div>
+    <div id="bettingTips" class="page-view">
+        <div class="category-manager">
+            <h3>Betting Tips</h3>
+            <button class="btn btn-p btn-sm" onclick="openAddBettingTipModal()" style="margin-bottom:15px;"><i class="fas fa-plus"></i> Add Tip</button>
+            <div id="bettingTipsList"></div>
+        </div>
+    </div>
 
     <!-- NOTIFICATIONS PAGE -->
     <div id="notif" class="page-view"><div class="category-manager"><h3>Broadcast</h3><input id="nTitle" class="input-box" placeholder="Title"><textarea id="nMsg" class="input-box" rows="3" placeholder="Message"></textarea><select id="nTarget" class="select-modern"><option value="all">All Users</option><option value="premium">Premium Only</option><option value="trial">Trial Only</option><option value="active">Active Only</option><option value="new">New Only</option></select><button class="btn btn-p" onclick="sendNotif()">Send</button></div></div>
@@ -230,7 +293,7 @@
     <div id="appSettings" class="page-view">
         <div class="app-settings-section"><h3>User App Settings</h3><div class="settings-grid" style="display:grid; gap:10px;"><div><label>Card Size</label><select id="cardSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Font Size</label><select id="fontSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Carousel Interval (ms)</label><input type="number" id="carouselInterval" value="5000"></div></div><button class="btn btn-p" onclick="saveAppSettings()">Save</button></div>
         <div class="channel-lock-management"><h3>Channel Lock</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><h4>Lock Channels</h4><div id="lockChannelsList" class="channel-list-container"></div><button class="btn btn-d btn-sm" onclick="lockSelectedChannels()">Lock Selected</button></div><div><h4>Unlock Channels</h4><div id="unlockChannelsList" class="channel-list-container"></div><button class="btn btn-p btn-sm" onclick="unlockSelectedChannels()">Unlock Selected</button></div></div><div style="margin-top:15px;"><h4>Make Free</h4><div id="freeChannelsList" class="channel-list-container"></div><button class="btn btn-premium btn-sm" onclick="makeChannelsFree()">Make Selected Free</button></div></div>
-        <div class="carousel-management"><h3>Carousel</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><input id="carouselTitle" placeholder="Title"><input id="carouselDescription" placeholder="Desc"><input id="carouselImage" placeholder="Image URL"><button class="btn btn-p" onclick="addCarouselSlide()">Add Slide</button></div><div><div id="carouselSlidesList"></div><button class="btn btn-sm btn-p" onclick="saveCarouselOrder()">Save Order</button></div></div></div>
+        <div class="carousel-management"><h3>Carousel</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><input id="carouselTitle" class="input-box" placeholder="Title"><input id="carouselDescription" class="input-box" placeholder="Desc"><input id="carouselImage" class="input-box" placeholder="Image URL"><button class="btn btn-p" onclick="addCarouselSlide()">Add Slide</button></div><div><div id="carouselSlidesList"></div><button class="btn btn-sm btn-p" onclick="saveCarouselOrder()">Save Order</button></div></div></div>
         <div class="app-settings-section"><h3>Channel Scripts</h3><select id="scriptChannelSelect" class="select-modern"></select><textarea id="channelScriptCode" rows="4" class="input-box" placeholder="JavaScript code"></textarea><button class="btn btn-p" onclick="saveChannelScript()">Save Script</button><button class="btn btn-d" onclick="clearChannelScript()">Clear</button></div>
     </div>
 
@@ -252,7 +315,7 @@
 <input type="number" id="cOrder" placeholder="Order" value="999"><label><input type="checkbox" id="chLock"> Locked (Premium only)</label>
 <div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveChan()">Save</button><button class="btn btn-d" onclick="closeModal('chanModal')">Cancel</button></div></div></div>
 
-<!-- MOVIE MODAL - FULL NH BOX STYLE -->
+<!-- MOVIE MODAL -->
 <div id="movModal" class="modal"><div class="modal-box"><h3 id="mTitle">Movie</h3><input type="hidden" id="mId">
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div><input id="mName" class="input-box" placeholder="Movie Title"></div>
@@ -312,13 +375,67 @@
 </div>
 <div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveMov()">Save Movie</button><button class="btn btn-d" onclick="closeModal('movModal')">Cancel</button></div></div></div>
 
-<div id="downloadModal" class="modal"><div class="modal-box"><h3>Add Download</h3><input type="hidden" id="dlId"><input id="dlTitle" class="input-box" placeholder="Title"><input id="dlUrl" class="input-box" placeholder="Download URL"><input id="dlImg" class="input-box" placeholder="Poster"><textarea id="dlDesc" placeholder="Description"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveDownload()">Save</button><button class="btn btn-d" onclick="closeModal('downloadModal')">Cancel</button></div></div></div>
+<div id="downloadModal" class="modal"><div class="modal-box"><h3>Add Download</h3><input type="hidden" id="dlId"><input id="dlTitle" class="input-box" placeholder="Title"><input id="dlUrl" class="input-box" placeholder="Download URL"><input id="dlImg" class="input-box" placeholder="Poster"><textarea id="dlDesc" class="input-box" placeholder="Description"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveDownload()">Save</button><button class="btn btn-d" onclick="closeModal('downloadModal')">Cancel</button></div></div></div>
 
 <div id="tipModal" class="modal"><div class="modal-box"><h3 id="tipTitle">Tip</h3><input type="hidden" id="tipId"><input id="tipName" class="input-box" placeholder="Title"><select id="tipCategory" class="select-modern"><option value="general">General</option><option value="premium">Premium</option></select><textarea id="tipContent" rows="3" class="input-box" placeholder="Content"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveTip()">Save</button><button class="btn btn-d" onclick="closeModal('tipModal')">Cancel</button></div></div></div>
 
 <div id="userModal" class="modal"><div class="modal-box"><h3>Manage User</h3><input type="hidden" id="umId"><h4 id="umName"></h4><p id="umEmail"></p><select id="umSubType" class="select-modern" onchange="toggleSubscriptionFields()"><option value="trial">Trial</option><option value="premium">Premium</option><option value="none">None</option></select><div id="subFields"><input type="date" id="umDate" class="input-box"><div style="display:flex; gap:5px;"><button class="btn btn-sm" onclick="addTime(1)">+1d</button><button class="btn btn-sm" onclick="addTime(7)">+7d</button><button class="btn btn-sm" onclick="addTime(30)">+30d</button></div></div><input id="umDevice" class="input-box" readonly><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveUserSub()">Update</button><button id="umBlockBtn" class="btn btn-d" onclick="toggleBlock()">Block</button></div><button class="btn btn-sm" onclick="viewPass()">View Passwords</button><button class="btn btn-sm" onclick="forceLogout()">Force Logout</button><button class="btn btn-sm" onclick="closeModal('userModal')">Close</button></div></div>
 
 <div id="passModal" class="modal"><div class="modal-box"><h3>Channel Passwords</h3><div id="passList"></div><button class="btn btn-d" onclick="closeModal('passModal')">Close</button></div></div>
+
+<!-- ✅ ADDED: Missing Betting Tips Edit Modal -->
+<div id="editBettingTipModal" class="modal">
+    <div class="modal-box">
+        <h3>Edit Betting Tip</h3>
+        <input type="hidden" id="editBettingTipId">
+        <input id="editTipTitle" class="input-box" placeholder="Tip Title">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <input id="editTeam1" class="input-box" placeholder="Team 1">
+            <input id="editTeam2" class="input-box" placeholder="Team 2">
+        </div>
+        <input id="editPrediction" class="input-box" placeholder="Prediction">
+        <input id="editOdds" class="input-box" placeholder="Odds" type="number" step="0.01">
+        <input id="editStake" class="input-box" placeholder="Stake (optional)">
+        <select id="editTipStatus" class="select-modern">
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+            <option value="successful">Successful</option>
+            <option value="failed">Failed</option>
+        </select>
+        <input id="editTipResult" class="input-box" placeholder="Result (optional)">
+        <input id="editBookmakerLink" class="input-box" placeholder="Bookmaker Link (optional)">
+        <textarea id="editTipDescription" class="input-box" rows="3" placeholder="Description"></textarea>
+        <div style="display:flex; gap:8px;">
+            <button class="btn btn-p" onclick="updateBettingTip()">Update</button>
+            <button class="btn btn-d" onclick="closeModal('editBettingTipModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ ADDED: Add Betting Tip Modal -->
+<div id="addBettingTipModal" class="modal">
+    <div class="modal-box">
+        <h3>Add Betting Tip</h3>
+        <input id="newTipTitle" class="input-box" placeholder="Tip Title">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <input id="newTeam1" class="input-box" placeholder="Team 1">
+            <input id="newTeam2" class="input-box" placeholder="Team 2">
+        </div>
+        <input id="newPrediction" class="input-box" placeholder="Prediction">
+        <input id="newOdds" class="input-box" placeholder="Odds" type="number" step="0.01">
+        <input id="newStake" class="input-box" placeholder="Stake (optional)">
+        <select id="newTipStatus" class="select-modern">
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+        </select>
+        <input id="newBookmakerLink" class="input-box" placeholder="Bookmaker Link (optional)">
+        <textarea id="newTipDescription" class="input-box" rows="3" placeholder="Description"></textarea>
+        <div style="display:flex; gap:8px;">
+            <button class="btn btn-p" onclick="saveNewBettingTip()">Save</button>
+            <button class="btn btn-d" onclick="closeModal('addBettingTipModal')">Cancel</button>
+        </div>
+    </div>
+</div>
 
 <script>
     const firebaseConfig = {
@@ -402,7 +519,8 @@
     function resetAllUsers(){ if(confirm("Reset all users' device IDs?")) db.ref('users').once('value').then(s=>{ s.forEach(u=>db.ref('users/'+u.key+'/activeDeviceId').set(null)); toast("Reset"); }); }
 
     function loadCategories(){ db.ref('genres').on('value',s=>{ categories=[]; const list=document.getElementById('categoryList'); list.innerHTML=''; s.forEach(c=>{ const cat={id:c.key,name:c.val().name,order:c.val().order||0}; categories.push(cat); list.innerHTML+=`<div class="sortable-item" draggable="true" data-id="${cat.id}"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${cat.id}')">Del</button></div>`; }); categories.sort((a,b)=>(a.order||0)-(b.order||0)); updateCategoryDropdowns(); loadCategoryStats(); attachCategoryDrag(); }); }
-    function attachCategoryDrag(){ const items=document.querySelectorAll('#categoryList .sortable-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.id); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcId=e.dataTransfer.getData('text/plain'); const tgtId=item.dataset.id; if(srcId===tgtId) return; const srcIdx=categories.findIndex(c=>c.id===srcId); const tgtIdx=categories.findIndex(c=>c.id===tgtId); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=categories.splice(srcIdx,1); categories.splice(tgtIdx,0,moved); renderCategoryList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
+    function attachCategoryDrag(){ const items=document.querySelectorAll('#categoryList .sortable-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.id); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcId=e.dataTransfer.getData('text/plain'); // ✅ Fixed: getData takes only 1 param
+        const tgtId=item.dataset.id; if(srcId===tgtId) return; const srcIdx=categories.findIndex(c=>c.id===srcId); const tgtIdx=categories.findIndex(c=>c.id===tgtId); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=categories.splice(srcIdx,1); categories.splice(tgtIdx,0,moved); renderCategoryList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
     function renderCategoryList(){ const list=document.getElementById('categoryList'); list.innerHTML=''; categories.forEach(cat=>{ list.innerHTML+=`<div class="sortable-item" draggable="true" data-id="${cat.id}"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${cat.id}')">Del</button></div>`; }); attachCategoryDrag(); updateCategoryDropdowns(); }
     function addCategory(){ const name=document.getElementById('newCategoryName').value; if(!name) return toast("Enter name"); db.ref('genres').push({name,order:categories.length}).then(()=>{ document.getElementById('newCategoryName').value=''; toast("Added"); loadCategories(); }); }
     function deleteCategory(id){ if(confirm("Delete category?")) db.ref('genres/'+id).remove().then(()=>{ toast("Deleted"); loadCategories(); }); }
@@ -416,7 +534,18 @@
     function loadPremiumContent(){ const popular=Object.values(movies).filter(m=>m.section==='popular'); const popularGrid=document.getElementById('popularMovies'); popularGrid.innerHTML=''; popular.forEach(m=>{ popularGrid.innerHTML+=`<div class="item-card"><img src="${m.posterURL||'https://via.placeholder.com/150x100'}" class="item-img"><div class="item-body"><div class="item-title">${m.title}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${m.id}')">Edit</button></div></div></div>`; }); const latest=Object.values(movies).filter(m=>m.section==='latest'); const latestGrid=document.getElementById('latestMovies'); latestGrid.innerHTML=''; latest.forEach(m=>{ latestGrid.innerHTML+=`<div class="item-card"><img src="${m.posterURL||'https://via.placeholder.com/150x100'}" class="item-img"><div class="item-body"><div class="item-title">${m.title}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${m.id}')">Edit</button></div></div></div>`; }); }
     function openMovModalWithSection(section){ openMovModal(); document.getElementById('mSection').value=section; }
     function loadTrialSettings(){ db.ref('trialSettings').on('value',s=>{ if(s.exists()){ trialSettings=s.val(); document.getElementById('trialDuration').value=trialSettings.duration||7; setTrialUnit(trialSettings.unit||'hours'); } }); }
-    function setTrialUnit(unit){ trialSettings.unit=unit; document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ btn.style.background='#333'; btn.style.color='white'; }); event.target.style.background='var(--primary)'; event.target.style.color='black'; }
+    // ✅ Fixed: Added event parameter
+    function setTrialUnit(unit, event){ 
+        trialSettings.unit=unit; 
+        document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
+            btn.style.background='#333'; 
+            btn.style.color='white'; 
+        }); 
+        if(event && event.target) {
+            event.target.style.background='var(--primary)'; 
+            event.target.style.color='black'; 
+        }
+    }
     function saveTrialSettings(){ const dur=parseInt(document.getElementById('trialDuration').value); if(dur<1) return toast("Invalid"); trialSettings.duration=dur; db.ref('trialSettings').set(trialSettings).then(()=>toast("Saved")); }
     function assignTrialToDateUsers(){ const date=document.getElementById('autoTrialDate').value; if(!date) return toast("Select date"); const target=new Date(date).toDateString(); let assigned=0; allUsers.forEach(user=>{ const join=user.joinDate?new Date(user.joinDate).toDateString():new Date(user.createdAt||user.key).toDateString(); if(join===target && user.subscriptionType!=='premium'){ let expiry=Date.now(); switch(trialSettings.unit){ case'seconds':expiry+=trialSettings.duration*1000;break; case'minutes':expiry+=trialSettings.duration*60*1000;break; case'hours':expiry+=trialSettings.duration*60*60*1000;break; case'days':expiry+=trialSettings.duration*24*60*60*1000;break; } db.ref('users/'+user.key).update({subscriptionType:'trial',accessExpiry:expiry}).then(()=>assigned++); } }); setTimeout(()=>toast(`Assigned to ${assigned} users`),1000); }
     function massBlockExpired(){ const now=Date.now(); let blocked=0; allUsers.forEach(user=>{ if(user.accessExpiry&&user.accessExpiry<now&&!user.isBlocked){ db.ref('users/'+user.key+'/isBlocked').set(true).then(()=>blocked++); } }); setTimeout(()=>toast(`Blocked ${blocked} expired users`),1000); }
@@ -437,27 +566,84 @@
 
     function loadCarouselSlides(){ db.ref('carousel').on('value',s=>{ allCarouselSlides=[]; s.forEach(slide=>{ allCarouselSlides.push({key:slide.key,...slide.val()}); }); allCarouselSlides.sort((a,b)=>(a.order||0)-(b.order||0)); renderCarouselList(); }); }
     function renderCarouselList(){ const container=document.getElementById('carouselSlidesList'); if(!allCarouselSlides.length){ container.innerHTML='<div class="empty-state">No slides</div>'; return; } container.innerHTML=allCarouselSlides.map((slide,idx)=>`<div class="carousel-slide-item" draggable="true" data-key="${slide.key}" data-index="${idx}"><img src="${slide.imageURL||'https://via.placeholder.com/60x60'}" width="50"><div><strong>${slide.title||'No Title'}</strong><div>${slide.description||''}</div></div><div><button class="btn btn-p btn-sm" onclick="editCarouselSlide('${slide.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="deleteCarouselSlide('${slide.key}')">Del</button></div></div>`).join(''); attachCarouselDrag(); }
-    function attachCarouselDrag(){ const items=document.querySelectorAll('#carouselSlidesList .carousel-slide-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.key); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcKey=e.dataTransfer.getData('text/plain'); const tgtKey=item.dataset.key; const srcIdx=allCarouselSlides.findIndex(s=>s.key===srcKey); const tgtIdx=allCarouselSlides.findIndex(s=>s.key===tgtKey); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=allCarouselSlides.splice(srcIdx,1); allCarouselSlides.splice(tgtIdx,0,moved); renderCarouselList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
+    function attachCarouselDrag(){ const items=document.querySelectorAll('#carouselSlidesList .carousel-slide-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.key); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcKey=e.dataTransfer.getData('text/plain'); // ✅ Fixed: getData takes only 1 param
+        const tgtKey=item.dataset.key; const srcIdx=allCarouselSlides.findIndex(s=>s.key===srcKey); const tgtIdx=allCarouselSlides.findIndex(s=>s.key===tgtKey); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=allCarouselSlides.splice(srcIdx,1); allCarouselSlides.splice(tgtIdx,0,moved); renderCarouselList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
     function addCarouselSlide(){ const title=document.getElementById('carouselTitle').value, desc=document.getElementById('carouselDescription').value, img=document.getElementById('carouselImage').value; if(!title||!img) return toast("Title and image required"); db.ref('carousel').push({title,description:desc,imageURL:img,createdAt:Date.now()}).then(()=>toast("Added")); }
     function editCarouselSlide(key){ db.ref('carousel/'+key).once('value').then(s=>{ const d=s.val(); document.getElementById('carouselTitle').value=d.title||''; document.getElementById('carouselDescription').value=d.description||''; document.getElementById('carouselImage').value=d.imageURL||''; db.ref('carousel/'+key).remove().then(()=>toast("Now edit and add new")); }); }
     function deleteCarouselSlide(key){ if(confirm("Delete slide?")) db.ref('carousel/'+key).remove().then(()=>toast("Deleted")); }
     async function saveCarouselOrder(){ const updates={}; allCarouselSlides.forEach((slide,idx)=>{ updates[`${slide.key}/order`]=idx; }); await db.ref('carousel').update(updates); toast("Order saved"); }
 
-    function loadChannelScriptsDropdown(){ const dropdown=document.getElementById('scriptChannelSelect'); dropdown.innerHTML='<option>Select channel</option>'; Object.values(channels).forEach(ch=>{ dropdown.innerHTML+=`<option value="${ch.id}">${ch.name}</option>`; }); dropdown.addEventListener('change',()=>{ const id=dropdown.value; if(id&&appSettings.channelScripts&&appSettings.channelScripts[id]) document.getElementById('channelScriptCode').value=appSettings.channelScripts[id]; else document.getElementById('channelScriptCode').value=''; }); }
+    function loadChannelScriptsDropdown(){ const dropdown=document.getElementById('scriptChannelSelect'); dropdown.innerHTML='<option>Select channel</option>'; Object.values(channels).forEach(ch=>{ dropdown.innerHTML+=`<option value="${ch.id}">${ch.name}</option>`; }); 
+        // ✅ Fixed: Remove old listener first to prevent duplicates
+        dropdown.replaceWith(dropdown.cloneNode(true));
+        const newDropdown = document.getElementById('scriptChannelSelect');
+        newDropdown.addEventListener('change',()=>{ const id=newDropdown.value; if(id&&appSettings.channelScripts&&appSettings.channelScripts[id]) document.getElementById('channelScriptCode').value=appSettings.channelScripts[id]; else document.getElementById('channelScriptCode').value=''; }); 
+    }
     function saveChannelScript(){ const id=document.getElementById('scriptChannelSelect').value; const code=document.getElementById('channelScriptCode').value; if(!id) return toast("Select channel"); if(!appSettings.channelScripts) appSettings.channelScripts={}; appSettings.channelScripts[id]=code; db.ref('appSettings/channelScripts').set(appSettings.channelScripts).then(()=>toast("Script saved")); }
     function clearChannelScript(){ const id=document.getElementById('scriptChannelSelect').value; if(!id) return toast("Select channel"); if(appSettings.channelScripts&&appSettings.channelScripts[id]){ delete appSettings.channelScripts[id]; db.ref('appSettings/channelScripts').set(appSettings.channelScripts).then(()=>{ document.getElementById('channelScriptCode').value=''; toast("Cleared"); }); } }
 
     function initBettingTips(){ db.ref('bettingTips').on('value',s=>{ bettingTips={}; const list=document.getElementById('bettingTipsList'); list.innerHTML=''; let count=0; s.forEach(tip=>{ bettingTips[tip.key]={id:tip.key,...tip.val()}; list.innerHTML+=createBettingTipItem(bettingTips[tip.key]); count++; }); document.getElementById('cntBettingTips').innerText=count; }); }
-    function createBettingTipItem(tip){ let statusClass=''; switch(tip.status){ case'upcoming':statusClass='status-upcoming';break; case'completed':statusClass='status-completed';break; case'successful':statusClass='status-successful';break; case'failed':statusClass='status-failed';break; } return `<div class="betting-tip-card"><div><span class="${statusClass}">${tip.status}</span><span>${new Date(tip.createdAt).toLocaleDateString()}</span></div><div><b>${tip.team1} vs ${tip.team2}</b></div><div>${tip.title}</div><div>Prediction: ${tip.prediction}</div><div>Odds: ${tip.odds}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="editBettingTip('${tip.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('bettingTips','${tip.id}')">Del</button></div></div>`; }
-    function editBettingTip(id){ const tip=bettingTips[id]; if(!tip) return; document.getElementById('editBettingTipId').value=id; document.getElementById('editTipTitle').value=tip.title||''; document.getElementById('editTeam1').value=tip.team1||''; document.getElementById('editTeam2').value=tip.team2||''; document.getElementById('editPrediction').value=tip.prediction||''; document.getElementById('editOdds').value=tip.odds||''; document.getElementById('editStake').value=tip.stake||''; document.getElementById('editTipStatus').value=tip.status||'upcoming'; document.getElementById('editTipResult').value=tip.result||''; document.getElementById('editBookmakerLink').value=tip.bookmakerLink||''; document.getElementById('editTipDescription').value=tip.description||''; currentEditBookingCodes=tip.bookingCodes?[...tip.bookingCodes]:[]; updateEditBookingCodesList(); document.getElementById('editBettingTipModal').style.display='flex'; }
-    function updateBettingTip(){ const id=document.getElementById('editBettingTipId').value; const tipData={ title:document.getElementById('editTipTitle').value, team1:document.getElementById('editTeam1').value, team2:document.getElementById('editTeam2').value, prediction:document.getElementById('editPrediction').value, odds:document.getElementById('editOdds').value, stake:document.getElementById('editStake').value||'', status:document.getElementById('editTipStatus').value, result:document.getElementById('editTipResult').value||'', bookmakerLink:document.getElementById('editBookmakerLink').value, description:document.getElementById('editTipDescription').value||'', bookingCodes:currentEditBookingCodes, updatedAt:Date.now() }; db.ref('bettingTips/'+id).update(tipData).then(()=>{ toast("Updated"); document.getElementById('editBettingTipModal').style.display='none'; }); }
-    function updateBookingCodesList(){} function updateEditBookingCodesList(){}
+    function createBettingTipItem(tip){ let statusClass=''; switch(tip.status){ case'upcoming':statusClass='status-upcoming';break; case'completed':statusClass='status-completed';break; case'successful':statusClass='status-successful';break; case'failed':statusClass='status-failed';break; } return `<div class="betting-tip-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span class="${statusClass} user-status">${tip.status}</span><span style="color:var(--gray);font-size:0.8em;">${new Date(tip.createdAt||Date.now()).toLocaleDateString()}</span></div><div><b>${tip.team1||'Team A'} vs ${tip.team2||'Team B'}</b></div><div style="margin:5px 0;">${tip.title||''}</div><div style="font-size:0.9em;">Prediction: <b>${tip.prediction||'-'}</b></div><div style="font-size:0.9em;">Odds: ${tip.odds||'-'}</div><div class="item-actions" style="margin-top:8px;"><button class="btn btn-p btn-sm" onclick="editBettingTip('${tip.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('bettingTips','${tip.id}')">Del</button></div></div>`; }
+    
+    // ✅ Fixed: Added missing add betting tip modal functions
+    function openAddBettingTipModal(){ document.getElementById('addBettingTipModal').style.display='flex'; }
+    function saveNewBettingTip(){ const data={ title:document.getElementById('newTipTitle').value, team1:document.getElementById('newTeam1').value, team2:document.getElementById('newTeam2').value, prediction:document.getElementById('newPrediction').value, odds:document.getElementById('newOdds').value, stake:document.getElementById('newStake').value||'', status:document.getElementById('newTipStatus').value, bookmakerLink:document.getElementById('newBookmakerLink').value, description:document.getElementById('newTipDescription').value||'', createdAt:Date.now() }; db.ref('bettingTips').push(data).then(()=>{ toast("Tip added"); closeModal('addBettingTipModal'); initBettingTips(); }); }
+    
+    function editBettingTip(id){ const tip=bettingTips[id]; if(!tip) return; document.getElementById('editBettingTipId').value=id; document.getElementById('editTipTitle').value=tip.title||''; document.getElementById('editTeam1').value=tip.team1||''; document.getElementById('editTeam2').value=tip.team2||''; document.getElementById('editPrediction').value=tip.prediction||''; document.getElementById('editOdds').value=tip.odds||''; document.getElementById('editStake').value=tip.stake||''; document.getElementById('editTipStatus').value=tip.status||'upcoming'; document.getElementById('editTipResult').value=tip.result||''; document.getElementById('editBookmakerLink').value=tip.bookmakerLink||''; document.getElementById('editTipDescription').value=tip.description||''; document.getElementById('editBettingTipModal').style.display='flex'; }
+    
+    function updateBettingTip(){ const id=document.getElementById('editBettingTipId').value; const tipData={ title:document.getElementById('editTipTitle').value, team1:document.getElementById('editTeam1').value, team2:document.getElementById('editTeam2').value, prediction:document.getElementById('editPrediction').value, odds:document.getElementById('editOdds').value, stake:document.getElementById('editStake').value||'', status:document.getElementById('editTipStatus').value, result:document.getElementById('editTipResult').value||'', bookmakerLink:document.getElementById('editBookmakerLink').value, description:document.getElementById('editTipDescription').value||'', updatedAt:Date.now() }; db.ref('bettingTips/'+id).update(tipData).then(()=>{ toast("Updated"); closeModal('editBettingTipModal'); }); }
 
     // TMDB Search
-    async function searchTMDB(){ const query=document.getElementById('tmdbSearchInput').value.trim(); if(!query) return toast("Enter movie name"); const loading=document.getElementById('tmdbLoading'), results=document.getElementById('tmdbResults'); loading.style.display='block'; results.style.display='grid'; try{ const res=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=2e211dfda888f7cc55ce433d743f9bc3&query=${encodeURIComponent(query)}`); const data=await res.json(); loading.style.display='none'; if(!data.results||!data.results.length){ results.innerHTML='<div>No results</div>'; return; } results.innerHTML=data.results.map(m=>`<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)"><img src="${m.poster_path?'https://image.tmdb.org/t/p/w300'+m.poster_path:'https://via.placeholder.com/100x150'}"><div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||''}</small></div></div>`).join(''); }catch(e){ loading.style.display='none'; toast("Search failed"); } }
-    async function selectTMDBMovie(id,el){ document.querySelectorAll('.tmdb-result-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); try{ const [details,credits]=await Promise.all([fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json()), fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json())]); document.getElementById('mName').value=details.title; document.getElementById('releaseYear').value=details.release_date?.substring(0,4)||''; document.getElementById('movieRating').value=details.vote_average?.toFixed(1)||''; document.getElementById('movieRuntime').value=details.runtime||''; document.getElementById('posterUrl').value=details.poster_path?'https://image.tmdb.org/t/p/w500'+details.poster_path:''; document.getElementById('backdropUrl').value=details.backdrop_path?'https://image.tmdb.org/t/p/original'+details.backdrop_path:''; document.getElementById('storyline').value=details.overview||''; document.getElementById('movieGenres').value=details.genres?details.genres.map(g=>g.name).join(', '):''; document.getElementById('trailerUrl').value=''; document.getElementById('link1080p').value=''; document.getElementById('link720p').value=''; document.getElementById('link480p').value=''; document.getElementById('mSection').value='regular'; document.getElementById('movLock').checked=false; document.getElementById('movDrm').checked=false; document.getElementById('movFormat').value='hls'; document.querySelectorAll('#languageCheckboxes input').forEach(cb=>cb.checked=false); document.querySelectorAll('#mCategory input').forEach(cb=>cb.checked=false); castArray = (credits.cast||[]).slice(0,10).map(actor=>({ name:actor.name, character:actor.character, profile_image:actor.profile_path?'https://image.tmdb.org/t/p/w185'+actor.profile_path:'https://via.placeholder.com/40' })); renderCastList(); toast("Movie data loaded"); document.getElementById('tmdbResults').style.display='none'; document.getElementById('tmdbSearchInput').value=''; }catch(e){ toast("Error loading details"); } }
+    async function searchTMDB(){ const query=document.getElementById('tmdbSearchInput').value.trim(); if(!query) return toast("Enter movie name"); const loading=document.getElementById('tmdbLoading'), results=document.getElementById('tmdbResults'); loading.style.display='block'; results.style.display='grid'; try{ const res=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=2e211dfda888f7cc55ce433d743f9bc3&query=${encodeURIComponent(query)}`); const data=await res.json(); loading.style.display='none'; if(!data.results||!data.results.length){ results.innerHTML='<div class="empty-state">No results</div>'; return; } results.innerHTML=data.results.map(m=>`<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)"><img src="${m.poster_path?'https://image.tmdb.org/t/p/w300'+m.poster_path:'https://via.placeholder.com/100x150'}" onerror="this.src='https://via.placeholder.com/100x150'"><div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||''}</small></div></div>`).join(''); }catch(e){ loading.style.display='none'; toast("Search failed"); console.error(e); } }
+    async function selectTMDBMovie(id,el){ document.querySelectorAll('.tmdb-result-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); try{ const [details,credits]=await Promise.all([fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json()), fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json())]); document.getElementById('mName').value=details.title; document.getElementById('releaseYear').value=details.release_date?.substring(0,4)||''; document.getElementById('movieRating').value=details.vote_average?.toFixed(1)||''; document.getElementById('movieRuntime').value=details.runtime||''; document.getElementById('posterUrl').value=details.poster_path?'https://image.tmdb.org/t/p/w500'+details.poster_path:''; document.getElementById('backdropUrl').value=details.backdrop_path?'https://image.tmdb.org/t/p/original'+details.backdrop_path:''; document.getElementById('storyline').value=details.overview||''; document.getElementById('movieGenres').value=details.genres?details.genres.map(g=>g.name).join(', '):''; document.getElementById('trailerUrl').value=''; document.getElementById('link1080p').value=''; document.getElementById('link720p').value=''; document.getElementById('link480p').value=''; document.getElementById('mSection').value='regular'; document.getElementById('movLock').checked=false; document.getElementById('movDrm').checked=false; document.getElementById('movFormat').value='hls'; document.querySelectorAll('#languageCheckboxes input').forEach(cb=>cb.checked=false); document.querySelectorAll('#mCategory input').forEach(cb=>cb.checked=false); castArray = (credits.cast||[]).slice(0,10).map(actor=>({ name:actor.name, character:actor.character, profile_image:actor.profile_path?'https://image.tmdb.org/t/p/w185'+actor.profile_path:'https://via.placeholder.com/40' })); renderCastList(); toast("Movie data loaded"); document.getElementById('tmdbResults').style.display='none'; document.getElementById('tmdbSearchInput').value=''; }catch(e){ toast("Error loading details"); console.error(e); } }
 
-    setTimeout(()=>{ updateAssignmentDropdowns(); updateCategoryDropdowns(); loadChannels(); loadAllMovies(); },2000);
+    // Helper functions
+    function loadChannels(){ db.ref('channels').once('value').then(s=>{ const g=document.getElementById('chanGrid'); g.innerHTML=''; let list=[]; s.forEach(c=>{ const ch={id:c.key,...c.val()}; channels[c.key]=ch; list.push(ch); }); list.sort((a,b)=>(a.order||999)-(b.order||999)); list.forEach(ch=>{ let img = ch.posterURL || (ch.type==='mdp'?ch.poster:'https://via.placeholder.com/150x100?text=No+Image'); g.innerHTML+=`<div class="item-card"><img src="${img}" class="item-img"><div class="item-body"><div class="item-title">${ch.name||'Unnamed'} ${ch.type==='mdp'?'[MDP]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openChanModal('${ch.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('channels','${ch.id}')">Del</button></div></div></div>`; }); document.getElementById('cntChan').innerText=s.numChildren(); }); }
+    function loadAllMovies(){ db.ref('movies').once('value').then(s=>{ const g=document.getElementById('movGrid'); g.innerHTML=''; s.forEach(c=>{ movies[c.key]={id:c.key,...c.val()}; g.innerHTML+=`<div class="item-card"><img src="${c.val().posterURL||'https://via.placeholder.com/150x100?text=No+Image'}" class="item-img"><div class="item-body"><div class="item-title">${c.val().title||'Untitled'} ${c.val().locked?'[LOCKED]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${c.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('movies','${c.key}')">Del</button></div></div></div>`; }); document.getElementById('cntMov').innerText=s.numChildren(); }); }
+
+    // Initialize after DOM is ready
+    setTimeout(()=>{ updateAssignmentDropdowns(); updateCategoryDropdowns(); },2000);
 </script>
 </body>
 </html>
+
+
+
+              <script>
+                              // ❌ Broken: Uses undefined `event` variable
+function setTrialUnit(unit){ 
+    trialSettings.unit=unit; 
+    document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
+        btn.style.background='#333'; 
+        btn.style.color='white'; 
+    }); 
+    event.target.style.background='var(--primary)'; // ❌ event not defined
+    event.target.style.color='black'; 
+}
+
+// ✅ Fixed: Pass event parameter
+function setTrialUnit(unit, event){ 
+    trialSettings.unit=unit; 
+    document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
+        btn.style.background='#333'; 
+        btn.style.color='white'; 
+    }); 
+    if(event && event.target) {
+        event.target.style.background='var(--primary)'; 
+        event.target.style.color='black'; 
+    }
+}
+
+// ❌ Broken: getData() only accepts ONE parameter
+e.dataTransfer.setData('text/plain',item.dataset.id); // ❌ Wrong method signature
+
+// ✅ Fixed: 
+e.dataTransfer.setData('text/plain', item.dataset.id); // setData is correct
+// But getData was wrong:
+const srcId = e.dataTransfer.getData('text/plain'); // ✅ Only one param
+
+
+              </script>
+                        </body>
+                        </html>
+                    
