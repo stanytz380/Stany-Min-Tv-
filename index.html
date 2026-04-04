@@ -1,438 +1,389 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-<title>STANY MIN TV ADMIN - FULL CONTROL</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-    :root {
-        --primary: #00e676;
-        --secondary: #00bcd4;
-        --bg: #050505;
-        --card: #141414;
-        --text: #ffffff;
-        --border: #222;
-        --gray: #888;
-        --danger: #ff3b30;
-        --success: #34c759;
-        --warning: #ff9500;
-        --premium: #ffd700;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-    body { background: var(--bg); color: var(--text); height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; }
-    .top-bar { height: 55px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; z-index: 100; }
-    .brand { font-size: 1.2em; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
-    .back-btn { display: none; font-size: 1.1em; padding: 8px; cursor: pointer; color: white; margin-right: 8px; }
-    .back-btn:hover { color: var(--primary); }
-    .view-container { flex: 1; position: relative; overflow: hidden; }
-    #homeView { width: 100%; height: 100%; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; align-content: start; }
-    .menu-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; position: relative; }
-    .menu-card:hover { border-color: var(--primary); transform: translateY(-2px); background: #1a1a1a; }
-    .menu-icon { font-size: 1.8em; margin-bottom: 6px; }
-    .menu-title { font-size: 0.9em; font-weight: 600; }
-    .menu-count { font-size: 0.75em; color: var(--gray); margin-top: 4px; }
-    .premium-card { border: 2px solid var(--premium); }
-    .premium-card::before { content: "PREMIUM"; position: absolute; top: 6px; right: -20px; background: var(--premium); color: black; padding: 1px 20px; font-size: 0.6em; font-weight: bold; transform: rotate(45deg); }
-    .page-view { display: none; width: 100%; height: 100%; overflow-y: auto; padding: 12px; padding-bottom: 80px; background: var(--bg); animation: slideIn 0.3s; }
-    @keyframes slideIn { from { transform: translateX(15px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-    .item-card { background: var(--card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
-    .item-img { width: 100%; height: 100px; object-fit: cover; background: #111; }
-    .item-body { padding: 8px; }
-    .item-title { font-weight: 600; font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
-    .item-actions { display: flex; gap: 5px; }
-    .user-row { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); cursor: pointer; }
-    .user-row:hover { border-color: var(--primary); transform: translateX(3px); }
-    .user-status { padding: 3px 8px; border-radius: 5px; font-size: 0.7em; font-weight: bold; white-space: nowrap; }
-    .status-blocked { background: var(--danger); color: white; }
-    .status-premium { background: var(--premium); color: black; }
-    .status-active { background: var(--success); color: white; }
-    .status-trial { background: var(--warning); color: black; }
-    .status-expired { background: var(--gray); color: white; }
-    .status-new { background: var(--secondary); color: white; }
-    /* ✅ Added missing betting status classes */
-    .status-upcoming { background: var(--secondary); color: white; }
-    .status-completed { background: var(--gray); color: white; }
-    .status-successful { background: var(--success); color: white; }
-    .status-failed { background: var(--danger); color: white; }
-    .input-box { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 8px; font-size: 0.9em; }
-    .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0,230,118,0.2); }
-    .btn { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 8px; transition: 0.2s; font-size: 0.9em; }
-    .btn-p { background: var(--primary); color: black; }
-    .btn-d { background: var(--danger); color: white; }
-    .btn-premium { background: var(--premium); color: black; }
-    .btn-sm { width: auto; padding: 5px 10px; font-size: 0.75em; margin-top: 0; }
-    .btn-secondary { background: #555; color: white; }
-    .btn-danger { background: var(--danger); color: white; }
-    .select-modern { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 8px; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'></path></svg>"); background-repeat: no-repeat; background-position: right 10px center; background-size: 10px; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-    .modal-box { background: #181818; width: 90%; max-width: 650px; padding: 20px; border-radius: 15px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; }
-    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-    .stat-card { background: var(--card); padding: 12px; border-radius: 10px; text-align: center; }
-    .stat-number { font-size: 1.6em; font-weight: bold; }
-    .stat-label { font-size: 0.7em; color: var(--gray); }
-    .chat-layout { display: flex; height: 100%; flex-direction: column; }
-    .chat-user { padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .chat-user-name { font-weight: bold; font-size: 0.9em; }
-    .chat-user-email { font-size: 0.7em; color: var(--gray); }
-    .chat-user-msg { font-size: 0.8em; margin-top: 4px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
-    .chat-msgs { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .msg { padding: 8px 12px; border-radius: 10px; max-width: 85%; font-size: 0.85em; }
-    .msg-in { background: #222; align-self: flex-start; color: #ccc; }
-    .msg-out { background: var(--primary); color: black; align-self: flex-end; }
-    .chat-input-area { padding: 10px; background: var(--card); display: flex; gap: 8px; }
-    .device-card { background: var(--card); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .device-header { flex: 1; }
-    .device-actions { display: flex; gap: 8px; }
-    .device-checkbox { transform: scale(1.2); margin-right: 8px; }
-    .bulk-actions { display: flex; gap: 8px; margin-bottom: 10px; justify-content: flex-end; }
-    .carousel-slide-item { background: #222; padding: 10px; margin-bottom: 8px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: grab; }
-    .carousel-slide-item.dragging { opacity: 0.5; }
-    .filter-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-    .filter-bar input, .filter-bar select { flex: 1; min-width: 100px; margin-bottom: 0; }
-    .tmdb-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px,1fr)); gap: 8px; max-height: 300px; overflow-y: auto; margin-bottom: 15px; }
-    .tmdb-result-card { background: #222; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
-    .tmdb-result-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-    .tmdb-result-card.selected { border-color: var(--primary); }
-    .tmdb-card-info { padding: 5px; text-align: center; }
-    .tmdb-card-info p { font-size: 0.75em; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tmdb-card-info small { color: var(--gray); }
-    .loading-spinner { text-align: center; padding: 20px; }
-    .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .cast-list { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
-    .cast-member { background: #222; padding: 8px; margin-bottom: 5px; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
-    .cast-member img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-    .cast-info { flex: 1; }
-    .cast-name { font-weight: bold; font-size: 0.85em; }
-    .cast-character { font-size: 0.75em; color: #aaa; }
-    .cast-actions { display: flex; gap: 4px; }
-    .language-checkboxes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-    .language-checkboxes label { display: flex; align-items: center; gap: 5px; background: #222; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; }
-    .language-checkboxes input { cursor: pointer; }
-    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #222; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--primary); z-index: 3000; display: none; font-size: 0.85em; white-space: nowrap; }
-    .multi-select-container { background: #000; border: 1px solid #333; border-radius: 8px; max-height: 100px; overflow-y: auto; margin-bottom: 8px; }
-    .multi-select-item { padding: 6px 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85em; }
-    .multi-select-item input { cursor: pointer; }
-    .multi-select-item label { cursor: pointer; flex: 1; }
-    .sortable-item { background: #222; padding: 10px; margin-bottom: 5px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; cursor: grab; }
-    .sortable-item.dragging { opacity: 0.5; }
-    .channel-lock-item { background: #222; padding: 8px; margin-bottom: 5px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; }
-    .channel-lock-item input { cursor: pointer; }
-    .betting-tip-card { background: var(--card); padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); }
-    .empty-state { text-align: center; color: var(--gray); padding: 20px; font-size: 0.9em; }
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; margin-bottom: 4px; font-size: 0.85em; color: var(--gray); }
-    .full-width { grid-column: 1 / -1; }
-    .links-section h4 { margin-bottom: 8px; font-size: 0.9em; }
-    @media (max-width: 480px) { 
-        .brand { font-size: 1em; } 
-        .top-bar { padding: 0 10px; height: 50px; } 
-        .menu-card { padding: 10px; min-height: 90px; } 
-        .menu-icon { font-size: 1.5em; } 
-        .menu-title { font-size: 0.8em; } 
-        .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } 
-        .stat-number { font-size: 1.3em; } 
-        .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; } 
-        .item-img { height: 80px; } 
-        .user-row { padding: 10px; } 
-        .user-status { font-size: 0.65em; } 
-        .btn-sm { padding: 4px 8px; font-size: 0.7em; } 
-        .modal-box { padding: 15px; } 
-        .filter-bar { flex-direction: column; } 
-        .filter-bar input, .filter-bar select { min-width: 100%; } 
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>STANY MIN TV - ADMIN PANEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+        body{background:#0a0a0a;color:#ffffff;}
+        
+        :root{
+            --primary:#00e676;
+            --primary-dark:#00c853;
+            --danger:#ff3b30;
+            --warning:#ff9500;
+            --success:#34c759;
+            --premium:#ffd700;
+            --card:#141414;
+            --border:#2a2a2a;
+            --text:#ffffff;
+            --text-secondary:#888888;
+        }
+        
+        .login-container{
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:#0a0a0a;display:flex;justify-content:center;
+            align-items:center;z-index:1000;
+        }
+        .login-box{
+            background:var(--card);padding:40px;border-radius:24px;
+            width:90%;max-width:400px;border:1px solid var(--border);
+        }
+        .login-box h2{text-align:center;margin-bottom:30px;color:var(--primary);}
+        .input{
+            width:100%;padding:14px 16px;background:#1a1a1a;
+            border:1px solid var(--border);border-radius:12px;
+            color:#fff;font-size:14px;margin-bottom:16px;outline:none;
+        }
+        .input:focus{border-color:var(--primary);}
+        .btn{
+            width:100%;padding:14px;border:none;border-radius:12px;
+            font-weight:600;font-size:14px;cursor:pointer;
+        }
+        .btn-primary{background:var(--primary);color:#000;}
+        .btn-danger{background:var(--danger);color:#fff;}
+        .btn-warning{background:var(--warning);color:#000;}
+        .btn-success{background:var(--success);color:#000;}
+        
+        .app-container{display:none;}
+        
+        .sidebar{
+            position:fixed;left:0;top:0;width:260px;height:100%;
+            background:var(--card);border-right:1px solid var(--border);
+            overflow-y:auto;z-index:100;
+        }
+        .sidebar-header{padding:24px 20px;border-bottom:1px solid var(--border);}
+        .sidebar-header h2{color:var(--primary);font-size:18px;}
+        .sidebar-menu{padding:16px 0;}
+        .menu-item{
+            display:flex;align-items:center;gap:12px;padding:12px 20px;
+            color:var(--text-secondary);cursor:pointer;transition:0.2s;
+        }
+        .menu-item:hover,.menu-item.active{
+            background:rgba(0,230,118,0.1);color:var(--primary);
+        }
+        .menu-item i{width:24px;}
+        
+        .main-content{
+            margin-left:260px;padding:20px;min-height:100vh;
+        }
+        .header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);
+        }
+        .header h1{font-size:24px;}
+        .logout-btn{
+            background:var(--danger);padding:8px 16px;border-radius:10px;
+            border:none;color:#fff;cursor:pointer;
+        }
+        
+        .stats-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:16px;margin-bottom:24px;
+        }
+        .stat-card{
+            background:var(--card);padding:20px;border-radius:16px;
+            border:1px solid var(--border);
+        }
+        .stat-number{font-size:32px;font-weight:700;color:var(--primary);}
+        .stat-label{color:var(--text-secondary);font-size:14px;margin-top:8px;}
+        
+        .section{
+            background:var(--card);border-radius:16px;padding:20px;
+            margin-bottom:24px;border:1px solid var(--border);
+        }
+        .section-header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:20px;
+        }
+        .section-header h3{font-size:18px;}
+        
+        table{width:100%;border-collapse:collapse;}
+        th,td{padding:12px;text-align:left;border-bottom:1px solid var(--border);}
+        th{color:var(--text-secondary);font-weight:500;}
+        
+        .user-status{
+            padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;
+            display:inline-block;
+        }
+        .status-premium{background:var(--premium);color:#000;}
+        .status-trial{background:var(--warning);color:#000;}
+        .status-blocked{background:var(--danger);color:#fff;}
+        .status-expired{background:var(--text-secondary);color:#000;}
+        
+        .modal{
+            display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);
+            justify-content:center;align-items:center;z-index:2000;
+        }
+        .modal.show{display:flex;}
+        .modal-content{
+            background:var(--card);padding:24px;border-radius:20px;
+            width:90%;max-width:500px;max-height:80vh;overflow-y:auto;
+        }
+        .modal-content h3{margin-bottom:20px;}
+        .form-group{margin-bottom:16px;}
+        .form-group label{display:block;margin-bottom:6px;font-size:13px;color:var(--text-secondary);}
+        
+        .grid-cards{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+            gap:12px;
+        }
+        .content-card{
+            background:#1a1a1a;border-radius:12px;overflow:hidden;
+            border:1px solid var(--border);
+        }
+        .content-card img{width:100%;height:120px;object-fit:cover;}
+        .content-card .info{padding:10px;}
+        .content-card .title{font-size:13px;font-weight:600;margin-bottom:6px;}
+        .card-actions{display:flex;gap:6px;margin-top:8px;}
+        .card-actions button{flex:1;padding:6px;border-radius:8px;border:none;font-size:11px;cursor:pointer;}
+        
+        .search-box{
+            width:100%;padding:12px 16px;background:#1a1a1a;
+            border:1px solid var(--border);border-radius:12px;
+            color:#fff;margin-bottom:16px;
+        }
+        
+        .filter-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+        .filter-btn{padding:8px 16px;background:#1a1a1a;border:none;border-radius:20px;color:#fff;cursor:pointer;}
+        .filter-btn.active{background:var(--primary);color:#000;}
+        
+        .drm-fields{background:#1a1a1a;padding:16px;border-radius:12px;margin-top:12px;}
+        
+        @media (max-width:768px){
+            .sidebar{transform:translateX(-100%);transition:0.3s;z-index:1000;}
+            .sidebar.open{transform:translateX(0);}
+            .main-content{margin-left:0;}
+            .menu-toggle{display:block;position:fixed;bottom:20px;right:20px;z-index:1001;}
+        }
+    </style>
 </head>
 <body>
 
-<!-- LOGIN MODAL -->
-<div id="authModal" class="modal" style="display:flex;">
-    <div class="modal-box" style="text-align:center;">
-        <h2 style="color:var(--primary); margin-bottom:15px;">ADMIN ACCESS</h2>
-        <input type="email" id="lemail" class="input-box" placeholder="Admin Email" value="stanytv@gmail.com">
-        <input type="password" id="lpass" class="input-box" placeholder="Password" value="stanytv123#">
-        <button class="btn btn-p" onclick="login()">LOGIN</button>
+<div class="login-container" id="loginContainer">
+    <div class="login-box">
+        <h2><i class="fas fa-crown"></i> STANY MIN TV ADMIN</h2>
+        <input type="email" id="adminEmail" class="input" placeholder="Admin Email" value="stanytv@gmail.com">
+        <input type="password" id="adminPassword" class="input" placeholder="Password" value="stanytv123#">
+        <button class="btn btn-primary" onclick="adminLogin()">Login</button>
     </div>
 </div>
 
-<!-- HEADER -->
-<div class="top-bar">
-    <div style="display:flex; align-items:center;">
-        <i class="fas fa-arrow-left back-btn" id="backBtn" onclick="goHome()"></i>
-        <div class="brand" id="pageTitle">STANY MIN TV ADMIN</div>
+<div class="app-container" id="appContainer">
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-tv"></i> STANY MIN TV</h2>
+            <p style="font-size:12px;color:#888;margin-top:8px;">Admin Panel</p>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="loadPage('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
+            <div class="menu-item" onclick="loadPage('users')"><i class="fas fa-users"></i> Users</div>
+            <div class="menu-item" onclick="loadPage('channels')"><i class="fas fa-tv"></i> Channels</div>
+            <div class="menu-item" onclick="loadPage('movies')"><i class="fas fa-film"></i> Movies</div>
+            <div class="menu-item" onclick="loadPage('schedule')"><i class="fas fa-calendar"></i> Match Schedule</div>
+            <div class="menu-item" onclick="loadPage('carousel')"><i class="fas fa-images"></i> Carousel</div>
+            <div class="menu-item" onclick="loadPage('settings')"><i class="fas fa-cog"></i> Settings</div>
+        </div>
     </div>
-    <div style="display:flex; gap:12px;">
-        <i class="fas fa-bell" onclick="openPage('notif')" style="font-size:1.1em; cursor:pointer;"></i>
-        <i class="fas fa-sign-out-alt" onclick="auth.signOut()" style="font-size:1.1em; cursor:pointer; color:var(--danger);"></i>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div id="pageContent"></div>
     </div>
 </div>
 
-<!-- MAIN VIEW CONTAINER -->
-<div class="view-container">
-    <!-- HOME DASHBOARD -->
-    <div id="homeView">
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number" id="statTotalUsers">0</div><div class="stat-label">Total Users</div></div>
-            <div class="stat-card"><div class="stat-number" id="statPremiumUsers">0</div><div class="stat-label">Premium</div></div>
-            <div class="stat-card"><div class="stat-number" id="statTrialUsers">0</div><div class="stat-label">Free Trial</div></div>
-            <div class="stat-card"><div class="stat-number" id="statNewUsers">0</div><div class="stat-label">New Today</div></div>
+<div class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars" style="background:var(--primary);padding:12px;border-radius:50%;color:#000;"></i>
+</div>
+
+<div class="modal" id="channelModal">
+    <div class="modal-content">
+        <h3 id="channelModalTitle">Add Channel</h3>
+        <input type="hidden" id="channelId">
+        <div class="form-group">
+            <label>Channel Name</label>
+            <input type="text" id="channelName" class="input" placeholder="Channel Name">
         </div>
-        <div class="menu-card" onclick="openPage('users')"><i class="fas fa-users menu-icon"></i><div class="menu-title">Users</div><div class="menu-count" id="cntUsers">0</div></div>
-        <div class="menu-card" onclick="openPage('channels')"><i class="fas fa-tv menu-icon"></i><div class="menu-title">Channels</div><div class="menu-count" id="cntChan">0</div></div>
-        <div class="menu-card" onclick="openPage('movies')"><i class="fas fa-film menu-icon"></i><div class="menu-title">Movies</div><div class="menu-count" id="cntMov">0</div></div>
-        <div class="menu-card premium-card" onclick="openPage('premium')"><i class="fas fa-crown menu-icon premium-icon"></i><div class="menu-title">Premium</div><div class="menu-count">Exclusive</div></div>
-        <div class="menu-card" onclick="openPage('downloads')"><i class="fas fa-download menu-icon"></i><div class="menu-title">Downloads</div><div class="menu-count" id="cntDownloads">0</div></div>
-        <div class="menu-card" onclick="openPage('chat')"><i class="fas fa-comments menu-icon"></i><div class="menu-title">Chat</div><div class="menu-count"><span id="cntChat">0</span> new</div></div>
-        <div class="menu-card" onclick="openPage('devices')"><i class="fas fa-mobile-alt menu-icon" style="color:var(--danger)"></i><div class="menu-title">Devices</div><div class="menu-count" id="cntDev">0</div></div>
-        <div class="menu-card" onclick="openPage('settings')"><i class="fas fa-cog menu-icon"></i><div class="menu-title">Settings</div><div class="menu-count">Config</div></div>
-        <div class="menu-card" onclick="openPage('categories')"><i class="fas fa-layer-group menu-icon"></i><div class="menu-title">Categories</div><div class="menu-count">Arrange</div></div>
-        <div class="menu-card" onclick="openPage('tips')"><i class="fas fa-lightbulb menu-icon" style="color:#ffd700"></i><div class="menu-title">Tips</div><div class="menu-count">Guides</div></div>
-        <div class="menu-card" onclick="openPage('bettingTips')"><i class="fas fa-chart-line menu-icon" style="color:#ff6b6b"></i><div class="menu-title">Betting</div><div class="menu-count" id="cntBettingTips">0</div></div>
-        <div class="menu-card" onclick="openPage('appSettings')"><i class="fas fa-sliders-h menu-icon" style="color:var(--secondary)"></i><div class="menu-title">App Settings</div><div class="menu-count">UI & Features</div></div>
-        <div class="menu-card" onclick="openPage('newUsers')"><i class="fas fa-user-plus menu-icon" style="color:var(--secondary)"></i><div class="menu-title">New Users</div><div class="menu-count" id="cntNewUsers">0</div></div>
-    </div>
-
-    <!-- USERS PAGE -->
-    <div id="users" class="page-view">
-        <div class="filter-bar">
-            <button class="btn btn-sm btn-p" onclick="filterUsers('all')">All</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('premium')">Premium</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('trial')">Trial</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('active')">Active</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('blocked')">Blocked</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('expired')">Expired</button>
-            <button class="btn btn-sm" style="background:#333;" onclick="filterUsers('new')">New</button>
-            <input id="searchUser" class="input-box" placeholder="Search..." onkeyup="searchUI()">
+        <div class="form-group">
+            <label>Channel Type</label>
+            <select id="channelType" class="input" onchange="toggleChannelType()">
+                <option value="normal">Normal (HLS/MP4)</option>
+                <option value="drm">DRM (Token + License)</option>
+            </select>
         </div>
-        <div id="userList"></div>
-    </div>
-
-    <!-- CHANNELS PAGE -->
-    <div id="channels" class="page-view">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><h3>Live Channels</h3><button class="btn btn-p btn-sm" onclick="openChanModal()"><i class="fas fa-plus"></i> Add</button></div>
-        <div class="grid" id="chanGrid"></div>
-    </div>
-
-    <!-- MOVIES PAGE -->
-    <div id="movies" class="page-view">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><h3>Movies</h3><button class="btn btn-p btn-sm" onclick="openMovModal()"><i class="fas fa-plus"></i> Add</button></div>
-        <div class="grid" id="movGrid"></div>
-    </div>
-
-    <!-- PREMIUM CONTENT PAGE -->
-    <div id="premium" class="page-view">
-        <div class="category-manager"><h3 style="color:var(--premium); margin-bottom:15px;"><i class="fas fa-crown"></i> Premium Content</h3>
-            <div class="trial-settings-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <div><h4>Free Trial Settings</h4><div class="form-group"><label>Trial Duration</label><input type="number" id="trialDuration" class="input-box" value="7"></div>
-                <label>Trial Unit</label><div class="trial-unit-selector" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;"><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('seconds',event)">Sec</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('minutes',event)">Min</button><button class="btn btn-sm btn-p" onclick="setTrialUnit('hours',event)">Hours</button><button class="btn btn-sm" style="background:#333;" onclick="setTrialUnit('days',event)">Days</button></div>
-                <button class="btn btn-premium" onclick="saveTrialSettings()">Save</button></div>
-                <div><h4>Auto Trial Assignment</h4><input type="date" id="autoTrialDate" class="input-box"><button class="btn btn-sm btn-p" onclick="assignTrialToDateUsers()">Assign to Date</button><button class="btn btn-sm" style="background:var(--danger);" onclick="massBlockExpired()">Block Expired</button></div>
+        <div id="normalFields">
+            <div class="form-group">
+                <label>Stream URL</label>
+                <input type="text" id="channelUrl" class="input" placeholder="https://example.com/stream.m3u8">
             </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
-            <div class="category-manager"><h4>Popular Movies</h4><div id="popularMovies" class="grid"></div><button class="btn btn-sm btn-p" onclick="openMovModalWithSection('popular')">Add Popular</button></div>
-            <div class="category-manager"><h4>Latest Movies</h4><div id="latestMovies" class="grid"></div><button class="btn btn-sm btn-p" onclick="openMovModalWithSection('latest')">Add Latest</button></div>
+        <div id="drmFields" style="display:none;">
+            <div class="drm-fields">
+                <div class="form-group">
+                    <label>Token / API Key</label>
+                    <input type="text" id="drmToken" class="input" placeholder="Bearer token or API key">
+                </div>
+                <div class="form-group">
+                    <label>License URL</label>
+                    <input type="text" id="licenseUrl" class="input" placeholder="https://example.com/license">
+                </div>
+                <div class="form-group">
+                    <label>MPD Stream URL</label>
+                    <input type="text" id="mpdUrl" class="input" placeholder="https://example.com/manifest.mpd">
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- DOWNLOADS PAGE -->
-    <div id="downloads" class="page-view"><div style="display:flex; justify-content:space-between;"><h3>Downloads</h3><button class="btn btn-p btn-sm" onclick="openDownloadModal()">Add</button></div><div class="grid" id="downloadsGrid"></div></div>
-
-    <!-- CHAT PAGE -->
-    <div id="chat" class="page-view" style="padding:0;"><div id="chatListContainer" class="chat-layout"><div style="padding:12px; border-bottom:1px solid var(--border);">Inbox</div><div id="chatList" class="chat-list-view"></div></div><div id="chatRoom" class="chat-room-view" style="display:none;"><div style="padding:10px; background:var(--card); display:flex; align-items:center;"><i class="fas fa-arrow-left" onclick="closeChatRoom()" style="padding:8px; cursor:pointer;"></i><div style="margin-left:8px;"><b id="chatHeaderName"></b><small id="chatHeaderEmail" style="color:var(--gray);"></small></div></div><div id="chatMsgs" class="chat-msgs"></div><div class="chat-input-area"><input id="chatInput" class="input-box" style="margin:0;" placeholder="Reply..."><button class="btn btn-p btn-sm" onclick="sendReply()">Send</button></div></div></div>
-
-    <!-- DEVICE REQUESTS PAGE -->
-    <div id="devices" class="page-view"><h3>Pending Device Approvals</h3><div class="bulk-actions"><button class="btn btn-sm btn-p" onclick="bulkApproveDevices()"><i class="fas fa-check-double"></i> Approve Selected</button><button class="btn btn-sm btn-d" onclick="bulkRejectDevices()"><i class="fas fa-times-circle"></i> Reject Selected</button></div><div id="devList"></div></div>
-
-    <!-- SETTINGS PAGE -->
-    <div id="settings" class="page-view"><div class="category-manager"><h3>App Configuration</h3><label>App Name</label><input id="setAppName" class="input-box"><label>Theme Color</label><div style="display:flex; gap:8px;"><input type="color" id="setColor"><input id="setColorText" class="input-box" style="margin:0;"></div><label>WhatsApp Number</label><input id="setContact" class="input-box"><button class="btn btn-p" onclick="saveSettings()">Save</button></div><div class="category-manager"><h3>System Controls</h3><button class="btn" style="background:#333;" onclick="clearAllDeviceRequests()">Clear Device Requests</button><button class="btn" style="background:var(--danger);" onclick="resetAllUsers()">Reset All Users</button></div></div>
-
-    <!-- CATEGORIES PAGE -->
-    <div id="categories" class="page-view"><div class="category-manager"><h3>Categories</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><input id="newCategoryName" class="input-box" placeholder="New Category"><button class="btn btn-p" onclick="addCategory()">Add</button></div><div><div id="categoryList" class="sortable-list"></div><button class="btn btn-sm btn-p" onclick="saveCategoryOrder()">Save Order</button></div></div></div><div class="category-manager"><h4>Assign Categories</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><select id="assignChannelSelect" class="select-modern"></select><div id="assignChannelCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignChannelCategories()">Assign to Channel</button></div><div><select id="assignMovieSelect" class="select-modern"></select><div id="assignMovieCategory" class="multi-select-container"></div><button class="btn btn-sm btn-p" onclick="assignMovieCategories()">Assign to Movie</button></div></div></div><div id="categoryStats" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin-top:10px;"></div></div>
-
-    <!-- TIPS PAGE -->
-    <div id="tips" class="page-view"><div style="display:flex; justify-content:space-between;"><h3>Tips</h3><button class="btn btn-p btn-sm" onclick="openTipModal()">Add</button></div><div class="tips-grid" id="tipsGrid"></div></div>
-
-    <!-- BETTING TIPS PAGE -->
-    <div id="bettingTips" class="page-view">
-        <div class="category-manager">
-            <h3>Betting Tips</h3>
-            <button class="btn btn-p btn-sm" onclick="openAddBettingTipModal()" style="margin-bottom:15px;"><i class="fas fa-plus"></i> Add Tip</button>
-            <div id="bettingTipsList"></div>
+        <div class="form-group">
+            <label>Poster URL</label>
+            <input type="text" id="channelPoster" class="input" placeholder="Image URL">
         </div>
-    </div>
-
-    <!-- NOTIFICATIONS PAGE -->
-    <div id="notif" class="page-view"><div class="category-manager"><h3>Broadcast</h3><input id="nTitle" class="input-box" placeholder="Title"><textarea id="nMsg" class="input-box" rows="3" placeholder="Message"></textarea><select id="nTarget" class="select-modern"><option value="all">All Users</option><option value="premium">Premium Only</option><option value="trial">Trial Only</option><option value="active">Active Only</option><option value="new">New Only</option></select><button class="btn btn-p" onclick="sendNotif()">Send</button></div></div>
-
-    <!-- APP SETTINGS PAGE -->
-    <div id="appSettings" class="page-view">
-        <div class="app-settings-section"><h3>User App Settings</h3><div class="settings-grid" style="display:grid; gap:10px;"><div><label>Card Size</label><select id="cardSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Font Size</label><select id="fontSizeSetting"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div><div><label>Carousel Interval (ms)</label><input type="number" id="carouselInterval" value="5000"></div></div><button class="btn btn-p" onclick="saveAppSettings()">Save</button></div>
-        <div class="channel-lock-management"><h3>Channel Lock</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><h4>Lock Channels</h4><div id="lockChannelsList" class="channel-list-container"></div><button class="btn btn-d btn-sm" onclick="lockSelectedChannels()">Lock Selected</button></div><div><h4>Unlock Channels</h4><div id="unlockChannelsList" class="channel-list-container"></div><button class="btn btn-p btn-sm" onclick="unlockSelectedChannels()">Unlock Selected</button></div></div><div style="margin-top:15px;"><h4>Make Free</h4><div id="freeChannelsList" class="channel-list-container"></div><button class="btn btn-premium btn-sm" onclick="makeChannelsFree()">Make Selected Free</button></div></div>
-        <div class="carousel-management"><h3>Carousel</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><div><input id="carouselTitle" class="input-box" placeholder="Title"><input id="carouselDescription" class="input-box" placeholder="Desc"><input id="carouselImage" class="input-box" placeholder="Image URL"><button class="btn btn-p" onclick="addCarouselSlide()">Add Slide</button></div><div><div id="carouselSlidesList"></div><button class="btn btn-sm btn-p" onclick="saveCarouselOrder()">Save Order</button></div></div></div>
-        <div class="app-settings-section"><h3>Channel Scripts</h3><select id="scriptChannelSelect" class="select-modern"></select><textarea id="channelScriptCode" rows="4" class="input-box" placeholder="JavaScript code"></textarea><button class="btn btn-p" onclick="saveChannelScript()">Save Script</button><button class="btn btn-d" onclick="clearChannelScript()">Clear</button></div>
-    </div>
-
-    <!-- NEW USERS PAGE -->
-    <div id="newUsers" class="page-view">
-        <div class="date-filter"><input type="date" id="newUsersStartDate"><input type="date" id="newUsersEndDate"><button class="btn btn-sm btn-p" onclick="filterNewUsersByDate()">Filter</button></div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-sm btn-p" onclick="filterNewUsers('today')">Today</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('yesterday')">Yesterday</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('week')">This Week</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('month')">This Month</button><button class="btn btn-sm" style="background:#333;" onclick="filterNewUsers('all')">All Time</button></div>
-        <div id="newUsersList"></div>
-    </div>
-</div>
-
-<div id="toast">Saved</div>
-
-<!-- MODALS -->
-<div id="chanModal" class="modal"><div class="modal-box"><h3 id="cTitle">Channel</h3><input type="hidden" id="cId"><input id="cName" class="input-box" placeholder="Name"><div class="form-group"><label>Categories</label><div id="cCategory" class="multi-select-container"></div></div>
-<select id="chType" class="select-modern" onchange="toggleChannelType()"><option value="normal">Normal (Stream URL)</option><option value="mdp">MDP Channel (Token + License)</option></select>
-<div id="normalChannelFields"><input id="cLink" class="input-box" placeholder="Stream URL"><input id="cImg" class="input-box" placeholder="Poster URL"><textarea id="cDesc" class="input-box" placeholder="Description"></textarea></div>
-<div id="mdpChannelFields" style="display:none;"><input id="mdpToken" class="input-box" placeholder="Token / API Key"><input id="mdpLicenseUrl" class="input-box" placeholder="License URL"><input id="mdpMpdUrl" class="input-box" placeholder="MPD URL"><input id="mdpPoster" class="input-box" placeholder="Poster URL"><textarea id="mdpDesc" class="input-box" placeholder="Description"></textarea></div>
-<input type="number" id="cOrder" placeholder="Order" value="999"><label><input type="checkbox" id="chLock"> Locked (Premium only)</label>
-<div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveChan()">Save</button><button class="btn btn-d" onclick="closeModal('chanModal')">Cancel</button></div></div></div>
-
-<!-- MOVIE MODAL -->
-<div id="movModal" class="modal"><div class="modal-box"><h3 id="mTitle">Movie</h3><input type="hidden" id="mId">
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div><input id="mName" class="input-box" placeholder="Movie Title"></div>
-    <div><input id="releaseYear" class="input-box" placeholder="Release Year" type="number"></div>
-    <div><input id="movieRating" class="input-box" placeholder="Rating (0-10)" step="0.1" type="number"></div>
-    <div><input id="movieRuntime" class="input-box" placeholder="Runtime (minutes)" type="number"></div>
-    <div class="full-width"><input id="posterUrl" class="input-box" placeholder="Poster URL"></div>
-    <div class="full-width"><input id="backdropUrl" class="input-box" placeholder="Backdrop URL"></div>
-    <div class="full-width"><textarea id="storyline" class="input-box" rows="3" placeholder="Storyline / Description"></textarea></div>
-    <div class="full-width"><input id="trailerUrl" class="input-box" placeholder="Trailer URL (YouTube)"></div>
-    <div class="full-width"><input id="movieGenres" class="input-box" placeholder="Genres (comma separated)"></div>
-    <div class="full-width">
-        <label>Languages</label>
-        <div class="language-checkboxes" id="languageCheckboxes">
-            <label><input type="checkbox" value="English"> English</label>
-            <label><input type="checkbox" value="Hindi"> Hindi</label>
-            <label><input type="checkbox" value="Tamil"> Tamil</label>
-            <label><input type="checkbox" value="Telugu"> Telugu</label>
-            <label><input type="checkbox" value="Malayalam"> Malayalam</label>
-            <label><input type="checkbox" value="Kannada"> Kannada</label>
-            <label><input type="checkbox" value="Bengali"> Bengali</label>
-            <label><input type="checkbox" value="Marathi"> Marathi</label>
-            <label><input type="checkbox" value="Punjabi"> Punjabi</label>
-            <label><input type="checkbox" value="Korean"> Korean</label>
-            <label><input type="checkbox" value="Japanese"> Japanese</label>
-            <label><input type="checkbox" value="Chinese"> Chinese</label>
-            <label><input type="checkbox" value="Spanish"> Spanish</label>
-            <label><input type="checkbox" value="French"> French</label>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="channelDesc" class="input" rows="3" placeholder="Channel description"></textarea>
         </div>
-    </div>
-    <div class="full-width links-section" style="background:#1a1a1a; padding:10px; border-radius:8px;">
-        <h4>Download / Stream Links</h4>
-        <input id="link1080p" class="input-box" placeholder="1080p Link (required)">
-        <input id="link720p" class="input-box" placeholder="720p Link">
-        <input id="link480p" class="input-box" placeholder="480p Link">
-    </div>
-    <div class="full-width"><label>Categories</label><div id="mCategory" class="multi-select-container" style="max-height:100px;"></div></div>
-    <div class="full-width"><label>Cast</label><button type="button" class="btn btn-sm btn-secondary" onclick="toggleManualCast()" style="margin-top:0;">Add Manual Cast</button>
-        <div id="castContainer" class="cast-list"></div>
-        <div id="manualCastForm" style="display:none; margin-top:8px;">
-            <input id="manualCastName" class="input-box" placeholder="Actor Name" style="margin-bottom:5px;">
-            <input id="manualCastCharacter" class="input-box" placeholder="Character" style="margin-bottom:5px;">
-            <input id="manualCastImage" class="input-box" placeholder="Image URL" style="margin-bottom:5px;">
-            <button class="btn btn-sm btn-p" onclick="addManualCast()">Add Cast</button>
+        <div class="form-group">
+            <label>Category</label>
+            <select id="channelCategory" class="input">
+                <option value="general">General</option>
+                <option value="sports">Sports</option>
+                <option value="news">News</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="premium">Premium</option>
+            </select>
         </div>
-    </div>
-    <div class="full-width"><select id="mSection" class="select-modern"><option value="regular">Regular</option><option value="popular">Popular</option><option value="latest">Latest</option><option value="premium">Premium</option></select></div>
-    <div class="full-width"><label><input type="checkbox" id="movLock"> Locked (Premium only)</label></div>
-    <div class="full-width"><label><input type="checkbox" id="movDrm"> DRM Protected</label></div>
-    <div class="full-width"><label>Stream Format</label><select id="movFormat" class="select-modern"><option value="hls">HLS (.m3u8)</option><option value="dash">DASH (.mpd)</option><option value="mp4">MP4</option></select></div>
-</div>
-<div class="tmdb-import" style="margin:15px 0; border-top:1px solid #333; padding-top:10px;">
-    <h4>TMDB Import</h4>
-    <div style="display:flex; gap:8px;"><input id="tmdbSearchInput" class="input-box" placeholder="Search TMDB..."><button class="btn btn-sm btn-p" onclick="searchTMDB()">Search</button></div>
-    <div id="tmdbResults" class="tmdb-results" style="display:none;"></div>
-    <div id="tmdbLoading" class="loading-spinner" style="display:none;"><div class="spinner"></div></div>
-</div>
-<div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveMov()">Save Movie</button><button class="btn btn-d" onclick="closeModal('movModal')">Cancel</button></div></div></div>
-
-<div id="downloadModal" class="modal"><div class="modal-box"><h3>Add Download</h3><input type="hidden" id="dlId"><input id="dlTitle" class="input-box" placeholder="Title"><input id="dlUrl" class="input-box" placeholder="Download URL"><input id="dlImg" class="input-box" placeholder="Poster"><textarea id="dlDesc" class="input-box" placeholder="Description"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveDownload()">Save</button><button class="btn btn-d" onclick="closeModal('downloadModal')">Cancel</button></div></div></div>
-
-<div id="tipModal" class="modal"><div class="modal-box"><h3 id="tipTitle">Tip</h3><input type="hidden" id="tipId"><input id="tipName" class="input-box" placeholder="Title"><select id="tipCategory" class="select-modern"><option value="general">General</option><option value="premium">Premium</option></select><textarea id="tipContent" rows="3" class="input-box" placeholder="Content"></textarea><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveTip()">Save</button><button class="btn btn-d" onclick="closeModal('tipModal')">Cancel</button></div></div></div>
-
-<div id="userModal" class="modal"><div class="modal-box"><h3>Manage User</h3><input type="hidden" id="umId"><h4 id="umName"></h4><p id="umEmail"></p><select id="umSubType" class="select-modern" onchange="toggleSubscriptionFields()"><option value="trial">Trial</option><option value="premium">Premium</option><option value="none">None</option></select><div id="subFields"><input type="date" id="umDate" class="input-box"><div style="display:flex; gap:5px;"><button class="btn btn-sm" onclick="addTime(1)">+1d</button><button class="btn btn-sm" onclick="addTime(7)">+7d</button><button class="btn btn-sm" onclick="addTime(30)">+30d</button></div></div><input id="umDevice" class="input-box" readonly><div style="display:flex; gap:8px;"><button class="btn btn-p" onclick="saveUserSub()">Update</button><button id="umBlockBtn" class="btn btn-d" onclick="toggleBlock()">Block</button></div><button class="btn btn-sm" onclick="viewPass()">View Passwords</button><button class="btn btn-sm" onclick="forceLogout()">Force Logout</button><button class="btn btn-sm" onclick="closeModal('userModal')">Close</button></div></div>
-
-<div id="passModal" class="modal"><div class="modal-box"><h3>Channel Passwords</h3><div id="passList"></div><button class="btn btn-d" onclick="closeModal('passModal')">Close</button></div></div>
-
-<!-- ✅ ADDED: Missing Betting Tips Edit Modal -->
-<div id="editBettingTipModal" class="modal">
-    <div class="modal-box">
-        <h3>Edit Betting Tip</h3>
-        <input type="hidden" id="editBettingTipId">
-        <input id="editTipTitle" class="input-box" placeholder="Tip Title">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input id="editTeam1" class="input-box" placeholder="Team 1">
-            <input id="editTeam2" class="input-box" placeholder="Team 2">
+        <div class="form-group">
+            <label><input type="checkbox" id="channelPremium"> Premium Only (Locked for trial users)</label>
         </div>
-        <input id="editPrediction" class="input-box" placeholder="Prediction">
-        <input id="editOdds" class="input-box" placeholder="Odds" type="number" step="0.01">
-        <input id="editStake" class="input-box" placeholder="Stake (optional)">
-        <select id="editTipStatus" class="select-modern">
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-            <option value="successful">Successful</option>
-            <option value="failed">Failed</option>
-        </select>
-        <input id="editTipResult" class="input-box" placeholder="Result (optional)">
-        <input id="editBookmakerLink" class="input-box" placeholder="Bookmaker Link (optional)">
-        <textarea id="editTipDescription" class="input-box" rows="3" placeholder="Description"></textarea>
-        <div style="display:flex; gap:8px;">
-            <button class="btn btn-p" onclick="updateBettingTip()">Update</button>
-            <button class="btn btn-d" onclick="closeModal('editBettingTipModal')">Cancel</button>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="saveChannel()">Save Channel</button>
+            <button class="btn" style="background:#333;margin-top:8px;" onclick="closeModal('channelModal')">Cancel</button>
         </div>
     </div>
 </div>
 
-<!-- ✅ ADDED: Add Betting Tip Modal -->
-<div id="addBettingTipModal" class="modal">
-    <div class="modal-box">
-        <h3>Add Betting Tip</h3>
-        <input id="newTipTitle" class="input-box" placeholder="Tip Title">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <input id="newTeam1" class="input-box" placeholder="Team 1">
-            <input id="newTeam2" class="input-box" placeholder="Team 2">
+<div class="modal" id="movieModal">
+    <div class="modal-content">
+        <h3 id="movieModalTitle">Add Movie</h3>
+        <input type="hidden" id="movieId">
+        <div class="form-group">
+            <label>Movie Title</label>
+            <input type="text" id="movieTitle" class="input" placeholder="Movie Title">
         </div>
-        <input id="newPrediction" class="input-box" placeholder="Prediction">
-        <input id="newOdds" class="input-box" placeholder="Odds" type="number" step="0.01">
-        <input id="newStake" class="input-box" placeholder="Stake (optional)">
-        <select id="newTipStatus" class="select-modern">
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-        </select>
-        <input id="newBookmakerLink" class="input-box" placeholder="Bookmaker Link (optional)">
-        <textarea id="newTipDescription" class="input-box" rows="3" placeholder="Description"></textarea>
-        <div style="display:flex; gap:8px;">
-            <button class="btn btn-p" onclick="saveNewBettingTip()">Save</button>
-            <button class="btn btn-d" onclick="closeModal('addBettingTipModal')">Cancel</button>
+        <div class="form-group">
+            <label>External ID (for vidsrc.to)</label>
+            <input type="text" id="movieExternalId" class="input" placeholder="TMDB ID or IMDB ID (e.g., 1523145)">
+        </div>
+        <div class="form-group">
+            <label>Poster URL</label>
+            <input type="text" id="moviePoster" class="input" placeholder="Image URL">
+        </div>
+        <div class="form-group">
+            <label>Backdrop URL</label>
+            <input type="text" id="movieBackdrop" class="input" placeholder="Backdrop image URL">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="movieDesc" class="input" rows="3" placeholder="Movie description"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Rating</label>
+            <input type="number" id="movieRating" class="input" step="0.1" placeholder="0-10">
+        </div>
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="movieYear" class="input" placeholder="2024">
+        </div>
+        <div class="form-group">
+            <label>Genre</label>
+            <select id="movieGenre" class="input">
+                <option value="action">Action</option>
+                <option value="comedy">Comedy</option>
+                <option value="drama">Drama</option>
+                <option value="horror">Horror</option>
+                <option value="romance">Romance</option>
+                <option value="sci-fi">Sci-Fi</option>
+                <option value="sports">Sports</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label><input type="checkbox" id="moviePremium"> Premium Only</label>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="saveMovie()">Save Movie</button>
+            <button class="btn" style="background:#333;margin-top:8px;" onclick="closeModal('movieModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="scheduleModal">
+    <div class="modal-content">
+        <h3 id="scheduleModalTitle">Add Schedule Item</h3>
+        <input type="hidden" id="scheduleId">
+        <input type="hidden" id="scheduleType">
+        <div class="form-group">
+            <label>Event Type</label>
+            <select id="scheduleEventType" class="input" onchange="toggleScheduleFields()">
+                <option value="match">Football Match</option>
+                <option value="series">Series/Movie</option>
+            </select>
+        </div>
+        <div id="matchFields">
+            <div class="form-group">
+                <label>Team 1 Name</label>
+                <input type="text" id="team1" class="input" placeholder="Team 1">
+            </div>
+            <div class="form-group">
+                <label>Team 1 Logo URL</label>
+                <input type="text" id="team1Logo" class="input" placeholder="Logo URL">
+            </div>
+            <div class="form-group">
+                <label>Team 2 Name</label>
+                <input type="text" id="team2" class="input" placeholder="Team 2">
+            </div>
+            <div class="form-group">
+                <label>Team 2 Logo URL</label>
+                <input type="text" id="team2Logo" class="input" placeholder="Logo URL">
+            </div>
+        </div>
+        <div id="seriesFields" style="display:none;">
+            <div class="form-group">
+                <label>Series/Movie Title</label>
+                <input type="text" id="seriesTitle" class="input" placeholder="Title">
+            </div>
+            <div class="form-group">
+                <label>Logo URL</label>
+                <input type="text" id="seriesLogo" class="input" placeholder="Logo URL">
+            </div>
+            <div class="form-group">
+                <label>Movie ID (optional)</label>
+                <input type="text" id="seriesMovieId" class="input" placeholder="Associated movie ID">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Match Time</label>
+            <input type="datetime-local" id="scheduleTime" class="input">
+        </div>
+        <div class="form-group">
+            <label>Channel Name</label>
+            <input type="text" id="scheduleChannel" class="input" placeholder="Channel name">
+        </div>
+        <div class="form-group">
+            <label>Channel ID (for streaming)</label>
+            <input type="text" id="scheduleChannelId" class="input" placeholder="Associated channel ID">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="saveScheduleItem()">Save</button>
+            <button class="btn" style="background:#333;margin-top:8px;" onclick="closeModal('scheduleModal')">Cancel</button>
         </div>
     </div>
 </div>
@@ -446,204 +397,654 @@
         messagingSenderId: "735017831251",
         appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
     };
-    firebase.initializeApp(firebaseConfig);
+    
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
-
-    let allUsers=[], channels={}, movies={}, downloads={}, tips={}, bettingTips={}, chatUid=null, currentChatUser=null;
-    let trialSettings={duration:7,unit:'hours'}, categories=[], appSettings={cardSize:'medium',fontSize:'medium',carouselInterval:5000,lockedChannels:[],freeChannels:[],channelScripts:{}};
-    let allCarouselSlides=[];
-    let currentBookingCodes=[], currentEditBookingCodes=[];
-    let castArray = [];
-
-    auth.onAuthStateChanged(u=>{ if(u){ document.getElementById('authModal').style.display='none'; init(); } else { document.getElementById('authModal').style.display='flex'; } });
-    function login(){ auth.signInWithEmailAndPassword(document.getElementById('lemail').value, document.getElementById('lpass').value).catch(e=>alert(e.message)); }
-    function openPage(id){ document.getElementById('homeView').style.display='none'; document.querySelectorAll('.page-view').forEach(p=>p.style.display='none'); document.getElementById(id).style.display='block'; document.getElementById('backBtn').style.display='block'; if(id==='users') filterUsers('all'); if(id==='channels') loadChannels(); if(id==='movies') loadAllMovies(); if(id==='devices') loadDeviceRequests(); if(id==='categories') loadCategories(); if(id==='appSettings') loadAppSettingsPage(); if(id==='newUsers') filterNewUsers('today'); if(id==='premium') loadPremiumContent(); if(id==='tips') loadTips(); if(id==='bettingTips') initBettingTips(); if(id==='downloads') loadDownloads(); if(id==='chat') loadChatList(); }
-    function goHome(){ document.querySelectorAll('.page-view').forEach(p=>p.style.display='none'); document.getElementById('homeView').style.display='grid'; document.getElementById('backBtn').style.display='none'; document.getElementById('pageTitle').innerText='STANY MIN TV ADMIN'; }
-    function closeModal(id){ document.getElementById(id).style.display='none'; }
-    function toast(msg){ const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2500); }
-
-    function init(){ loadData(); loadChatList(); loadSettings(); loadTrialSettings(); loadCategories(); loadAppSettings(); initBettingTips(); }
-
-    function loadData(){
-        db.ref('users').on('value',s=>{ allUsers=[]; let total=0,premium=0,trial=0,blocked=0,active=0,newUsers=0; const today=new Date().toDateString(); s.forEach(c=>{ let u={key:c.key,...c.val()}; u.isExpired=u.accessExpiry&&u.accessExpiry<Date.now(); u.isTrial=u.subscriptionType==='trial'; u.isPremium=u.subscriptionType==='premium'; const join=u.joinDate?new Date(u.joinDate).toDateString():new Date(u.createdAt||c.key).toDateString(); u.isNew=join===today; total++; if(u.isBlocked) blocked++; else if(u.isPremium&&!u.isExpired) premium++; else if(u.isTrial&&!u.isExpired) trial++; else if(!u.isExpired&&u.accessExpiry) active++; if(u.isNew) newUsers++; allUsers.push(u); }); document.getElementById('cntUsers').innerText=total; document.getElementById('statTotalUsers').innerText=total; document.getElementById('statPremiumUsers').innerText=premium; document.getElementById('statTrialUsers').innerText=trial; document.getElementById('statNewUsers').innerText=newUsers; document.getElementById('cntNewUsers').innerText=newUsers; filterUsers('all'); });
-        db.ref('channels').on('value',s=>{ channels={}; const g=document.getElementById('chanGrid'); g.innerHTML=''; let list=[]; s.forEach(c=>{ const ch={id:c.key,...c.val()}; channels[c.key]=ch; list.push(ch); }); list.sort((a,b)=>(a.order||999)-(b.order||999)); list.forEach(ch=>{ let img = ch.posterURL || (ch.type==='mdp'?ch.poster:'https://via.placeholder.com/150x100?text=No+Image'); g.innerHTML+=`<div class="item-card"><img src="${img}" class="item-img"><div class="item-body"><div class="item-title">${ch.name||'Unnamed'} ${ch.type==='mdp'?'[MDP]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openChanModal('${ch.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('channels','${ch.id}')">Del</button></div></div></div>`; }); document.getElementById('cntChan').innerText=s.numChildren(); updateAssignmentDropdowns(); });
-        db.ref('movies').on('value',s=>{ movies={}; const g=document.getElementById('movGrid'); g.innerHTML=''; s.forEach(c=>{ movies[c.key]={id:c.key,...c.val()}; g.innerHTML+=`<div class="item-card"><img src="${c.val().posterURL||'https://via.placeholder.com/150x100?text=No+Image'}" class="item-img"><div class="item-body"><div class="item-title">${c.val().title||'Untitled'} ${c.val().locked?'[LOCKED]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${c.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('movies','${c.key}')">Del</button></div></div></div>`; }); document.getElementById('cntMov').innerText=s.numChildren(); updateAssignmentDropdowns(); });
-        loadDownloads(); loadTips(); loadDeviceRequests();
+    
+    let allUsers = [];
+    let allChannels = [];
+    let allMovies = [];
+    let allMatches = [];
+    let allSeries = [];
+    let carouselItems = [];
+    
+    function adminLogin(){
+        let email = document.getElementById('adminEmail').value;
+        let pass = document.getElementById('adminPassword').value;
+        auth.signInWithEmailAndPassword(email,pass)
+            .then(() => {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                loadPage('dashboard');
+            })
+            .catch(e => alert(e.message));
     }
-    function loadDownloads(){ db.ref('downloadableMovies').on('value',s=>{ downloads={}; const g=document.getElementById('downloadsGrid'); g.innerHTML=''; let count=0; s.forEach(c=>{ downloads[c.key]={id:c.key,...c.val()}; g.innerHTML+=`<div class="item-card"><img src="${c.val().posterURL||'https://via.placeholder.com/150x100?text=No+Image'}" class="item-img"><div class="item-body"><div class="item-title">${c.val().title||'Untitled'}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openDownloadModal('${c.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('downloadableMovies','${c.key}')">Del</button></div></div></div>`; count++; }); document.getElementById('cntDownloads').innerText=count; }); }
-    function loadTips(){ db.ref('tips').on('value',s=>{ tips={}; const g=document.getElementById('tipsGrid'); g.innerHTML=''; s.forEach(c=>{ tips[c.key]={id:c.key,...c.val()}; g.innerHTML+=`<div class="tip-card" style="background:var(--card);padding:12px;border-radius:10px;margin-bottom:8px;"><div class="tip-title">${c.val().title}</div><div class="tip-content">${c.val().content}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openTipModal('${c.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('tips','${c.key}')">Del</button></div></div>`; }); }); }
-    function loadDeviceRequests(){ db.ref('deviceRequests').on('value',s=>{ const d=document.getElementById('devList'); d.innerHTML=''; let count=0; s.forEach(r=>{ const req=r.val(); if(req.status==='pending'){ d.innerHTML+=`<div class="device-card"><input type="checkbox" class="device-checkbox" data-req-id="${r.key}" data-user-uid="${req.userUid}" data-device-id="${req.deviceId}"><div class="device-header"><div><b>${req.userName||'User'}</b><div>${req.email}</div></div><div>Device: ${req.deviceId}</div></div><div class="device-actions"><button class="btn btn-p btn-sm" onclick="approveDevice('${r.key}','${req.userUid}','${req.deviceId}')">Approve</button><button class="btn btn-d btn-sm" onclick="rejectDevice('${r.key}')">Reject</button></div></div>`; count++; } }); document.getElementById('cntDev').innerText=count; }); }
-    function loadChatList(){ db.ref('stanyBotMessages').on('value',s=>{ const l=document.getElementById('chatList'); l.innerHTML=''; let newCount=0; s.forEach(userChat=>{ const userId=userChat.key; let lastMsg=null,unread=false; userChat.forEach(msg=>{ const m=msg.val(); if(!lastMsg||m.timestamp>lastMsg.timestamp){ lastMsg=m; if(m.sender==='user'&&(!m.read||m.read===false)) unread=true; } }); if(lastMsg){ const user=allUsers.find(u=>u.key===userId); if(user){ l.innerHTML+=`<div class="chat-user" onclick="openChatRoom('${userId}')"><div><div class="chat-user-name">${user.name||'User'}</div><div class="chat-user-email">${user.email}</div><div class="chat-user-msg">${lastMsg.text}</div></div>${unread?'<div class="badge">NEW</div>':''}</div>`; } } }); document.getElementById('cntChat').innerText=newCount; }); }
-    function openChatRoom(uid){ chatUid=uid; currentChatUser=allUsers.find(u=>u.key===uid); document.getElementById('chatListContainer').style.display='none'; document.getElementById('chatRoom').style.display='flex'; document.getElementById('chatHeaderName').innerText=currentChatUser.name||'User'; document.getElementById('chatHeaderEmail').innerText=currentChatUser.email; loadChatMessages(); }
-    function closeChatRoom(){ document.getElementById('chatListContainer').style.display='block'; document.getElementById('chatRoom').style.display='none'; chatUid=null; }
-    function loadChatMessages(){ if(!chatUid) return; const m=document.getElementById('chatMsgs'); m.innerHTML=''; db.ref(`stanyBotMessages/${chatUid}`).limitToLast(50).on('value',s=>{ m.innerHTML=''; s.forEach(msg=>{ const data=msg.val(); const div=document.createElement('div'); div.className=`msg msg-${data.sender}`; div.innerHTML=`<div class="msg-info">${new Date(data.timestamp).toLocaleString()}</div>${data.text}`; m.appendChild(div); if(data.sender==='user'&&(!data.read||data.read===false)) db.ref(`stanyBotMessages/${chatUid}/${msg.key}/read`).set(true); }); m.scrollTop=m.scrollHeight; }); }
-    function sendReply(){ if(!chatUid) return; const text=document.getElementById('chatInput').value.trim(); if(!text) return; db.ref(`stanyBotMessages/${chatUid}`).push({ text, sender:'admin', timestamp:Date.now(), read:false }); document.getElementById('chatInput').value=''; sendUserNotification(chatUid,"Admin Replied",`Admin: ${text}`); }
-
-    function filterUsers(type){ const list=document.getElementById('userList'); list.innerHTML=''; let filtered=allUsers; switch(type){ case'premium': filtered=allUsers.filter(u=>u.subscriptionType==='premium'&&!u.isExpired&&!u.isBlocked); break; case'trial': filtered=allUsers.filter(u=>u.subscriptionType==='trial'&&!u.isExpired&&!u.isBlocked); break; case'active': filtered=allUsers.filter(u=>!u.isExpired&&!u.isBlocked&&u.accessExpiry); break; case'blocked': filtered=allUsers.filter(u=>u.isBlocked); break; case'expired': filtered=allUsers.filter(u=>u.isExpired&&!u.isBlocked); break; case'new': const today=new Date().toDateString(); filtered=allUsers.filter(u=>{ const join=u.joinDate?new Date(u.joinDate).toDateString():new Date(u.createdAt||u.key).toDateString(); return join===today&&!u.isBlocked; }); break; } filtered.forEach(u=>{ let status='status-active',text='ACTIVE'; if(u.isBlocked){ status='status-blocked'; text='BLOCKED'; }else if(u.isExpired){ status='status-expired'; text='EXPIRED'; }else if(u.subscriptionType==='premium'){ status='status-premium'; text='PREMIUM'; }else if(u.subscriptionType==='trial'){ status='status-trial'; text='TRIAL'; }else if(u.isNew){ status='status-new'; text='NEW'; } const days=u.accessExpiry?Math.ceil((u.accessExpiry-Date.now())/(86400000)):0; list.innerHTML+=`<div class="user-row" onclick="openUserModal('${u.key}')"><div><b>${u.name||'No Name'}</b><div style="color:var(--gray);font-size:0.7em;">${u.email}</div><div style="font-size:0.7em;">${u.activeDeviceId?'Device:'+u.activeDeviceId.substring(0,6)+'...':'No Device'} ${days>0?days+'d left':u.accessExpiry?'EXPIRED':''}</div></div><div class="user-status ${status}">${text}</div></div>`; }); }
-    function searchUI(){ const q=document.getElementById('searchUser').value.toLowerCase(); document.querySelectorAll('.user-row').forEach(row=>{ row.style.display=row.innerText.toLowerCase().includes(q)?'flex':'none'; }); }
-    function openUserModal(uid){ const u=allUsers.find(x=>x.key===uid); if(!u) return; document.getElementById('umId').value=u.key; document.getElementById('umName').innerText=u.name||'No Name'; document.getElementById('umEmail').innerText=u.email; document.getElementById('umSubType').value=u.subscriptionType||'none'; document.getElementById('umDevice').value=u.activeDeviceId||'No device'; if(u.accessExpiry) document.getElementById('umDate').value=new Date(u.accessExpiry).toISOString().split('T')[0]; else document.getElementById('umDate').value=''; document.getElementById('umBlockBtn').innerText=u.isBlocked?'UNBLOCK':'BLOCK'; document.getElementById('umBlockBtn').className=u.isBlocked?'btn btn-p':'btn btn-d'; toggleSubscriptionFields(); document.getElementById('userModal').style.display='flex'; }
-    function toggleSubscriptionFields(){ document.getElementById('subFields').style.display=document.getElementById('umSubType').value==='none'?'none':'block'; }
-    function addTime(days){ const inp=document.getElementById('umDate'); let date=inp.value?new Date(inp.value):new Date(); date.setDate(date.getDate()+days); inp.value=date.toISOString().split('T')[0]; }
-    function saveUserSub(){ const uid=document.getElementById('umId').value, type=document.getElementById('umSubType').value, date=document.getElementById('umDate').value; const updates={subscriptionType:type}; if(type!=='none'&&date) updates.accessExpiry=new Date(date).getTime(); else if(type==='none') updates.accessExpiry=null; db.ref('users/'+uid).update(updates).then(()=>{ toast("Updated"); document.getElementById('userModal').style.display='none'; }); }
-    function toggleBlock(){ const uid=document.getElementById('umId').value, u=allUsers.find(x=>x.key===uid); if(!u) return; db.ref('users/'+uid+'/isBlocked').set(!u.isBlocked).then(()=>{ toast(u.isBlocked?"Unblocked":"Blocked"); document.getElementById('userModal').style.display='none'; }); }
-    function viewPass(){ const uid=document.getElementById('umId').value, u=allUsers.find(x=>x.key===uid); if(!u) return; const list=document.getElementById('passList'); list.innerHTML=''; if(u.channelPasswords){ for(let [chanId,pass] of Object.entries(u.channelPasswords)){ const chan=Object.values(channels).find(c=>c.id===chanId); list.innerHTML+=`<div><b>${chan?chan.name:'Unknown'}</b><br><span>${pass}</span></div>`; } }else list.innerHTML='No passwords'; document.getElementById('passModal').style.display='flex'; }
-    function forceLogout(){ const uid=document.getElementById('umId').value; db.ref('users/'+uid+'/activeDeviceId').set(null).then(()=>{ toast("Logged out"); document.getElementById('userModal').style.display='none'; }); }
-
-    function toggleChannelType(){ const type=document.getElementById('chType').value; document.getElementById('normalChannelFields').style.display=type==='normal'?'block':'none'; document.getElementById('mdpChannelFields').style.display=type==='mdp'?'block':'none'; }
-    function openChanModal(id){ const modal=document.getElementById('chanModal'), title=document.getElementById('cTitle'); if(id){ const c=channels[id]; if(c){ title.innerText='Edit Channel'; document.getElementById('cId').value=id; document.getElementById('cName').value=c.name||''; document.getElementById('chType').value=c.type||'normal'; toggleChannelType(); if(c.type==='normal'){ document.getElementById('cLink').value=c.m3u8Link||''; document.getElementById('cImg').value=c.posterURL||''; document.getElementById('cDesc').value=c.description||''; }else{ document.getElementById('mdpToken').value=c.token||''; document.getElementById('mdpLicenseUrl').value=c.licenseUrl||''; document.getElementById('mdpMpdUrl').value=c.mpdUrl||''; document.getElementById('mdpPoster').value=c.posterURL||''; document.getElementById('mdpDesc').value=c.description||''; } document.getElementById('cOrder').value=c.order||999; document.getElementById('chLock').checked=c.locked||false; if(c.categories) document.querySelectorAll('#cCategory input').forEach(cb=>{ cb.checked=c.categories.includes(cb.value); }); } }else{ title.innerText='Add Channel'; document.getElementById('cId').value=''; document.getElementById('cName').value=''; document.getElementById('chType').value='normal'; toggleChannelType(); document.getElementById('cLink').value=''; document.getElementById('cImg').value=''; document.getElementById('cDesc').value=''; document.getElementById('mdpToken').value=''; document.getElementById('mdpLicenseUrl').value=''; document.getElementById('mdpMpdUrl').value=''; document.getElementById('mdpPoster').value=''; document.getElementById('mdpDesc').value=''; document.getElementById('cOrder').value=999; document.getElementById('chLock').checked=false; document.querySelectorAll('#cCategory input').forEach(cb=>cb.checked=false); } modal.style.display='flex'; }
-    function saveChan(){ const id=document.getElementById('cId').value; const type=document.getElementById('chType').value; let data={ name:document.getElementById('cName').value, type:type, order:parseInt(document.getElementById('cOrder').value)||999, locked:document.getElementById('chLock').checked, updatedAt:Date.now() }; if(type==='normal'){ data.m3u8Link=document.getElementById('cLink').value; data.posterURL=document.getElementById('cImg').value; data.description=document.getElementById('cDesc').value; }else{ data.token=document.getElementById('mdpToken').value; data.licenseUrl=document.getElementById('mdpLicenseUrl').value; data.mpdUrl=document.getElementById('mdpMpdUrl').value; data.posterURL=document.getElementById('mdpPoster').value; data.description=document.getElementById('mdpDesc').value; } const cats=Array.from(document.querySelectorAll('#cCategory input:checked')).map(cb=>cb.value); if(cats.length) data.categories=cats; if(id){ db.ref('channels/'+id).update(data).then(()=>{ toast("Channel updated"); document.getElementById('chanModal').style.display='none'; loadChannels(); }); }else{ data.createdAt=Date.now(); db.ref('channels').push(data).then(()=>{ toast("Channel added"); document.getElementById('chanModal').style.display='none'; loadChannels(); }); } }
-
-    function openMovModal(id){ const modal=document.getElementById('movModal'), title=document.getElementById('mTitle'); castArray = []; if(id){ const m=movies[id]; if(m){ title.innerText='Edit Movie'; document.getElementById('mId').value=id; document.getElementById('mName').value=m.title||''; document.getElementById('releaseYear').value=m.release_year||''; document.getElementById('movieRating').value=m.rating||''; document.getElementById('movieRuntime').value=m.runtime||''; document.getElementById('posterUrl').value=m.posterURL||''; document.getElementById('backdropUrl').value=m.backdrop_url||''; document.getElementById('storyline').value=m.storyline||''; document.getElementById('trailerUrl').value=m.trailer_url||''; document.getElementById('movieGenres').value=(m.genres||[]).join(', '); document.getElementById('link1080p').value=(m.movie_links?.['1080p'])||''; document.getElementById('link720p').value=(m.movie_links?.['720p'])||''; document.getElementById('link480p').value=(m.movie_links?.['480p'])||''; document.getElementById('mSection').value=m.section||'regular'; document.getElementById('movLock').checked=m.locked||false; document.getElementById('movDrm').checked=m.hasDRM||false; document.getElementById('movFormat').value=m.streamFormat||'hls'; if(m.language) document.querySelectorAll('#languageCheckboxes input').forEach(cb=>{ cb.checked=m.language.includes(cb.value); }); if(m.genre) document.querySelectorAll('#mCategory input').forEach(cb=>{ cb.checked=m.genre.includes(cb.value); }); if(m.cast) castArray = m.cast; renderCastList(); } }else{ title.innerText='Add Movie'; document.getElementById('mId').value=''; document.getElementById('mName').value=''; document.getElementById('releaseYear').value=''; document.getElementById('movieRating').value=''; document.getElementById('movieRuntime').value=''; document.getElementById('posterUrl').value=''; document.getElementById('backdropUrl').value=''; document.getElementById('storyline').value=''; document.getElementById('trailerUrl').value=''; document.getElementById('movieGenres').value=''; document.getElementById('link1080p').value=''; document.getElementById('link720p').value=''; document.getElementById('link480p').value=''; document.getElementById('mSection').value='regular'; document.getElementById('movLock').checked=false; document.getElementById('movDrm').checked=false; document.getElementById('movFormat').value='hls'; document.querySelectorAll('#languageCheckboxes input').forEach(cb=>cb.checked=false); document.querySelectorAll('#mCategory input').forEach(cb=>cb.checked=false); castArray=[]; renderCastList(); } modal.style.display='flex'; }
-    function renderCastList(){ const container=document.getElementById('castContainer'); if(!castArray.length){ container.innerHTML='<div class="empty-state">No cast members</div>'; return; } container.innerHTML=castArray.map((a,i)=>`<div class="cast-member"><img src="${a.profile_image||'https://via.placeholder.com/40'}" onerror="this.src='https://via.placeholder.com/40'"><div class="cast-info"><div class="cast-name">${a.name}</div><div class="cast-character">${a.character||''}</div></div><div class="cast-actions"><button class="btn btn-sm btn-secondary" onclick="editCastMember(${i})"><i class="fas fa-pen"></i></button><button class="btn btn-sm btn-danger" onclick="removeCastMember(${i})"><i class="fas fa-trash"></i></button></div></div>`).join(''); }
-    function editCastMember(i){ const a=castArray[i]; const n=prompt('Name',a.name); if(n!==null) a.name=n; const c=prompt('Character',a.character); if(c!==null) a.character=c; const img=prompt('Image URL',a.profile_image); if(img!==null) a.profile_image=img; renderCastList(); }
-    function removeCastMember(i){ castArray.splice(i,1); renderCastList(); }
-    function toggleManualCast(){ document.getElementById('manualCastForm').style.display=document.getElementById('manualCastForm').style.display==='none'?'grid':'none'; }
-    function addManualCast(){ const name=document.getElementById('manualCastName').value.trim(); if(!name) return toast("Enter actor name"); castArray.push({ name, character:document.getElementById('manualCastCharacter').value.trim(), profile_image:document.getElementById('manualCastImage').value.trim()||'https://via.placeholder.com/40' }); document.getElementById('manualCastName').value=''; document.getElementById('manualCastCharacter').value=''; document.getElementById('manualCastImage').value=''; renderCastList(); toast("Cast added"); }
-    function saveMov(){ const id=document.getElementById('mId').value; const data={ title:document.getElementById('mName').value, release_year:parseInt(document.getElementById('releaseYear').value)||0, rating:parseFloat(document.getElementById('movieRating').value)||0, runtime:parseInt(document.getElementById('movieRuntime').value)||0, posterURL:document.getElementById('posterUrl').value, backdrop_url:document.getElementById('backdropUrl').value, storyline:document.getElementById('storyline').value, trailer_url:document.getElementById('trailerUrl').value, genres:document.getElementById('movieGenres').value.split(',').map(g=>g.trim()).filter(g=>g), language:Array.from(document.querySelectorAll('#languageCheckboxes input:checked')).map(cb=>cb.value), movie_links:{ "1080p":document.getElementById('link1080p').value, "720p":document.getElementById('link720p').value, "480p":document.getElementById('link480p').value }, section:document.getElementById('mSection').value, locked:document.getElementById('movLock').checked, hasDRM:document.getElementById('movDrm').checked, streamFormat:document.getElementById('movFormat').value, cast:castArray, updatedAt:Date.now() }; const cats=Array.from(document.querySelectorAll('#mCategory input:checked')).map(cb=>cb.value); if(cats.length) data.genre=cats; if(id){ db.ref('movies/'+id).update(data).then(()=>{ toast("Movie updated"); document.getElementById('movModal').style.display='none'; loadAllMovies(); }); }else{ data.createdAt=Date.now(); db.ref('movies').push(data).then(()=>{ toast("Movie added"); document.getElementById('movModal').style.display='none'; loadAllMovies(); }); } }
-
-    function openDownloadModal(id){ const modal=document.getElementById('downloadModal'); if(id){ const d=downloads[id]; if(d){ document.getElementById('dlId').value=id; document.getElementById('dlTitle').value=d.title||''; document.getElementById('dlUrl').value=d.downloadURL||''; document.getElementById('dlImg').value=d.posterURL||''; document.getElementById('dlDesc').value=d.description||''; } }else{ document.getElementById('dlId').value=''; document.getElementById('dlTitle').value=''; document.getElementById('dlUrl').value=''; document.getElementById('dlImg').value=''; document.getElementById('dlDesc').value=''; } modal.style.display='flex'; }
-    function saveDownload(){ const id=document.getElementById('dlId').value; const data={ title:document.getElementById('dlTitle').value, downloadURL:document.getElementById('dlUrl').value, posterURL:document.getElementById('dlImg').value, description:document.getElementById('dlDesc').value, updatedAt:Date.now() }; if(id){ db.ref('downloadableMovies/'+id).update(data).then(()=>{ toast("Download updated"); document.getElementById('downloadModal').style.display='none'; loadDownloads(); }); }else{ data.createdAt=Date.now(); db.ref('downloadableMovies').push(data).then(()=>{ toast("Download added"); document.getElementById('downloadModal').style.display='none'; loadDownloads(); }); } }
-    function openTipModal(id){ const modal=document.getElementById('tipModal'), title=document.getElementById('tipTitle'); if(id){ const t=tips[id]; if(t){ title.innerText='Edit Tip'; document.getElementById('tipId').value=id; document.getElementById('tipName').value=t.title||''; document.getElementById('tipCategory').value=t.category||'general'; document.getElementById('tipContent').value=t.content||''; } }else{ title.innerText='Add Tip'; document.getElementById('tipId').value=''; document.getElementById('tipName').value=''; document.getElementById('tipCategory').value='general'; document.getElementById('tipContent').value=''; } modal.style.display='flex'; }
-    function saveTip(){ const id=document.getElementById('tipId').value; const data={ title:document.getElementById('tipName').value, category:document.getElementById('tipCategory').value, content:document.getElementById('tipContent').value, updatedAt:Date.now() }; if(id){ db.ref('tips/'+id).update(data).then(()=>{ toast("Tip updated"); document.getElementById('tipModal').style.display='none'; loadTips(); }); }else{ data.createdAt=Date.now(); db.ref('tips').push(data).then(()=>{ toast("Tip added"); document.getElementById('tipModal').style.display='none'; loadTips(); }); } }
-    function del(type,id){ if(confirm("Delete?")) db.ref(type+'/'+id).remove().then(()=>{ toast("Deleted"); if(type==='channels') loadChannels(); if(type==='movies') loadAllMovies(); if(type==='downloadableMovies') loadDownloads(); if(type==='tips') loadTips(); if(type==='bettingTips') initBettingTips(); }); }
-
-    function approveDevice(reqId,uid,deviceId){ db.ref('deviceRequests/'+reqId+'/status').set('approved').then(()=>{ db.ref('users/'+uid+'/activeDeviceId').set(deviceId); toast("Approved"); loadDeviceRequests(); }); }
-    function rejectDevice(reqId){ db.ref('deviceRequests/'+reqId+'/status').set('rejected').then(()=>{ toast("Rejected"); loadDeviceRequests(); }); }
-    async function bulkApproveDevices(){ const boxes=document.querySelectorAll('#devList .device-checkbox:checked'); if(!boxes.length) return toast("Select at least one"); for(const cb of boxes){ await approveDevice(cb.dataset.reqId, cb.dataset.userUid, cb.dataset.deviceId); } toast(`Approved ${boxes.length}`); }
-    async function bulkRejectDevices(){ const boxes=document.querySelectorAll('#devList .device-checkbox:checked'); if(!boxes.length) return toast("Select at least one"); for(const cb of boxes){ await rejectDevice(cb.dataset.reqId); } toast(`Rejected ${boxes.length}`); }
-
-    function loadSettings(){ db.ref('settings').on('value',s=>{ if(s.exists()){ const d=s.val(); document.getElementById('setAppName').value=d.appName||''; document.getElementById('setColor').value=d.primaryColor||'#00e676'; document.getElementById('setColorText').value=d.primaryColor||'#00e676'; document.getElementById('setContact').value=d.adminContactNumber||''; } }); }
-    function saveSettings(){ const data={ appName:document.getElementById('setAppName').value, primaryColor:document.getElementById('setColorText').value, adminContactNumber:document.getElementById('setContact').value, updatedAt:Date.now() }; db.ref('settings').set(data).then(()=>toast("Saved")); }
-    function clearAllDeviceRequests(){ if(confirm("Clear all device requests?")) db.ref('deviceRequests').remove().then(()=>toast("Cleared")); }
-    function resetAllUsers(){ if(confirm("Reset all users' device IDs?")) db.ref('users').once('value').then(s=>{ s.forEach(u=>db.ref('users/'+u.key+'/activeDeviceId').set(null)); toast("Reset"); }); }
-
-    function loadCategories(){ db.ref('genres').on('value',s=>{ categories=[]; const list=document.getElementById('categoryList'); list.innerHTML=''; s.forEach(c=>{ const cat={id:c.key,name:c.val().name,order:c.val().order||0}; categories.push(cat); list.innerHTML+=`<div class="sortable-item" draggable="true" data-id="${cat.id}"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${cat.id}')">Del</button></div>`; }); categories.sort((a,b)=>(a.order||0)-(b.order||0)); updateCategoryDropdowns(); loadCategoryStats(); attachCategoryDrag(); }); }
-    function attachCategoryDrag(){ const items=document.querySelectorAll('#categoryList .sortable-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.id); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcId=e.dataTransfer.getData('text/plain'); // ✅ Fixed: getData takes only 1 param
-        const tgtId=item.dataset.id; if(srcId===tgtId) return; const srcIdx=categories.findIndex(c=>c.id===srcId); const tgtIdx=categories.findIndex(c=>c.id===tgtId); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=categories.splice(srcIdx,1); categories.splice(tgtIdx,0,moved); renderCategoryList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
-    function renderCategoryList(){ const list=document.getElementById('categoryList'); list.innerHTML=''; categories.forEach(cat=>{ list.innerHTML+=`<div class="sortable-item" draggable="true" data-id="${cat.id}"><span>${cat.name}</span><button class="btn btn-d btn-sm" onclick="deleteCategory('${cat.id}')">Del</button></div>`; }); attachCategoryDrag(); updateCategoryDropdowns(); }
-    function addCategory(){ const name=document.getElementById('newCategoryName').value; if(!name) return toast("Enter name"); db.ref('genres').push({name,order:categories.length}).then(()=>{ document.getElementById('newCategoryName').value=''; toast("Added"); loadCategories(); }); }
-    function deleteCategory(id){ if(confirm("Delete category?")) db.ref('genres/'+id).remove().then(()=>{ toast("Deleted"); loadCategories(); }); }
-    function saveCategoryOrder(){ const updates={}; categories.forEach((cat,idx)=>{ updates[`${cat.id}/order`]=idx; }); db.ref('genres').update(updates).then(()=>toast("Order saved")); }
-    function updateCategoryDropdowns(){ const opts=categories.map(c=>`<div class="multi-select-item"><input type="checkbox" value="${c.name}"><label>${c.name}</label></div>`).join(''); document.getElementById('cCategory').innerHTML=opts; document.getElementById('mCategory').innerHTML=opts; document.getElementById('assignChannelCategory').innerHTML=opts; document.getElementById('assignMovieCategory').innerHTML=opts; }
-    function loadCategoryStats(){ const stats=document.getElementById('categoryStats'); stats.innerHTML=''; categories.forEach(cat=>{ const chCount=Object.values(channels).filter(ch=>ch.categories&&ch.categories.includes(cat.name)).length; const movCount=Object.values(movies).filter(mv=>mv.genre&&mv.genre.includes(cat.name)).length; stats.innerHTML+=`<div class="stat-card"><div class="stat-number">${chCount+movCount}</div><div class="stat-label">${cat.name}</div><div>${chCount}ch ${movCount}mv</div></div>`; }); }
-    function assignChannelCategories(){ const chId=document.getElementById('assignChannelSelect').value; const selected=Array.from(document.querySelectorAll('#assignChannelCategory input:checked')).map(cb=>cb.value); if(!chId) return toast("Select channel"); if(!selected.length) return toast("Select categories"); db.ref('channels/'+chId+'/categories').set(selected).then(()=>toast("Assigned")); }
-    function assignMovieCategories(){ const movId=document.getElementById('assignMovieSelect').value; const selected=Array.from(document.querySelectorAll('#assignMovieCategory input:checked')).map(cb=>cb.value); if(!movId) return toast("Select movie"); if(!selected.length) return toast("Select categories"); db.ref('movies/'+movId+'/genre').set(selected).then(()=>toast("Assigned")); }
-    function updateAssignmentDropdowns(){ const chSelect=document.getElementById('assignChannelSelect'); chSelect.innerHTML='<option>Select Channel</option>'; Object.values(channels).forEach(ch=>{ chSelect.innerHTML+=`<option value="${ch.id}">${ch.name}</option>`; }); const movSelect=document.getElementById('assignMovieSelect'); movSelect.innerHTML='<option>Select Movie</option>'; Object.values(movies).forEach(m=>{ movSelect.innerHTML+=`<option value="${m.id}">${m.title}</option>`; }); }
-
-    function loadPremiumContent(){ const popular=Object.values(movies).filter(m=>m.section==='popular'); const popularGrid=document.getElementById('popularMovies'); popularGrid.innerHTML=''; popular.forEach(m=>{ popularGrid.innerHTML+=`<div class="item-card"><img src="${m.posterURL||'https://via.placeholder.com/150x100'}" class="item-img"><div class="item-body"><div class="item-title">${m.title}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${m.id}')">Edit</button></div></div></div>`; }); const latest=Object.values(movies).filter(m=>m.section==='latest'); const latestGrid=document.getElementById('latestMovies'); latestGrid.innerHTML=''; latest.forEach(m=>{ latestGrid.innerHTML+=`<div class="item-card"><img src="${m.posterURL||'https://via.placeholder.com/150x100'}" class="item-img"><div class="item-body"><div class="item-title">${m.title}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${m.id}')">Edit</button></div></div></div>`; }); }
-    function openMovModalWithSection(section){ openMovModal(); document.getElementById('mSection').value=section; }
-    function loadTrialSettings(){ db.ref('trialSettings').on('value',s=>{ if(s.exists()){ trialSettings=s.val(); document.getElementById('trialDuration').value=trialSettings.duration||7; setTrialUnit(trialSettings.unit||'hours'); } }); }
-    // ✅ Fixed: Added event parameter
-    function setTrialUnit(unit, event){ 
-        trialSettings.unit=unit; 
-        document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
-            btn.style.background='#333'; 
-            btn.style.color='white'; 
-        }); 
-        if(event && event.target) {
-            event.target.style.background='var(--primary)'; 
-            event.target.style.color='black'; 
+    
+    function adminLogout(){
+        auth.signOut().then(() => {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('appContainer').style.display = 'none';
+        });
+    }
+    
+    auth.onAuthStateChanged(user => {
+        if(user){
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            loadPage('dashboard');
+        }
+    });
+    
+    function loadData(){
+        db.ref('users').on('value', snap => {
+            allUsers = [];
+            snap.forEach(u => { allUsers.push({ id: u.key, ...u.val() }); });
+            if(document.getElementById('pageContent').innerHTML.includes('Users')) loadUsersPage();
+        });
+        db.ref('channels').on('value', snap => {
+            allChannels = [];
+            snap.forEach(c => { allChannels.push({ id: c.key, ...c.val() }); });
+        });
+        db.ref('movies').on('value', snap => {
+            allMovies = [];
+            snap.forEach(m => { allMovies.push({ id: m.key, ...m.val() }); });
+        });
+        db.ref('matchSchedule').on('value', snap => {
+            allMatches = [];
+            snap.forEach(m => { allMatches.push({ id: m.key, ...m.val() }); });
+        });
+        db.ref('seriesSchedule').on('value', snap => {
+            allSeries = [];
+            snap.forEach(s => { allSeries.push({ id: s.key, ...s.val() }); });
+        });
+        db.ref('carousel').on('value', snap => {
+            carouselItems = [];
+            snap.forEach(c => { carouselItems.push({ id: c.key, ...c.val() }); });
+        });
+    }
+    
+    function loadPage(page){
+        document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+        event.target.closest('.menu-item').classList.add('active');
+        document.getElementById('pageTitle').innerText = page.charAt(0).toUpperCase() + page.slice(1);
+        
+        if(page === 'dashboard') loadDashboard();
+        else if(page === 'users') loadUsersPage();
+        else if(page === 'channels') loadChannelsPage();
+        else if(page === 'movies') loadMoviesPage();
+        else if(page === 'schedule') loadSchedulePage();
+        else if(page === 'carousel') loadCarouselPage();
+        else if(page === 'settings') loadSettingsPage();
+        
+        loadData();
+    }
+    
+    function loadDashboard(){
+        let html = `
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number" id="totalUsers">0</div><div class="stat-label">Total Users</div></div>
+                <div class="stat-card"><div class="stat-number" id="premiumUsers">0</div><div class="stat-label">Premium Users</div></div>
+                <div class="stat-card"><div class="stat-number" id="trialUsers">0</div><div class="stat-label">Trial Users</div></div>
+                <div class="stat-card"><div class="stat-number" id="blockedUsers">0</div><div class="stat-label">Blocked Users</div></div>
+                <div class="stat-card"><div class="stat-number" id="totalChannels">${allChannels.length}</div><div class="stat-label">Channels</div></div>
+                <div class="stat-card"><div class="stat-number" id="totalMovies">${allMovies.length}</div><div class="stat-label">Movies</div></div>
+            </div>
+            <div class="section">
+                <div class="section-header"><h3>Recent Users</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="loadPage('users')">View All</button></div>
+                <div id="recentUsersList"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        
+        let premium=0, trial=0, blocked=0;
+        allUsers.forEach(u => {
+            if(u.isPremium) premium++;
+            if(u.trialExpiry && u.trialExpiry > Date.now()) trial++;
+            if(u.isBlocked) blocked++;
+        });
+        document.getElementById('totalUsers').innerText = allUsers.length;
+        document.getElementById('premiumUsers').innerText = premium;
+        document.getElementById('trialUsers').innerText = trial;
+        document.getElementById('blockedUsers').innerText = blocked;
+        document.getElementById('totalChannels').innerText = allChannels.length;
+        document.getElementById('totalMovies').innerText = allMovies.length;
+        
+        let recentHtml = '<table><tr><th>Name</th><th>Email</th><th>Status</th><th>Action</th></tr>';
+        allUsers.slice(0,10).forEach(u => {
+            let status = u.isPremium ? 'premium' : (u.trialExpiry && u.trialExpiry > Date.now() ? 'trial' : (u.isBlocked ? 'blocked' : 'expired'));
+            recentHtml += `<tr>
+                <td>${u.name || 'N/A'}</td>
+                <td>${u.email || 'N/A'}</td>
+                <td><span class="user-status status-${status}">${status.toUpperCase()}</span></td>
+                <td><button class="btn btn-primary" style="width:auto;padding:4px 12px;" onclick="toggleUserBlock('${u.id}',${u.isBlocked})">${u.isBlocked ? 'Unblock' : 'Block'}</button></td>
+            </tr>`;
+        });
+        recentHtml += '</table>';
+        document.getElementById('recentUsersList').innerHTML = recentHtml;
+    }
+    
+    function loadUsersPage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>All Users</h3></div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterUsers('all')">All</button>
+                    <button class="filter-btn" onclick="filterUsers('premium')">Premium</button>
+                    <button class="filter-btn" onclick="filterUsers('trial')">Trial</button>
+                    <button class="filter-btn" onclick="filterUsers('blocked')">Blocked</button>
+                    <button class="filter-btn" onclick="filterUsers('expired')">Expired</button>
+                </div>
+                <input type="text" id="userSearch" class="search-box" placeholder="Search users..." onkeyup="filterUsers()">
+                <div id="usersTable"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        filterUsers('all');
+    }
+    
+    function filterUsers(filter){
+        let filtered = [...allUsers];
+        if(filter === 'premium') filtered = filtered.filter(u => u.isPremium === true);
+        else if(filter === 'trial') filtered = filtered.filter(u => u.trialExpiry && u.trialExpiry > Date.now() && !u.isPremium);
+        else if(filter === 'blocked') filtered = filtered.filter(u => u.isBlocked === true);
+        else if(filter === 'expired') filtered = filtered.filter(u => u.trialExpiry && u.trialExpiry <= Date.now() && !u.isPremium && !u.isBlocked);
+        
+        let search = document.getElementById('userSearch')?.value.toLowerCase() || '';
+        if(search) filtered = filtered.filter(u => (u.name || '').toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search));
+        
+        let html = '<table><tr><th>Name</th><th>Email</th><th>Device ID</th><th>Trial Expiry</th><th>Status</th><th>Actions</th></tr>';
+        filtered.forEach(u => {
+            let status = u.isPremium ? 'premium' : (u.trialExpiry && u.trialExpiry > Date.now() ? 'trial' : (u.isBlocked ? 'blocked' : 'expired'));
+            let expiryDate = u.trialExpiry ? new Date(u.trialExpiry).toLocaleString() : 'N/A';
+            html += `<tr>
+                <td>${u.name || 'N/A'}</td>
+                <td>${u.email || 'N/A'}</td>
+                <td>${u.deviceId || 'N/A'}</td>
+                <td>${expiryDate}</td>
+                <td><span class="user-status status-${status}">${status.toUpperCase()}</span></td>
+                <td>
+                    <button class="btn btn-primary" style="width:auto;padding:4px 12px;" onclick="toggleUserBlock('${u.id}',${u.isBlocked})">${u.isBlocked ? 'Unblock' : 'Block'}</button>
+                    <button class="btn btn-success" style="width:auto;padding:4px 12px;margin-left:8px;" onclick="makePremium('${u.id}')">Make Premium</button>
+                    <button class="btn btn-warning" style="width:auto;padding:4px 12px;margin-left:8px;" onclick="extendTrial('${u.id}')">Extend Trial</button>
+                </td>
+            </tr>`;
+        });
+        html += '</table>';
+        document.getElementById('usersTable').innerHTML = html;
+    }
+    
+    function toggleUserBlock(uid, isBlocked){
+        db.ref('users/' + uid + '/isBlocked').set(!isBlocked).then(() => showToast(`User ${!isBlocked ? 'blocked' : 'unblocked'}`));
+    }
+    
+    function makePremium(uid){
+        db.ref('users/' + uid).update({ isPremium: true, trialExpiry: null }).then(() => showToast('User upgraded to premium'));
+    }
+    
+    function extendTrial(uid){
+        let newExpiry = Date.now() + (2 * 60 * 1000);
+        db.ref('users/' + uid).update({ trialExpiry: newExpiry, isPremium: false }).then(() => showToast('Trial extended by 2 minutes'));
+    }
+    
+    function loadChannelsPage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>Channels</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="openChannelModal()">+ Add Channel</button></div>
+                <div class="grid-cards" id="channelsGrid"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        renderChannelsGrid();
+    }
+    
+    function renderChannelsGrid(){
+        let grid = document.getElementById('channelsGrid');
+        grid.innerHTML = '';
+        allChannels.forEach(ch => {
+            grid.innerHTML += `
+                <div class="content-card">
+                    <img src="${ch.posterURL || 'https://via.placeholder.com/150x120'}" onerror="this.src='https://via.placeholder.com/150x120'">
+                    <div class="info">
+                        <div class="title">${ch.name || 'Untitled'}</div>
+                        <div style="font-size:11px;color:#888;">${ch.type === 'drm' ? '🔒 DRM' : '📡 Normal'}</div>
+                        <div class="card-actions">
+                            <button onclick="editChannel('${ch.id}')">Edit</button>
+                            <button style="background:var(--danger);color:#fff;" onclick="deleteChannel('${ch.id}')">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    function openChannelModal(id){
+        document.getElementById('channelModalTitle').innerText = id ? 'Edit Channel' : 'Add Channel';
+        document.getElementById('channelId').value = id || '';
+        if(id){
+            let ch = allChannels.find(c => c.id === id);
+            if(ch){
+                document.getElementById('channelName').value = ch.name || '';
+                document.getElementById('channelType').value = ch.type || 'normal';
+                toggleChannelType();
+                if(ch.type === 'drm'){
+                    document.getElementById('drmToken').value = ch.token || '';
+                    document.getElementById('licenseUrl').value = ch.licenseUrl || '';
+                    document.getElementById('mpdUrl').value = ch.mpdUrl || '';
+                } else {
+                    document.getElementById('channelUrl').value = ch.stream_url || ch.m3u8Link || '';
+                }
+                document.getElementById('channelPoster').value = ch.posterURL || '';
+                document.getElementById('channelDesc').value = ch.description || '';
+                document.getElementById('channelCategory').value = ch.category || 'general';
+                document.getElementById('channelPremium').checked = ch.isPremiumOnly || false;
+            }
+        } else {
+            document.getElementById('channelName').value = '';
+            document.getElementById('channelUrl').value = '';
+            document.getElementById('drmToken').value = '';
+            document.getElementById('licenseUrl').value = '';
+            document.getElementById('mpdUrl').value = '';
+            document.getElementById('channelPoster').value = '';
+            document.getElementById('channelDesc').value = '';
+            document.getElementById('channelCategory').value = 'general';
+            document.getElementById('channelPremium').checked = false;
+        }
+        document.getElementById('channelModal').classList.add('show');
+    }
+    
+    function toggleChannelType(){
+        let type = document.getElementById('channelType').value;
+        document.getElementById('normalFields').style.display = type === 'normal' ? 'block' : 'none';
+        document.getElementById('drmFields').style.display = type === 'drm' ? 'block' : 'none';
+    }
+    
+    function saveChannel(){
+        let id = document.getElementById('channelId').value;
+        let type = document.getElementById('channelType').value;
+        let data = {
+            name: document.getElementById('channelName').value,
+            type: type,
+            posterURL: document.getElementById('channelPoster').value,
+            description: document.getElementById('channelDesc').value,
+            category: document.getElementById('channelCategory').value,
+            isPremiumOnly: document.getElementById('channelPremium').checked,
+            updatedAt: Date.now()
+        };
+        if(type === 'drm'){
+            data.token = document.getElementById('drmToken').value;
+            data.licenseUrl = document.getElementById('licenseUrl').value;
+            data.mpdUrl = document.getElementById('mpdUrl').value;
+        } else {
+            data.stream_url = document.getElementById('channelUrl').value;
+            data.m3u8Link = document.getElementById('channelUrl').value;
+        }
+        if(id){
+            db.ref('channels/' + id).update(data).then(() => { closeModal('channelModal'); renderChannelsGrid(); showToast('Channel updated'); });
+        } else {
+            data.createdAt = Date.now();
+            db.ref('channels').push(data).then(() => { closeModal('channelModal'); renderChannelsGrid(); showToast('Channel added'); });
         }
     }
-    function saveTrialSettings(){ const dur=parseInt(document.getElementById('trialDuration').value); if(dur<1) return toast("Invalid"); trialSettings.duration=dur; db.ref('trialSettings').set(trialSettings).then(()=>toast("Saved")); }
-    function assignTrialToDateUsers(){ const date=document.getElementById('autoTrialDate').value; if(!date) return toast("Select date"); const target=new Date(date).toDateString(); let assigned=0; allUsers.forEach(user=>{ const join=user.joinDate?new Date(user.joinDate).toDateString():new Date(user.createdAt||user.key).toDateString(); if(join===target && user.subscriptionType!=='premium'){ let expiry=Date.now(); switch(trialSettings.unit){ case'seconds':expiry+=trialSettings.duration*1000;break; case'minutes':expiry+=trialSettings.duration*60*1000;break; case'hours':expiry+=trialSettings.duration*60*60*1000;break; case'days':expiry+=trialSettings.duration*24*60*60*1000;break; } db.ref('users/'+user.key).update({subscriptionType:'trial',accessExpiry:expiry}).then(()=>assigned++); } }); setTimeout(()=>toast(`Assigned to ${assigned} users`),1000); }
-    function massBlockExpired(){ const now=Date.now(); let blocked=0; allUsers.forEach(user=>{ if(user.accessExpiry&&user.accessExpiry<now&&!user.isBlocked){ db.ref('users/'+user.key+'/isBlocked').set(true).then(()=>blocked++); } }); setTimeout(()=>toast(`Blocked ${blocked} expired users`),1000); }
-
-    function filterNewUsers(type){ const list=document.getElementById('newUsersList'); list.innerHTML=''; let filtered=allUsers.filter(u=>!u.isBlocked); const now=new Date(); switch(type){ case'today': const today=now.toDateString(); filtered=filtered.filter(u=>{ const join=u.joinDate?new Date(u.joinDate).toDateString():new Date(u.createdAt||u.key).toDateString(); return join===today; }); break; case'yesterday': const yest=new Date(now.setDate(now.getDate()-1)).toDateString(); filtered=filtered.filter(u=>{ const join=u.joinDate?new Date(u.joinDate).toDateString():new Date(u.createdAt||u.key).toDateString(); return join===yest; }); break; case'week': const week=new Date(now.setDate(now.getDate()-7)); filtered=filtered.filter(u=>{ const join=u.joinDate?new Date(u.joinDate):new Date(u.createdAt||u.key); return join>=week; }); break; case'month': const month=new Date(now.setMonth(now.getMonth()-1)); filtered=filtered.filter(u=>{ const join=u.joinDate?new Date(u.joinDate):new Date(u.createdAt||u.key); return join>=month; }); break; } filtered.forEach(u=>{ const join=u.joinDate?new Date(u.joinDate):new Date(u.createdAt||u.key); const days=Math.floor((Date.now()-join)/86400000); list.innerHTML+=`<div class="user-row" onclick="openUserModal('${u.key}')"><div><b>${u.name||'No Name'}</b><div>${u.email}</div><div>Joined: ${join.toLocaleDateString()} (${days}d ago)</div></div><div class="user-status status-new">NEW</div></div>`; }); }
-    function filterNewUsersByDate(){ const start=document.getElementById('newUsersStartDate').value, end=document.getElementById('newUsersEndDate').value; if(!start||!end) return toast("Select both dates"); const s=new Date(start), e=new Date(end); e.setHours(23,59,59,999); const list=document.getElementById('newUsersList'); list.innerHTML=''; const filtered=allUsers.filter(u=>{ if(u.isBlocked) return false; const join=u.joinDate?new Date(u.joinDate):new Date(u.createdAt||u.key); return join>=s&&join<=e; }); filtered.forEach(u=>{ const join=u.joinDate?new Date(u.joinDate):new Date(u.createdAt||u.key); list.innerHTML+=`<div class="user-row" onclick="openUserModal('${u.key}')"><div><b>${u.name||'No Name'}</b><div>${u.email}</div><div>Joined: ${join.toLocaleDateString()}</div></div><div class="user-status status-new">NEW</div></div>`; }); }
-
-    function sendNotif(){ const title=document.getElementById('nTitle').value, msg=document.getElementById('nMsg').value, target=document.getElementById('nTarget').value; if(!title||!msg) return toast("Title and message required"); let usersToNotify=allUsers; switch(target){ case'premium': usersToNotify=allUsers.filter(u=>u.subscriptionType==='premium'&&!u.isExpired&&!u.isBlocked); break; case'trial': usersToNotify=allUsers.filter(u=>u.subscriptionType==='trial'&&!u.isExpired&&!u.isBlocked); break; case'active': usersToNotify=allUsers.filter(u=>!u.isExpired&&!u.isBlocked&&u.accessExpiry); break; case'new': const today=new Date().toDateString(); usersToNotify=allUsers.filter(u=>{ const join=u.joinDate?new Date(u.joinDate).toDateString():new Date(u.createdAt||u.key).toDateString(); return join===today&&!u.isBlocked; }); break; } let sent=0; usersToNotify.forEach(user=>{ db.ref('userNotifications/'+user.key).push({ title, message:msg, timestamp:Date.now(), read:false }).then(()=>sent++); }); setTimeout(()=>toast(`Sent to ${sent} users`),1000); }
-    function sendUserNotification(userId,title,message){ db.ref('userNotifications/'+userId).push({ title, message, timestamp:Date.now(), read:false }); }
-
-    function loadAppSettings(){ db.ref('appSettings').on('value',s=>{ if(s.exists()) appSettings={...appSettings,...s.val()}; }); }
-    function loadAppSettingsPage(){ document.getElementById('cardSizeSetting').value=appSettings.cardSize||'medium'; document.getElementById('fontSizeSetting').value=appSettings.fontSize||'medium'; document.getElementById('carouselInterval').value=appSettings.carouselInterval||5000; loadChannelLockLists(); loadCarouselSlides(); loadChannelScriptsDropdown(); }
-    function saveAppSettings(){ const newSettings={ cardSize:document.getElementById('cardSizeSetting').value, fontSize:document.getElementById('fontSizeSetting').value, carouselInterval:parseInt(document.getElementById('carouselInterval').value)||5000, lockedChannels:appSettings.lockedChannels||[], freeChannels:appSettings.freeChannels||[], channelScripts:appSettings.channelScripts||{}, updatedAt:Date.now() }; db.ref('appSettings').set(newSettings).then(()=>toast("App settings saved")); }
-    function loadChannelLockLists(){ const lockList=document.getElementById('lockChannelsList'), unlockList=document.getElementById('unlockChannelsList'), freeList=document.getElementById('freeChannelsList'); lockList.innerHTML=unlockList.innerHTML=freeList.innerHTML=''; Object.values(channels).forEach(ch=>{ const isLocked=appSettings.lockedChannels?.includes(ch.id); const isFree=appSettings.freeChannels?.includes(ch.id); const item=`<div class="channel-lock-item"><span>${ch.name}</span><input type="checkbox" value="${ch.id}"></div>`; if(!isLocked) lockList.innerHTML+=item; else unlockList.innerHTML+=item; freeList.innerHTML+=`<div class="channel-lock-item"><span>${ch.name}</span><input type="checkbox" value="${ch.id}" ${isFree?'checked':''}></div>`; }); }
-    function lockSelectedChannels(){ const boxes=document.querySelectorAll('#lockChannelsList input:checked'); const toLock=Array.from(boxes).map(cb=>cb.value); if(!toLock.length) return toast("Select channels"); appSettings.lockedChannels=[...new Set([...(appSettings.lockedChannels||[]),...toLock])]; db.ref('appSettings/lockedChannels').set(appSettings.lockedChannels).then(()=>{ toast("Locked"); loadChannelLockLists(); }); }
-    function unlockSelectedChannels(){ const boxes=document.querySelectorAll('#unlockChannelsList input:checked'); const toUnlock=Array.from(boxes).map(cb=>cb.value); if(!toUnlock.length) return toast("Select channels"); appSettings.lockedChannels=(appSettings.lockedChannels||[]).filter(id=>!toUnlock.includes(id)); db.ref('appSettings/lockedChannels').set(appSettings.lockedChannels).then(()=>{ toast("Unlocked"); loadChannelLockLists(); }); }
-    function makeChannelsFree(){ const boxes=document.querySelectorAll('#freeChannelsList input:checked'); const toFree=Array.from(boxes).map(cb=>cb.value); if(!toFree.length) return toast("Select channels"); appSettings.freeChannels=[...new Set([...(appSettings.freeChannels||[]),...toFree])]; db.ref('appSettings/freeChannels').set(appSettings.freeChannels).then(()=>{ toast("Made free"); loadChannelLockLists(); }); }
-
-    function loadCarouselSlides(){ db.ref('carousel').on('value',s=>{ allCarouselSlides=[]; s.forEach(slide=>{ allCarouselSlides.push({key:slide.key,...slide.val()}); }); allCarouselSlides.sort((a,b)=>(a.order||0)-(b.order||0)); renderCarouselList(); }); }
-    function renderCarouselList(){ const container=document.getElementById('carouselSlidesList'); if(!allCarouselSlides.length){ container.innerHTML='<div class="empty-state">No slides</div>'; return; } container.innerHTML=allCarouselSlides.map((slide,idx)=>`<div class="carousel-slide-item" draggable="true" data-key="${slide.key}" data-index="${idx}"><img src="${slide.imageURL||'https://via.placeholder.com/60x60'}" width="50"><div><strong>${slide.title||'No Title'}</strong><div>${slide.description||''}</div></div><div><button class="btn btn-p btn-sm" onclick="editCarouselSlide('${slide.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="deleteCarouselSlide('${slide.key}')">Del</button></div></div>`).join(''); attachCarouselDrag(); }
-    function attachCarouselDrag(){ const items=document.querySelectorAll('#carouselSlidesList .carousel-slide-item'); items.forEach(item=>{ item.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',item.dataset.key); item.classList.add('dragging'); }); item.addEventListener('dragover',e=>e.preventDefault()); item.addEventListener('drop',e=>{ e.preventDefault(); const srcKey=e.dataTransfer.getData('text/plain'); // ✅ Fixed: getData takes only 1 param
-        const tgtKey=item.dataset.key; const srcIdx=allCarouselSlides.findIndex(s=>s.key===srcKey); const tgtIdx=allCarouselSlides.findIndex(s=>s.key===tgtKey); if(srcIdx===-1||tgtIdx===-1) return; const [moved]=allCarouselSlides.splice(srcIdx,1); allCarouselSlides.splice(tgtIdx,0,moved); renderCarouselList(); }); item.addEventListener('dragend',e=>item.classList.remove('dragging')); }); }
-    function addCarouselSlide(){ const title=document.getElementById('carouselTitle').value, desc=document.getElementById('carouselDescription').value, img=document.getElementById('carouselImage').value; if(!title||!img) return toast("Title and image required"); db.ref('carousel').push({title,description:desc,imageURL:img,createdAt:Date.now()}).then(()=>toast("Added")); }
-    function editCarouselSlide(key){ db.ref('carousel/'+key).once('value').then(s=>{ const d=s.val(); document.getElementById('carouselTitle').value=d.title||''; document.getElementById('carouselDescription').value=d.description||''; document.getElementById('carouselImage').value=d.imageURL||''; db.ref('carousel/'+key).remove().then(()=>toast("Now edit and add new")); }); }
-    function deleteCarouselSlide(key){ if(confirm("Delete slide?")) db.ref('carousel/'+key).remove().then(()=>toast("Deleted")); }
-    async function saveCarouselOrder(){ const updates={}; allCarouselSlides.forEach((slide,idx)=>{ updates[`${slide.key}/order`]=idx; }); await db.ref('carousel').update(updates); toast("Order saved"); }
-
-    function loadChannelScriptsDropdown(){ const dropdown=document.getElementById('scriptChannelSelect'); dropdown.innerHTML='<option>Select channel</option>'; Object.values(channels).forEach(ch=>{ dropdown.innerHTML+=`<option value="${ch.id}">${ch.name}</option>`; }); 
-        // ✅ Fixed: Remove old listener first to prevent duplicates
-        dropdown.replaceWith(dropdown.cloneNode(true));
-        const newDropdown = document.getElementById('scriptChannelSelect');
-        newDropdown.addEventListener('change',()=>{ const id=newDropdown.value; if(id&&appSettings.channelScripts&&appSettings.channelScripts[id]) document.getElementById('channelScriptCode').value=appSettings.channelScripts[id]; else document.getElementById('channelScriptCode').value=''; }); 
+    
+    function editChannel(id){ openChannelModal(id); }
+    function deleteChannel(id){ if(confirm('Delete channel?')) db.ref('channels/'+id).remove().then(() => showToast('Deleted')); }
+    
+    function loadMoviesPage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>Movies</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="openMovieModal()">+ Add Movie</button></div>
+                <div class="grid-cards" id="moviesGrid"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        renderMoviesGrid();
     }
-    function saveChannelScript(){ const id=document.getElementById('scriptChannelSelect').value; const code=document.getElementById('channelScriptCode').value; if(!id) return toast("Select channel"); if(!appSettings.channelScripts) appSettings.channelScripts={}; appSettings.channelScripts[id]=code; db.ref('appSettings/channelScripts').set(appSettings.channelScripts).then(()=>toast("Script saved")); }
-    function clearChannelScript(){ const id=document.getElementById('scriptChannelSelect').value; if(!id) return toast("Select channel"); if(appSettings.channelScripts&&appSettings.channelScripts[id]){ delete appSettings.channelScripts[id]; db.ref('appSettings/channelScripts').set(appSettings.channelScripts).then(()=>{ document.getElementById('channelScriptCode').value=''; toast("Cleared"); }); } }
-
-    function initBettingTips(){ db.ref('bettingTips').on('value',s=>{ bettingTips={}; const list=document.getElementById('bettingTipsList'); list.innerHTML=''; let count=0; s.forEach(tip=>{ bettingTips[tip.key]={id:tip.key,...tip.val()}; list.innerHTML+=createBettingTipItem(bettingTips[tip.key]); count++; }); document.getElementById('cntBettingTips').innerText=count; }); }
-    function createBettingTipItem(tip){ let statusClass=''; switch(tip.status){ case'upcoming':statusClass='status-upcoming';break; case'completed':statusClass='status-completed';break; case'successful':statusClass='status-successful';break; case'failed':statusClass='status-failed';break; } return `<div class="betting-tip-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span class="${statusClass} user-status">${tip.status}</span><span style="color:var(--gray);font-size:0.8em;">${new Date(tip.createdAt||Date.now()).toLocaleDateString()}</span></div><div><b>${tip.team1||'Team A'} vs ${tip.team2||'Team B'}</b></div><div style="margin:5px 0;">${tip.title||''}</div><div style="font-size:0.9em;">Prediction: <b>${tip.prediction||'-'}</b></div><div style="font-size:0.9em;">Odds: ${tip.odds||'-'}</div><div class="item-actions" style="margin-top:8px;"><button class="btn btn-p btn-sm" onclick="editBettingTip('${tip.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('bettingTips','${tip.id}')">Del</button></div></div>`; }
     
-    // ✅ Fixed: Added missing add betting tip modal functions
-    function openAddBettingTipModal(){ document.getElementById('addBettingTipModal').style.display='flex'; }
-    function saveNewBettingTip(){ const data={ title:document.getElementById('newTipTitle').value, team1:document.getElementById('newTeam1').value, team2:document.getElementById('newTeam2').value, prediction:document.getElementById('newPrediction').value, odds:document.getElementById('newOdds').value, stake:document.getElementById('newStake').value||'', status:document.getElementById('newTipStatus').value, bookmakerLink:document.getElementById('newBookmakerLink').value, description:document.getElementById('newTipDescription').value||'', createdAt:Date.now() }; db.ref('bettingTips').push(data).then(()=>{ toast("Tip added"); closeModal('addBettingTipModal'); initBettingTips(); }); }
+    function renderMoviesGrid(){
+        let grid = document.getElementById('moviesGrid');
+        grid.innerHTML = '';
+        allMovies.forEach(m => {
+            grid.innerHTML += `
+                <div class="content-card">
+                    <img src="${m.posterURL || 'https://via.placeholder.com/150x120'}" onerror="this.src='https://via.placeholder.com/150x120'">
+                    <div class="info">
+                        <div class="title">${m.title || 'Untitled'}</div>
+                        <div style="font-size:11px;color:#888;">${m.external_id ? '🎬 vidsrc.to' : '📽️ Standard'}</div>
+                        <div class="card-actions">
+                            <button onclick="editMovie('${m.id}')">Edit</button>
+                            <button style="background:var(--danger);color:#fff;" onclick="deleteMovie('${m.id}')">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
     
-    function editBettingTip(id){ const tip=bettingTips[id]; if(!tip) return; document.getElementById('editBettingTipId').value=id; document.getElementById('editTipTitle').value=tip.title||''; document.getElementById('editTeam1').value=tip.team1||''; document.getElementById('editTeam2').value=tip.team2||''; document.getElementById('editPrediction').value=tip.prediction||''; document.getElementById('editOdds').value=tip.odds||''; document.getElementById('editStake').value=tip.stake||''; document.getElementById('editTipStatus').value=tip.status||'upcoming'; document.getElementById('editTipResult').value=tip.result||''; document.getElementById('editBookmakerLink').value=tip.bookmakerLink||''; document.getElementById('editTipDescription').value=tip.description||''; document.getElementById('editBettingTipModal').style.display='flex'; }
+    function openMovieModal(id){
+        document.getElementById('movieModalTitle').innerText = id ? 'Edit Movie' : 'Add Movie';
+        document.getElementById('movieId').value = id || '';
+        if(id){
+            let m = allMovies.find(m => m.id === id);
+            if(m){
+                document.getElementById('movieTitle').value = m.title || '';
+                document.getElementById('movieExternalId').value = m.external_id || '';
+                document.getElementById('moviePoster').value = m.posterURL || '';
+                document.getElementById('movieBackdrop').value = m.backdropURL || '';
+                document.getElementById('movieDesc').value = m.description || '';
+                document.getElementById('movieRating').value = m.rating || '';
+                document.getElementById('movieYear').value = m.year || '';
+                document.getElementById('movieGenre').value = m.genre || 'action';
+                document.getElementById('moviePremium').checked = m.isPremiumOnly || false;
+            }
+        } else {
+            document.getElementById('movieTitle').value = '';
+            document.getElementById('movieExternalId').value = '';
+            document.getElementById('moviePoster').value = '';
+            document.getElementById('movieBackdrop').value = '';
+            document.getElementById('movieDesc').value = '';
+            document.getElementById('movieRating').value = '';
+            document.getElementById('movieYear').value = '';
+            document.getElementById('movieGenre').value = 'action';
+            document.getElementById('moviePremium').checked = false;
+        }
+        document.getElementById('movieModal').classList.add('show');
+    }
     
-    function updateBettingTip(){ const id=document.getElementById('editBettingTipId').value; const tipData={ title:document.getElementById('editTipTitle').value, team1:document.getElementById('editTeam1').value, team2:document.getElementById('editTeam2').value, prediction:document.getElementById('editPrediction').value, odds:document.getElementById('editOdds').value, stake:document.getElementById('editStake').value||'', status:document.getElementById('editTipStatus').value, result:document.getElementById('editTipResult').value||'', bookmakerLink:document.getElementById('editBookmakerLink').value, description:document.getElementById('editTipDescription').value||'', updatedAt:Date.now() }; db.ref('bettingTips/'+id).update(tipData).then(()=>{ toast("Updated"); closeModal('editBettingTipModal'); }); }
-
-    // TMDB Search
-    async function searchTMDB(){ const query=document.getElementById('tmdbSearchInput').value.trim(); if(!query) return toast("Enter movie name"); const loading=document.getElementById('tmdbLoading'), results=document.getElementById('tmdbResults'); loading.style.display='block'; results.style.display='grid'; try{ const res=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=2e211dfda888f7cc55ce433d743f9bc3&query=${encodeURIComponent(query)}`); const data=await res.json(); loading.style.display='none'; if(!data.results||!data.results.length){ results.innerHTML='<div class="empty-state">No results</div>'; return; } results.innerHTML=data.results.map(m=>`<div class="tmdb-result-card" onclick="selectTMDBMovie(${m.id}, this)"><img src="${m.poster_path?'https://image.tmdb.org/t/p/w300'+m.poster_path:'https://via.placeholder.com/100x150'}" onerror="this.src='https://via.placeholder.com/100x150'"><div class="tmdb-card-info"><p>${m.title}</p><small>${m.release_date?.substring(0,4)||''}</small></div></div>`).join(''); }catch(e){ loading.style.display='none'; toast("Search failed"); console.error(e); } }
-    async function selectTMDBMovie(id,el){ document.querySelectorAll('.tmdb-result-card').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); try{ const [details,credits]=await Promise.all([fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json()), fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=2e211dfda888f7cc55ce433d743f9bc3`).then(r=>r.json())]); document.getElementById('mName').value=details.title; document.getElementById('releaseYear').value=details.release_date?.substring(0,4)||''; document.getElementById('movieRating').value=details.vote_average?.toFixed(1)||''; document.getElementById('movieRuntime').value=details.runtime||''; document.getElementById('posterUrl').value=details.poster_path?'https://image.tmdb.org/t/p/w500'+details.poster_path:''; document.getElementById('backdropUrl').value=details.backdrop_path?'https://image.tmdb.org/t/p/original'+details.backdrop_path:''; document.getElementById('storyline').value=details.overview||''; document.getElementById('movieGenres').value=details.genres?details.genres.map(g=>g.name).join(', '):''; document.getElementById('trailerUrl').value=''; document.getElementById('link1080p').value=''; document.getElementById('link720p').value=''; document.getElementById('link480p').value=''; document.getElementById('mSection').value='regular'; document.getElementById('movLock').checked=false; document.getElementById('movDrm').checked=false; document.getElementById('movFormat').value='hls'; document.querySelectorAll('#languageCheckboxes input').forEach(cb=>cb.checked=false); document.querySelectorAll('#mCategory input').forEach(cb=>cb.checked=false); castArray = (credits.cast||[]).slice(0,10).map(actor=>({ name:actor.name, character:actor.character, profile_image:actor.profile_path?'https://image.tmdb.org/t/p/w185'+actor.profile_path:'https://via.placeholder.com/40' })); renderCastList(); toast("Movie data loaded"); document.getElementById('tmdbResults').style.display='none'; document.getElementById('tmdbSearchInput').value=''; }catch(e){ toast("Error loading details"); console.error(e); } }
-
-    // Helper functions
-    function loadChannels(){ db.ref('channels').once('value').then(s=>{ const g=document.getElementById('chanGrid'); g.innerHTML=''; let list=[]; s.forEach(c=>{ const ch={id:c.key,...c.val()}; channels[c.key]=ch; list.push(ch); }); list.sort((a,b)=>(a.order||999)-(b.order||999)); list.forEach(ch=>{ let img = ch.posterURL || (ch.type==='mdp'?ch.poster:'https://via.placeholder.com/150x100?text=No+Image'); g.innerHTML+=`<div class="item-card"><img src="${img}" class="item-img"><div class="item-body"><div class="item-title">${ch.name||'Unnamed'} ${ch.type==='mdp'?'[MDP]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openChanModal('${ch.id}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('channels','${ch.id}')">Del</button></div></div></div>`; }); document.getElementById('cntChan').innerText=s.numChildren(); }); }
-    function loadAllMovies(){ db.ref('movies').once('value').then(s=>{ const g=document.getElementById('movGrid'); g.innerHTML=''; s.forEach(c=>{ movies[c.key]={id:c.key,...c.val()}; g.innerHTML+=`<div class="item-card"><img src="${c.val().posterURL||'https://via.placeholder.com/150x100?text=No+Image'}" class="item-img"><div class="item-body"><div class="item-title">${c.val().title||'Untitled'} ${c.val().locked?'[LOCKED]':''}</div><div class="item-actions"><button class="btn btn-p btn-sm" onclick="openMovModal('${c.key}')">Edit</button><button class="btn btn-d btn-sm" onclick="del('movies','${c.key}')">Del</button></div></div></div>`; }); document.getElementById('cntMov').innerText=s.numChildren(); }); }
-
-    // Initialize after DOM is ready
-    setTimeout(()=>{ updateAssignmentDropdowns(); updateCategoryDropdowns(); },2000);
+    function saveMovie(){
+        let id = document.getElementById('movieId').value;
+        let data = {
+            title: document.getElementById('movieTitle').value,
+            external_id: document.getElementById('movieExternalId').value,
+            posterURL: document.getElementById('moviePoster').value,
+            backdropURL: document.getElementById('movieBackdrop').value,
+            description: document.getElementById('movieDesc').value,
+            rating: parseFloat(document.getElementById('movieRating').value) || 0,
+            year: parseInt(document.getElementById('movieYear').value) || 0,
+            genre: document.getElementById('movieGenre').value,
+            isPremiumOnly: document.getElementById('moviePremium').checked,
+            updatedAt: Date.now()
+        };
+        if(id){
+            db.ref('movies/' + id).update(data).then(() => { closeModal('movieModal'); renderMoviesGrid(); showToast('Movie updated'); });
+        } else {
+            data.createdAt = Date.now();
+            db.ref('movies').push(data).then(() => { closeModal('movieModal'); renderMoviesGrid(); showToast('Movie added'); });
+        }
+    }
+    
+    function editMovie(id){ openMovieModal(id); }
+    function deleteMovie(id){ if(confirm('Delete movie?')) db.ref('movies/'+id).remove().then(() => showToast('Deleted')); }
+    
+    function loadSchedulePage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>Match Schedule</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="openScheduleModal('match')">+ Add Match</button></div>
+                <div id="matchesList"></div>
+            </div>
+            <div class="section">
+                <div class="section-header"><h3>Series/Movie Schedule</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="openScheduleModal('series')">+ Add Series</button></div>
+                <div id="seriesList"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        renderScheduleLists();
+    }
+    
+    function renderScheduleLists(){
+        let matchesHtml = '<table><tr><th>Teams</th><th>Time</th><th>Channel</th><th>Actions</th></tr>';
+        allMatches.forEach(m => {
+            matchesHtml += `<tr>
+                <td><img src="${m.team1Logo || ''}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;"> ${m.team1} vs ${m.team2}</td>
+                <td>${m.time ? new Date(m.time).toLocaleString() : 'N/A'}</td>
+                <td>${m.channel || ''}</td>
+                <td><button onclick="deleteScheduleItem('match','${m.id}')" style="background:var(--danger);padding:4px 12px;border:none;border-radius:8px;color:#fff;">Delete</button></td>
+            </tr>`;
+        });
+        matchesHtml += '</table>';
+        document.getElementById('matchesList').innerHTML = matchesHtml || '<p>No matches scheduled</p>';
+        
+        let seriesHtml = '<table><tr><th>Title</th><th>Time</th><th>Channel</th><th>Actions</th></tr>';
+        allSeries.forEach(s => {
+            seriesHtml += `<tr>
+                <td><img src="${s.logo || ''}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;"> ${s.title}</td>
+                <td>${s.time ? new Date(s.time).toLocaleString() : 'N/A'}</td>
+                <td>${s.channel || ''}</td>
+                <td><button onclick="deleteScheduleItem('series','${s.id}')" style="background:var(--danger);padding:4px 12px;border:none;border-radius:8px;color:#fff;">Delete</button></td>
+            </tr>`;
+        });
+        seriesHtml += '</table>';
+        document.getElementById('seriesList').innerHTML = seriesHtml || '<p>No series scheduled</p>';
+    }
+    
+    function openScheduleModal(type){
+        document.getElementById('scheduleModalTitle').innerText = type === 'match' ? 'Add Match' : 'Add Series';
+        document.getElementById('scheduleId').value = '';
+        document.getElementById('scheduleType').value = type;
+        document.getElementById('scheduleEventType').value = type === 'match' ? 'match' : 'series';
+        toggleScheduleFields();
+        document.getElementById('scheduleTime').value = '';
+        document.getElementById('scheduleChannel').value = '';
+        document.getElementById('scheduleChannelId').value = '';
+        if(type === 'match'){
+            document.getElementById('team1').value = '';
+            document.getElementById('team1Logo').value = '';
+            document.getElementById('team2').value = '';
+            document.getElementById('team2Logo').value = '';
+        } else {
+            document.getElementById('seriesTitle').value = '';
+            document.getElementById('seriesLogo').value = '';
+            document.getElementById('seriesMovieId').value = '';
+        }
+        document.getElementById('scheduleModal').classList.add('show');
+    }
+    
+    function toggleScheduleFields(){
+        let type = document.getElementById('scheduleEventType').value;
+        document.getElementById('matchFields').style.display = type === 'match' ? 'block' : 'none';
+        document.getElementById('seriesFields').style.display = type === 'series' ? 'block' : 'none';
+    }
+    
+    function saveScheduleItem(){
+        let type = document.getElementById('scheduleEventType').value;
+        let time = document.getElementById('scheduleTime').value;
+        let channel = document.getElementById('scheduleChannel').value;
+        let channelId = document.getElementById('scheduleChannelId').value;
+        
+        if(type === 'match'){
+            let data = {
+                team1: document.getElementById('team1').value,
+                team1Logo: document.getElementById('team1Logo').value,
+                team2: document.getElementById('team2').value,
+                team2Logo: document.getElementById('team2Logo').value,
+                time: time ? new Date(time).getTime() : null,
+                channel: channel,
+                channelId: channelId,
+                createdAt: Date.now()
+            };
+            db.ref('matchSchedule').push(data).then(() => { closeModal('scheduleModal'); renderScheduleLists(); showToast('Match added'); });
+        } else {
+            let data = {
+                title: document.getElementById('seriesTitle').value,
+                logo: document.getElementById('seriesLogo').value,
+                movieId: document.getElementById('seriesMovieId').value,
+                time: time ? new Date(time).getTime() : null,
+                channel: channel,
+                channelId: channelId,
+                createdAt: Date.now()
+            };
+            db.ref('seriesSchedule').push(data).then(() => { closeModal('scheduleModal'); renderScheduleLists(); showToast('Series added'); });
+        }
+    }
+    
+    function deleteScheduleItem(type, id){
+        if(confirm('Delete this item?')){
+            let ref = type === 'match' ? 'matchSchedule' : 'seriesSchedule';
+            db.ref(ref + '/' + id).remove().then(() => { renderScheduleLists(); showToast('Deleted'); });
+        }
+    }
+    
+    function loadCarouselPage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>Carousel Slides</h3><button class="btn btn-primary" style="width:auto;padding:8px 16px;" onclick="openCarouselModal()">+ Add Slide</button></div>
+                <div id="carouselList"></div>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+        renderCarouselList();
+    }
+    
+    function renderCarouselList(){
+        let html = '<div class="grid-cards">';
+        carouselItems.forEach(item => {
+            html += `
+                <div class="content-card">
+                    <img src="${item.imageURL || 'https://via.placeholder.com/150x120'}" onerror="this.src='https://via.placeholder.com/150x120'">
+                    <div class="info">
+                        <div class="title">${item.title || 'Untitled'}</div>
+                        <div class="card-actions">
+                            <button onclick="editCarousel('${item.id}')">Edit</button>
+                            <button style="background:var(--danger);color:#fff;" onclick="deleteCarousel('${item.id}')">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        document.getElementById('carouselList').innerHTML = html;
+    }
+    
+    function openCarouselModal(id){
+        let title = id ? 'Edit Slide' : 'Add Slide';
+        let html = `
+            <div class="modal" id="carouselModalInner">
+                <div class="modal-content">
+                    <h3>${title}</h3>
+                    <input type="hidden" id="carouselId" value="${id || ''}">
+                    <div class="form-group"><label>Title</label><input type="text" id="carouselTitle" class="input"></div>
+                    <div class="form-group"><label>Description</label><textarea id="carouselDesc" class="input" rows="2"></textarea></div>
+                    <div class="form-group"><label>Image URL</label><input type="text" id="carouselImage" class="input"></div>
+                    <div class="form-group"><label>Link Type</label>
+                        <select id="carouselLinkType" class="input">
+                            <option value="movie">Movie</option>
+                            <option value="channel">Channel</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Item ID</label><input type="text" id="carouselItemId" class="input" placeholder="Channel ID or Movie ID"></div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="saveCarousel()">Save</button>
+                        <button class="btn" style="background:#333;margin-top:8px;" onclick="closeModal('carouselModalInner')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        let modalDiv = document.createElement('div');
+        modalDiv.innerHTML = html;
+        document.body.appendChild(modalDiv);
+        if(id){
+            let item = carouselItems.find(i => i.id === id);
+            if(item){
+                document.getElementById('carouselTitle').value = item.title || '';
+                document.getElementById('carouselDesc').value = item.description || '';
+                document.getElementById('carouselImage').value = item.imageURL || '';
+                document.getElementById('carouselLinkType').value = item.linkType || 'movie';
+                document.getElementById('carouselItemId').value = item.itemId || '';
+            }
+        }
+        document.getElementById('carouselModalInner').classList.add('show');
+    }
+    
+    function saveCarousel(){
+        let id = document.getElementById('carouselId').value;
+        let data = {
+            title: document.getElementById('carouselTitle').value,
+            description: document.getElementById('carouselDesc').value,
+            imageURL: document.getElementById('carouselImage').value,
+            linkType: document.getElementById('carouselLinkType').value,
+            itemId: document.getElementById('carouselItemId').value,
+            updatedAt: Date.now()
+        };
+        if(id){
+            db.ref('carousel/' + id).update(data).then(() => { closeModal('carouselModalInner'); renderCarouselList(); showToast('Updated'); });
+        } else {
+            data.createdAt = Date.now();
+            db.ref('carousel').push(data).then(() => { closeModal('carouselModalInner'); renderCarouselList(); showToast('Added'); });
+        }
+    }
+    
+    function editCarousel(id){ openCarouselModal(id); }
+    function deleteCarousel(id){ if(confirm('Delete slide?')) db.ref('carousel/'+id).remove().then(() => { renderCarouselList(); showToast('Deleted'); }); }
+    
+    function loadSettingsPage(){
+        let html = `
+            <div class="section">
+                <div class="section-header"><h3>App Settings</h3></div>
+                <div class="form-group"><label>Trial Duration (minutes)</label><input type="number" id="trialDuration" class="input" value="2"></div>
+                <div class="form-group"><label>Default Trial Time (seconds)</label><input type="number" id="trialSeconds" class="input" value="120"></div>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+            <div class="section">
+                <div class="section-header"><h3>Broadcast Notification</h3></div>
+                <div class="form-group"><label>Title</label><input type="text" id="notifTitle" class="input"></div>
+                <div class="form-group"><label>Message</label><textarea id="notifMsg" class="input" rows="3"></textarea></div>
+                <div class="form-group"><label>Target</label>
+                    <select id="notifTarget" class="input">
+                        <option value="all">All Users</option>
+                        <option value="premium">Premium Only</option>
+                        <option value="trial">Trial Only</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="sendNotification()">Send Notification</button>
+            </div>
+        `;
+        document.getElementById('pageContent').innerHTML = html;
+    }
+    
+    function saveSettings(){
+        let duration = document.getElementById('trialDuration').value;
+        let seconds = document.getElementById('trialSeconds').value;
+        db.ref('appSettings').set({ trialDurationMinutes: parseInt(duration), trialSeconds: parseInt(seconds) }).then(() => showToast('Settings saved'));
+    }
+    
+    function sendNotification(){
+        let title = document.getElementById('notifTitle').value;
+        let msg = document.getElementById('notifMsg').value;
+        let target = document.getElementById('notifTarget').value;
+        if(!title || !msg){ showToast('Enter title and message'); return; }
+        let usersToNotify = allUsers.filter(u => {
+            if(target === 'premium') return u.isPremium;
+            if(target === 'trial') return u.trialExpiry && u.trialExpiry > Date.now() && !u.isPremium;
+            return true;
+        });
+        usersToNotify.forEach(u => {
+            db.ref('notifications/' + u.id).push({ title, message: msg, timestamp: Date.now(), read: false });
+        });
+        showToast(`Notification sent to ${usersToNotify.length} users`);
+    }
+    
+    function closeModal(id){
+        let modal = document.getElementById(id);
+        if(modal) modal.classList.remove('show');
+        else document.querySelector('.modal')?.remove();
+    }
+    
+    function showToast(msg){
+        let toast = document.createElement('div');
+        toast.style.position = 'fixed'; toast.style.bottom = '20px'; toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)'; toast.style.background = 'var(--primary)';
+        toast.style.color = '#000'; toast.style.padding = '10px 20px'; toast.style.borderRadius = '30px';
+        toast.style.zIndex = '9999'; toast.style.fontSize = '14px';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    function toggleSidebar(){
+        document.getElementById('sidebar').classList.toggle('open');
+    }
+    
+    loadData();
 </script>
 </body>
 </html>
-
-
-
-              <script>
-                              // ❌ Broken: Uses undefined `event` variable
-function setTrialUnit(unit){ 
-    trialSettings.unit=unit; 
-    document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
-        btn.style.background='#333'; 
-        btn.style.color='white'; 
-    }); 
-    event.target.style.background='var(--primary)'; // ❌ event not defined
-    event.target.style.color='black'; 
-}
-
-// ✅ Fixed: Pass event parameter
-function setTrialUnit(unit, event){ 
-    trialSettings.unit=unit; 
-    document.querySelectorAll('.trial-unit-selector .btn').forEach(btn=>{ 
-        btn.style.background='#333'; 
-        btn.style.color='white'; 
-    }); 
-    if(event && event.target) {
-        event.target.style.background='var(--primary)'; 
-        event.target.style.color='black'; 
-    }
-}
-
-// ❌ Broken: getData() only accepts ONE parameter
-e.dataTransfer.setData('text/plain',item.dataset.id); // ❌ Wrong method signature
-
-// ✅ Fixed: 
-e.dataTransfer.setData('text/plain', item.dataset.id); // setData is correct
-// But getData was wrong:
-const srcId = e.dataTransfer.getData('text/plain'); // ✅ Only one param
-
-
-              </script>
-                        </body>
-                        </html>
-                    
