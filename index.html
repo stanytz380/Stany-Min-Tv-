@@ -1,763 +1,345 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Stany Panel | Premium Digital Services</title>
-    
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
-    <meta property="og:title" content="Stany Panel Service">
-    <meta property="og:image" content="https://d.uguu.se/YXMBoWQi.jpg">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#f97316">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  
+  <title>Stany Panel Service | Premium Digital Hub</title>
+  <meta name="description" content="Stany Panel Service - Premium Panels, Bots, Azam TV, NIDA, VPN. Order via WhatsApp instantly!">
+  <meta name="theme-color" content="#f97316">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stany Panel Service | Premium Digital Hub">
+  <meta property="og:description" content="Panels, Bots, Azam TV, NIDA, VPN — Instant WhatsApp Delivery">
+  <meta property="og:image" content="https://d.uguu.se/YXMBoWQi.jpg">
+  
+  <!-- PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Stany Panel">
+  <link rel="icon" type="image/jpeg" href="https://d.uguu.se/YXMBoWQi.jpg">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet"/>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-        :root {
-            --bg: #0a0a12;
-            --card: #16162a;
-            --primary: #f97316;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --text: #ffffff;
-            --text-muted: #a1a1aa;
-            --border: #27272a;
-            --shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
-            --shadow-glow: 0 0 20px rgba(249,115,22,0.3);
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'] },
+          colors: { brand: { dark: '#050505', card: '#0f172a', orange: '#f97316', purple: '#8b5cf6', teal: '#14b8a6', pink: '#ec4899', whatsapp: '#25D366' } },
+          animation: { 'blob': 'blob 7s infinite', 'float': 'float 6s ease-in-out infinite' },
+          keyframes: { blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } }, float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } } }
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10,10,18,0.95);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 0;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 16px;
-            object-fit: cover;
-            border: 2px solid var(--primary);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .brand {
-            font-size: 1.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .btn {
-            padding: 10px 22px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 12px rgba(249,115,22,0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(249,115,22,0.5);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: rgba(249,115,22,0.1);
-            transform: translateY(-2px);
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 24px;
-            margin: 40px 0;
-        }
-
-        .category-card {
-            background: var(--card);
-            border-radius: 28px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .category-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-        }
-
-        .category-img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-        }
-
-        .category-name {
-            padding: 16px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            background: var(--card);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            margin: 30px 0;
-        }
-
-        .service-card {
-            background: var(--card);
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--secondary);
-            box-shadow: var(--shadow);
-        }
-
-        .service-img {
-            width: 100%;
-            height: 170px;
-            object-fit: cover;
-        }
-
-        .service-content {
-            padding: 18px;
-        }
-
-        .price-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.96);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--card);
-            border-radius: 32px;
-            max-width: 580px;
-            width: 100%;
-            max-height: 88vh;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            animation: fadeInUp 0.3s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .price-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.05);
-            padding: 14px 20px;
-            margin: 10px 0;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .price-option.selected {
-            background: rgba(249,115,22,0.25);
-            border-color: var(--primary);
-        }
-
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            border-radius: 60px;
-            color: white;
-            margin-bottom: 14px;
-            font-size: 0.95rem;
-        }
-
-        .form-textarea {
-            border-radius: 24px;
-            resize: vertical;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .requirements-box {
-            background: rgba(6,182,212,0.08);
-            padding: 18px;
-            border-radius: 24px;
-            margin: 15px 0;
-            font-size: 0.85rem;
-            border-left: 4px solid var(--accent);
-        }
-
-        .requirements-box ul {
-            margin-left: 20px;
-            margin-top: 10px;
-            list-style: none;
-        }
-
-        .requirements-box li {
-            margin: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .requirements-box li i {
-            color: var(--accent);
-            width: 20px;
-        }
-
-        .whatsapp-float {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 5px 20px rgba(37,211,102,0.5);
-            z-index: 99;
-            transition: all 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.08);
-        }
-
-        .section-title {
-            font-size: 1.6rem;
-            margin: 20px 0 10px;
-            border-left: 4px solid var(--primary);
-            padding-left: 16px;
-        }
-
-        @media (max-width: 680px) {
-            .categories-grid { gap: 12px; }
-            .category-img { height: 110px; }
-            .section-title { font-size: 1.3rem; }
-        }
-    </style>
+      }
+    }
+  </script>
+  
+  <style>
+    body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    input, textarea { -webkit-user-select: text; user-select: text; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+    .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .glass-nav { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .text-gradient { background: linear-gradient(135deg, #f97316 0%, #8b5cf6 50%, #14b8a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .service-card { transition: all 0.3s ease; cursor: pointer; }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(249,115,22,0.2); }
+    .whatsapp-pulse { animation: pulse-green 2s infinite; }
+    @keyframes pulse-green { 0%,100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.7); } 50% { box-shadow: 0 0 0 15px rgba(37,211,102,0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #f97316, #8b5cf6); z-index: 9999; transition: width 0.1s ease; }
+    .nav-item { transition: all 0.2s ease; }
+    .nav-item.active { color: #f97316; }
+    section { scroll-margin-top: 80px; }
+    .safe-top { padding-top: env(safe-area-inset-top); }
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  </style>
 </head>
-<body>
+<body class="bg-black text-slate-300 font-sans antialiased overflow-x-hidden pb-24 md:pb-0">
 
-<header>
-    <div class="container header-content">
-        <div class="logo-area" id="homeLink">
-            <img src="https://d.uguu.se/YXMBoWQi.jpg" alt="Stany Panel" class="logo">
-            <span class="brand">Stany Panel Service</span>
-        </div>
-        <div style="display: flex; gap: 12px;">
-            <div id="authButtons">
-                <button class="btn btn-outline" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-                <button class="btn btn-primary" id="signupBtn"><i class="fas fa-user-plus"></i> Sign Up</button>
-            </div>
-            <div id="userMenu" style="display: none; align-items: center; gap: 12px;">
-                <span><i class="fas fa-user-circle"></i> <span id="userName">User</span></span>
-                <button class="btn btn-outline" id="logoutBtn" style="padding: 8px 16px;"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
-        </div>
+  <div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+  <!-- Loader -->
+  <div id="loader" class="fixed inset-0 z-[9999] bg-gradient-to-br from-black to-gray-900 flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="text-center">
+      <img src="https://d.uguu.se/YXMBoWQi.jpg" class="w-28 h-28 rounded-2xl mx-auto mb-6 animate-float shadow-2xl shadow-orange-500/50 object-cover border-4 border-orange-500/50">
+      <div class="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mx-auto mb-4"></div>
+      <h2 class="text-2xl font-display font-bold text-white">STANY PANEL</h2>
+      <p class="text-sm text-orange-400 uppercase tracking-[0.3em] animate-pulse">Loading Services...</p>
     </div>
-</header>
+  </div>
 
-<main class="container">
-    <div id="homePage">
-        <div style="text-align: center; padding: 60px 0 40px;">
-            <h1 style="font-size: 2.4rem; background: linear-gradient(135deg,#fff,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; color:transparent;">Premium Digital Services</h1>
-            <p style="color: var(--text-muted); margin: 16px 0; font-size: 1.1rem;">Panels · Bots · Azam TV · NIDA · VPN — Instant WhatsApp Delivery</p>
-            <button class="btn btn-primary" id="exploreBtn"><i class="fas fa-rocket"></i> Explore Services</button>
+  <!-- Welcome Message -->
+  <div id="welcomeMsg" class="glass-panel px-8 py-6 rounded-2xl max-w-md mx-4 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9998] text-center pointer-events-none opacity-0 transition-opacity duration-500">
+    <h3 class="text-2xl font-bold text-white mb-2">Karibu Stany Panel! 👋</h3>
+    <p class="text-gray-300 text-sm">Premium digital services at your fingertips. Order via WhatsApp instantly!</p>
+  </div>
+
+  <!-- Background Animation -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob"></div>
+    <div class="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-teal-500/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <!-- Desktop Navbar -->
+  <nav class="fixed w-full z-40 glass-nav safe-top hidden md:block">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#" class="flex items-center gap-3 group" id="homeLinkDesktop">
+          <img src="https://d.uguu.se/YXMBoWQi.jpg" class="w-10 h-10 rounded-lg object-cover border-2 border-orange-500/50 group-hover:border-orange-500 transition-colors">
+          <span class="text-xl font-display font-bold text-white">STANY<span class="text-orange-500">PANEL</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="#home" class="text-sm font-medium hover:text-white transition">Home</a>
+          <a href="#services" class="text-sm font-medium hover:text-white transition">Services</a>
+          <a href="#portfolio" class="text-sm font-medium hover:text-white transition">Portfolio</a>
+          <a href="#help" class="text-sm font-medium hover:text-white transition">Help</a>
+          <a href="#contributors" class="text-sm font-medium hover:text-white transition">Team</a>
+          <a href="#contact" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-orange-500 to-purple-600 text-white text-sm font-semibold hover:shadow-lg transition" id="getStartedBtnDesktop">Get Started</a>
         </div>
+      </div>
     </div>
+  </nav>
 
-    <div id="authPage" style="display: none; max-width: 450px; margin: 60px auto;">
-        <div style="background: var(--card); border-radius: 32px; padding: 35px; border:1px solid var(--border);">
-            <h2 id="authTitle" style="text-align: center;">Create Account</h2>
-            <form id="authForm">
-                <input type="text" id="username" class="form-input" placeholder="Full Name" required>
-                <input type="tel" id="phone" class="form-input" placeholder="WhatsApp Number (255...)" required>
-                <input type="password" id="password" class="form-input" placeholder="Password (min 6)" required>
-                <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" id="authBtn">Sign Up</button>
-            </form>
-            <p style="text-align: center; margin-top: 20px;"><a id="toggleAuthMode" style="color: var(--primary); cursor: pointer;">Already have an account? Login</a></p>
+  <!-- Mobile Top Bar -->
+  <div class="fixed top-0 left-0 right-0 z-40 glass-nav safe-top md:hidden">
+    <div class="flex items-center justify-between h-14 px-4">
+      <div class="flex items-center gap-2 cursor-pointer" id="mobileHomeLink">
+        <img src="https://d.uguu.se/YXMBoWQi.jpg" class="w-8 h-8 rounded-lg object-cover">
+        <span class="text-lg font-display font-bold text-white">STANY<span class="text-orange-500">PANEL</span></span>
+      </div>
+      <button onclick="toggleMobileMenu()" class="text-white p-2"><i class="fas fa-bars text-xl"></i></button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl hidden md:hidden safe-top">
+    <div class="flex flex-col h-full p-6">
+      <div class="flex justify-between items-center mb-8"><span class="text-2xl font-display font-bold text-white">Menu</span><button onclick="toggleMobileMenu()" class="text-white p-2"><i class="fas fa-times text-2xl"></i></button></div>
+      <nav class="flex flex-col gap-2">
+        <a href="#home" onclick="toggleMobileMenu()" class="text-xl font-semibold text-white py-4 px-4 rounded-lg hover:bg-white/10 transition">Home</a>
+        <a href="#services" onclick="toggleMobileMenu()" class="text-xl font-semibold text-gray-400 py-4 px-4 rounded-lg hover:bg-white/10 transition">Services</a>
+        <a href="#portfolio" onclick="toggleMobileMenu()" class="text-xl font-semibold text-gray-400 py-4 px-4 rounded-lg hover:bg-white/10 transition">Portfolio</a>
+        <a href="#help" onclick="toggleMobileMenu()" class="text-xl font-semibold text-gray-400 py-4 px-4 rounded-lg hover:bg-white/10 transition">Help</a>
+        <a href="#contributors" onclick="toggleMobileMenu()" class="text-xl font-semibold text-gray-400 py-4 px-4 rounded-lg hover:bg-white/10 transition">Team</a>
+        <a href="#contact" onclick="toggleMobileMenu()" class="text-xl font-semibold text-teal-400 py-4 px-4 rounded-lg hover:bg-white/10 transition">Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section id="home" class="relative z-10 min-h-screen flex items-center justify-center pt-20 md:pt-32 pb-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-12">
+      <div class="lg:w-1/2 text-center lg:text-left" data-aos="fade-right">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-orange-500/50 mb-6">
+          <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span></span>
+          <span class="text-xs font-bold text-teal-500 uppercase tracking-wider">Available 24/7</span>
         </div>
-    </div>
-
-    <div id="dashboardPage" style="display: none;">
-        <div class="section-title"><i class="fas fa-th-large"></i> Categories</div>
-        <div id="categoriesContainer"></div>
-        <div id="servicesArea" style="display: none;">
-            <button id="backBtn" class="btn btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i> Back to Categories</button>
-            <div class="section-title" id="servicesTitle"></div>
-            <div id="servicesGrid" class="services-grid"></div>
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-display font-extrabold text-white leading-tight mb-6">Premium <span class="text-gradient">Digital Services</span> for Everyone</h1>
+        <p class="text-lg text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">Panels · Bots · Azam TV · NIDA · VPN — Instant WhatsApp Delivery. Trusted by thousands across Tanzania & Africa.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
+          <a href="#services" class="px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-purple-600 text-white font-bold shadow-lg hover:shadow-orange-500/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-2"><i class="fas fa-rocket"></i> Explore Services</a>
+          <a href="https://wa.me/255787069580?text=Hello%20Stany%20Panel!%20I%20need%20assistance." target="_blank" class="px-8 py-4 rounded-full glass-panel text-white font-semibold hover:bg-white/10 transition flex items-center justify-center gap-2"><i class="fab fa-whatsapp text-2xl text-whatsapp"></i> Chat Now</a>
         </div>
+        <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-8"><div><div class="text-3xl font-bold text-white" id="statProjects">0</div><div class="text-xs text-gray-500 uppercase mt-1">Services</div></div><div><div class="text-3xl font-bold text-white" id="statClients">0</div><div class="text-xs text-gray-500 uppercase mt-1">Active Users</div></div><div><div class="text-3xl font-bold text-white">24/7</div><div class="text-xs text-gray-500 uppercase mt-1">Support</div></div></div>
+      </div>
+      <div class="lg:w-1/2 flex justify-center" data-aos="fade-left"><div class="relative"><div class="absolute -inset-2 bg-gradient-to-r from-orange-500 to-purple-600 rounded-3xl blur opacity-40 animate-pulse"></div><div class="relative glass-panel rounded-3xl p-3 border border-white/20"><img src="https://d.uguu.se/YXMBoWQi.jpg" class="rounded-2xl w-full max-w-md object-cover shadow-2xl"></div></div></div>
     </div>
-</main>
+  </section>
 
-<a href="#" class="whatsapp-float" id="whatsappFloatBtn"><i class="fab fa-whatsapp"></i></a>
+  <!-- SERVICES SECTION -->
+  <section id="services" class="py-20 md:py-32 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-aos="fade-up"><h2 class="text-orange-500 font-bold tracking-wide uppercase text-sm mb-3">What We Offer</h2><h3 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Our Premium Services</h3><p class="text-gray-400 max-w-2xl mx-auto">Choose your service, fill details, and order via WhatsApp instantly!</p></div>
+      
+      <!-- Auth Status & Buttons -->
+      <div id="authStatus" class="text-center mb-6"></div>
+      <div id="authButtonsContainer" class="flex justify-center gap-4 mb-8"></div>
+      
+      <div id="userBadge" class="text-center mb-4 hidden"><span class="glass-panel px-6 py-2 rounded-full text-sm"><i class="fas fa-user-circle text-orange-500 mr-2"></i>Logged in as: <strong id="userNameDisplay"></strong> <button id="logoutBtnNav" class="ml-3 text-red-400 text-xs hover:text-red-300"><i class="fas fa-sign-out-alt"></i> Logout</button></span></div>
+      
+      <!-- Categories Grid -->
+      <div id="categoriesContainer" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12"></div>
+      
+      <!-- Services Area -->
+      <div id="servicesArea" style="display:none"><button id="backBtn" class="mb-4 px-4 py-2 rounded-full border border-orange-500 text-orange-500 text-sm hover:bg-orange-500/10 transition"><i class="fas fa-arrow-left"></i> Back to Categories</button><h3 id="servicesTitle" class="text-lg font-bold text-white mb-4"></h3><div id="servicesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div></div>
+    </div>
+  </section>
 
-<script>
+  <!-- PORTFOLIO SECTION -->
+  <section id="portfolio" class="py-20 md:py-32 relative z-10 bg-black/20"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-16" data-aos="fade-up"><h2 class="text-pink-500 font-bold tracking-wide uppercase text-sm mb-3">Our Work</h2><h3 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Featured Projects</h3><p class="text-gray-400 max-w-2xl mx-auto">Showcasing our best work and successful client partnerships.</p></div><div class="grid md:grid-cols-3 gap-8"><div class="glass-panel rounded-2xl overflow-hidden"><img src="https://d.uguu.se/YXMBoWQi.jpg" class="w-full h-48 object-cover"><div class="p-6"><h4 class="text-xl font-bold text-white mb-2">STANY FREE BOT</h4><p class="text-gray-400 text-sm">Advanced WhatsApp automation with AI responses.</p></div></div><div class="glass-panel rounded-2xl overflow-hidden"><div class="w-full h-48 bg-gradient-to-br from-blue-900 to-cyan-900 flex items-center justify-center"><i class="fas fa-shopping-bag text-6xl text-white/20"></i></div><div class="p-6"><h4 class="text-xl font-bold text-white mb-2">E-Commerce Platform</h4><p class="text-gray-400 text-sm">Complete online store with payment integration.</p></div></div><div class="glass-panel rounded-2xl overflow-hidden"><div class="w-full h-48 bg-gradient-to-br from-green-900 to-teal-900 flex items-center justify-center"><i class="fas fa-mobile-alt text-6xl text-white/20"></i></div><div class="p-6"><h4 class="text-xl font-bold text-white mb-2">Delivery App</h4><p class="text-gray-400 text-sm">Real-time delivery tracking mobile application.</p></div></div></div></div></section>
+
+  <!-- HELP SECTION -->
+  <section id="help" class="py-20 md:py-32 relative z-10"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-16" data-aos="fade-up"><h2 class="text-purple-500 font-bold tracking-wide uppercase text-sm mb-3">Support</h2><h3 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Help Center</h3><p class="text-gray-400 max-w-2xl mx-auto">Find answers to common questions and get the support you need.</p></div><div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"><div class="glass-panel p-6 rounded-2xl"><h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-question-circle text-teal-500"></i> Frequently Asked Questions</h4><div class="space-y-3"><details><summary class="flex justify-between items-center cursor-pointer text-gray-300 hover:text-white py-2"><span>How long does service activation take?</span><i class="fas fa-chevron-down text-sm"></i></summary><p class="text-gray-400 text-sm mt-2">Most services are activated within 5-30 minutes after payment confirmation.</p></details><hr class="border-white/10"><details><summary class="flex justify-between items-center cursor-pointer text-gray-300 hover:text-white py-2"><span>How do I pay?</span><i class="fas fa-chevron-down text-sm"></i></summary><p class="text-gray-400 text-sm mt-2">Payment details will be shared on WhatsApp after you place your order.</p></details><hr class="border-white/10"><details><summary class="flex justify-between items-center cursor-pointer text-gray-300 hover:text-white py-2"><span>Do you provide support?</span><i class="fas fa-chevron-down text-sm"></i></summary><p class="text-gray-400 text-sm mt-2">Yes! 24/7 support via WhatsApp. Our team is always ready to help.</p></details></div></div><div class="glass-panel p-6 rounded-2xl"><h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-headset text-pink-500"></i> Get In Touch</h4><div class="space-y-4"><a href="https://wa.me/255787069580" target="_blank" class="flex items-center gap-3 p-3 rounded-lg bg-whatsapp/10 hover:bg-whatsapp/20 transition"><i class="fab fa-whatsapp text-2xl text-whatsapp"></i><div><div class="text-white font-semibold">WhatsApp</div><div class="text-sm text-gray-400">+255 787 069 580</div></div></a><a href="https://t.me/StanyTz076" target="_blank" class="flex items-center gap-3 p-3 rounded-lg bg-telegram/10 hover:bg-telegram/20 transition"><i class="fab fa-telegram text-2xl text-telegram"></i><div><div class="text-white font-semibold">Telegram</div><div class="text-sm text-gray-400">@StanyTz076</div></div></a><a href="mailto:officialstanlee143@gmail.com" class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition"><i class="fas fa-envelope text-2xl text-red-500"></i><div><div class="text-white font-semibold">Email</div><div class="text-sm text-gray-400">officialstanlee143@gmail.com</div></div></a></div></div></div></div></section>
+
+  <!-- CONTRIBUTORS SECTION -->
+  <section id="contributors" class="py-20 md:py-32 relative z-10 bg-black/20"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center mb-16" data-aos="fade-up"><h2 class="text-teal-500 font-bold tracking-wide uppercase text-sm mb-3">Our Team</h2><h3 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Special Thanks to Contributors</h3><p class="text-gray-400 max-w-2xl mx-auto">Meet the talented individuals and teams who contribute to our success.</p></div><div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"><div class="glass-panel p-8 rounded-2xl text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl font-bold text-white">SP</div><h4 class="text-xl font-bold text-white mb-1">Stany Panel</h4><p class="text-orange-500 text-sm mb-3">Founder & CEO</p><p class="text-gray-400 text-sm">Driving innovation in digital services across Africa.</p></div><div class="glass-panel p-8 rounded-2xl text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-4xl font-bold text-white">KT</div><h4 class="text-xl font-bold text-white mb-1">Kakunda Tech</h4><p class="text-pink-500 text-sm mb-3">Technology Partner</p><p class="text-gray-400 text-sm">Contributing expertise in software architecture.</p></div><div class="glass-panel p-8 rounded-2xl text-center"><div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-4xl font-bold text-white">TT</div><h4 class="text-xl font-bold text-white mb-1">TimnasaTech</h4><p class="text-teal-500 text-sm mb-3">Innovation Partner</p><p class="text-gray-400 text-sm">Driving innovation in AI and automation technologies.</p></div></div></div></section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="py-20 md:py-32 relative z-10"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"><div class="glass-panel rounded-3xl p-8 md:p-12" data-aos="fade-up"><div class="text-center mb-10"><h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-4">Let's Build Together</h2><p class="text-gray-400">Ready to order or have questions? Get in touch with us today.</p></div><form id="contactForm" class="space-y-4"><div class="grid md:grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Full Name *</label><input type="text" id="contactName" required class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition" placeholder="John Doe"></div><div><label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Phone Number</label><input type="tel" id="contactPhone" class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition" placeholder="+255 787 069 580"></div></div><div><label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Email Address *</label><input type="email" id="contactEmail" required class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition" placeholder="john@example.com"></div><div><label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Service Required *</label><select id="contactService" required class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition"><option value="">Select a service...</option><option value="Panel">Panel Service</option><option value="Bot">WhatsApp Bot</option><option value="Azam TV">Azam TV</option><option value="NIDA">NIDA Soft Copy</option><option value="Birth Certificate">Birthday Certificate</option><option value="VPN">VPN Service</option><option value="Other">Other</option></select></div><div><label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Message *</label><textarea id="contactMessage" rows="4" required class="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition resize-none" placeholder="Tell us about your request..."></textarea></div><div class="flex flex-col sm:flex-row gap-3 pt-4"><button type="submit" class="flex-1 py-4 rounded-lg bg-gradient-to-r from-orange-500 to-purple-600 text-white font-bold hover:shadow-lg transition flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> Send Message</button><button type="button" onclick="sendContactToWhatsApp()" class="flex-1 py-4 rounded-lg bg-whatsapp text-white font-bold hover:bg-whatsapp/80 transition flex items-center justify-center gap-2"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button></div></form></div></div></section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 bg-black/60 pt-16 pb-32 md:pb-8 relative z-10"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid md:grid-cols-4 gap-8 mb-12"><div class="col-span-1 md:col-span-2"><div class="flex items-center gap-2 mb-4"><img src="https://d.uguu.se/YXMBoWQi.jpg" class="w-10 h-10 rounded-lg object-cover border-2 border-orange-500/50"><span class="text-2xl font-display font-bold text-white">STANY<span class="text-orange-500">PANEL</span></span></div><p class="text-gray-400 text-sm max-w-md mb-6">Premium digital services provider offering panels, bots, Azam TV, NIDA, VPN and more. Order via WhatsApp instantly!</p><div class="flex gap-3"><a href="https://wa.me/255787069580" target="_blank" class="w-10 h-10 rounded-full bg-whatsapp/20 flex items-center justify-center text-whatsapp hover:bg-whatsapp hover:text-white transition"><i class="fab fa-whatsapp"></i></a><a href="https://t.me/StanyTz076" target="_blank" class="w-10 h-10 rounded-full bg-telegram/20 flex items-center justify-center text-telegram hover:bg-telegram hover:text-white transition"><i class="fab fa-telegram-plane"></i></a><a href="mailto:officialstanlee143@gmail.com" class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-envelope"></i></a></div></div><div><h4 class="text-white font-semibold mb-4">Quick Links</h4><ul class="space-y-2 text-sm text-gray-400"><li><a href="#home" class="hover:text-orange-500 transition">Home</a></li><li><a href="#services" class="hover:text-orange-500 transition">Services</a></li><li><a href="#portfolio" class="hover:text-orange-500 transition">Portfolio</a></li><li><a href="#contact" class="hover:text-orange-500 transition">Contact</a></li></ul></div><div><h4 class="text-white font-semibold mb-4">Legal</h4><ul class="space-y-2 text-sm text-gray-400"><li><a href="#" class="hover:text-orange-500 transition">Privacy Policy</a></li><li><a href="#" class="hover:text-orange-500 transition">Terms of Service</a></li></ul></div></div><div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"><p class="text-gray-500 text-sm">&copy; <span id="year"></span> Stany Panel Service. All rights reserved.</p><p class="text-gray-600 text-xs">Made with <i class="fas fa-heart text-pink-500"></i> in Tanzania 🇹</p></div></div></footer>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-nav safe-bottom md:hidden"><div class="flex items-center justify-around h-16"><a href="#home" class="nav-item active flex flex-col items-center text-gray-400" onclick="setActiveNav(this)"><i class="fas fa-home text-xl mb-1"></i><span class="text-[10px]">Home</span></a><a href="#services" class="nav-item flex flex-col items-center text-gray-400" onclick="setActiveNav(this)"><i class="fas fa-th-large text-xl mb-1"></i><span class="text-[10px]">Services</span></a><a href="https://wa.me/255787069580" target="_blank" class="flex flex-col items-center"><div class="w-12 h-12 rounded-full bg-whatsapp flex items-center justify-center -mt-6 border-4 border-black whatsapp-pulse"><i class="fab fa-whatsapp text-2xl text-white"></i></div><span class="text-[10px] text-whatsapp mt-1">Chat</span></a><a href="#portfolio" class="nav-item flex flex-col items-center text-gray-400" onclick="setActiveNav(this)"><i class="fas fa-briefcase text-xl mb-1"></i><span class="text-[10px]">Work</span></a><a href="#contact" class="nav-item flex flex-col items-center text-gray-400" onclick="setActiveNav(this)"><i class="fas fa-envelope text-xl mb-1"></i><span class="text-[10px]">Contact</span></a></div></nav>
+
+  <!-- Floating WhatsApp Desktop -->
+  <a href="https://wa.me/255787069580?text=Hello%20Stany%20Panel!" target="_blank" class="hidden md:flex fixed bottom-6 right-6 z-50 w-14 h-14 bg-whatsapp rounded-full items-center justify-center shadow-lg hover:scale-110 transition whatsapp-pulse"><i class="fab fa-whatsapp text-white text-3xl"></i></a>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 800 });
+    
+    // Firebase Config
     const firebaseConfig = {
-        apiKey: "AIzaSyBhF_jesV0dMhy3cEgehrWlT_mZOtKXySE",
-        authDomain: "stanytechzone.firebaseapp.com",
-        projectId: "stanytechzone",
-        storageBucket: "stanytechzone.firebasestorage.app",
-        messagingSenderId: "182249230489",
-        appId: "1:182249230489:web:c87d89de113b6714c46808"
+      apiKey: "AIzaSyBhF_jesV0dMhy3cEgehrWlT_mZOtKXySE",
+      authDomain: "stanytechzone.firebaseapp.com",
+      projectId: "stanytechzone",
+      storageBucket: "stanytechzone.firebasestorage.app",
+      messagingSenderId: "182249230489",
+      appId: "1:182249230489:web:c87d89de113b6714c46808"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
     let currentUser = null;
-    let selectedService = null;
-    let selectedPlan = null;
-
+    
+    // Categories with Images
     const CATEGORIES = [
-        { key: "all", name: "All Services", img: "https://o.uguu.se/vizuEVnl.jpg" },
-        { key: "panels", name: "Panels", img: "https://o.uguu.se/vizuEVnl.jpg" },
-        { key: "bots", name: "Bots", img: "https://d.uguu.se/VJGvwiWA.jpg" },
-        { key: "azam", name: "Azam TV", img: "https://n.uguu.se/eUPrQpsS.jpg" },
-        { key: "documents", name: "Documents", img: "https://o.uguu.se/vizuEVnl.jpg" },
-        { key: "vpn", name: "VPN & Security", img: "https://o.uguu.se/vizuEVnl.jpg" }
+      { key: "all", name: "All Services", img: "https://o.uguu.se/vizuEVnl.jpg" },
+      { key: "panels", name: "Panels", img: "https://o.uguu.se/vizuEVnl.jpg" },
+      { key: "bots", name: "Bots", img: "https://d.uguu.se/VJGvwiWA.jpg" },
+      { key: "azam", name: "Azam TV", img: "https://n.uguu.se/eUPrQpsS.jpg" },
+      { key: "documents", name: "Documents", img: "https://o.uguu.se/vizuEVnl.jpg" },
+      { key: "vpn", name: "VPN", img: "https://o.uguu.se/vizuEVnl.jpg" }
     ];
 
+    // Services Data
     let SERVICES = [
-        { id: "unl", name: "Unlimited Panel", category: "panels", desc: "Full premium access, no data limits", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"Unlimited Access",price:"5,000 TZS"}], needPanel: true },
-        { id: "2gb", name: "2GB Panel", category: "panels", desc: "2GB premium data package", img: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=250&fit=crop", prices: [{plan:"2GB Data",price:"3,000 TZS"}], needPanel: true },
-        { id: "4gb", name: "4GB Panel", category: "panels", desc: "4GB high-speed data", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop", prices: [{plan:"4GB Data",price:"4,000 TZS"}], needPanel: true },
-        { id: "5gb", name: "5GB Panel", category: "panels", desc: "5GB ultimate value", img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop", prices: [{plan:"5GB Data",price:"4,500 TZS"}], needPanel: true },
-        { id: "bugbot", name: "Bug Bot", category: "bots", desc: "Advanced WhatsApp bug detection bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Bug Bot Deployment",price:"5,000 TZS"}], needPanel: false },
-        { id: "normalbot", name: "Normal Bot", category: "bots", desc: "Standard automation bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Normal Bot",price:"4,000 TZS"}], needPanel: false },
-        { id: "botdev", name: "Bot Development", category: "bots", desc: "Custom bot tailored to your needs", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Custom Development",price:"25,000 TZS"}], needPanel: false },
-        { id: "azam1d", name: "Azam TV 1 Day", category: "azam", desc: "24 hours all channels access", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Day",price:"500 TZS"}], needPanel: false },
-        { id: "azam1w", name: "Azam TV 1 Week", category: "azam", desc: "7 days premium entertainment", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Week",price:"2,000 TZS"}], needPanel: false },
-        { id: "azam1m", name: "Azam TV 1 Month", category: "azam", desc: "30 days unlimited", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Month",price:"3,000 TZS"}], needPanel: false },
-        { id: "azam1y", name: "Azam TV 1 Year", category: "azam", desc: "Best value yearly plan", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Year",price:"5,000 TZS"}], needPanel: false },
-        { id: "nida", name: "NIDA Soft Copy", category: "documents", desc: "Digital NIDA registration document", img: "https://h.uguu.se/ydzmLpek.jpg", prices: [{plan:"Soft Copy",price:"10,000 TZS"}], needPanel: false, hasReqs: true, reqType: "nida" },
-        { id: "birthcert", name: "Birthday Certificate", category: "documents", desc: "RITA Certificate + Service Fee", img: "https://d.uguu.se/GEJPFeNk.jpg", prices: [{plan:"RITA Fee",price:"20,000 TZS"},{plan:"Service Fee",price:"15,000 TZS"},{plan:"TOTAL",price:"35,000 TZS"}], needPanel: false, hasReqs: true, reqType: "birth" },
-        { id: "halovpn10", name: "Halotel VPN 10 Days", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"10 Days",price:"2,500 TZS"}], needPanel: false },
-        { id: "halovpn2w", name: "Halotel VPN 2 Weeks", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"2 Weeks",price:"3,500 TZS"}], needPanel: false },
-        { id: "halovpn1m", name: "Halotel VPN 1 Month", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"1 Month",price:"4,500 TZS"}], needPanel: false }
+      { id: "unl", name: "Unlimited Panel", category: "panels", desc: "Full premium access", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"Unlimited",price:"5,000 TZS"}], needPanel: true },
+      { id: "2gb", name: "2GB Panel", category: "panels", desc: "2GB premium data", img: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=250&fit=crop", prices: [{plan:"2GB",price:"3,000 TZS"}], needPanel: true },
+      { id: "4gb", name: "4GB Panel", category: "panels", desc: "4GB high-speed", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop", prices: [{plan:"4GB",price:"4,000 TZS"}], needPanel: true },
+      { id: "5gb", name: "5GB Panel", category: "panels", desc: "5GB ultimate", img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop", prices: [{plan:"5GB",price:"4,500 TZS"}], needPanel: true },
+      { id: "bugbot", name: "Bug Bot", category: "bots", desc: "Advanced WhatsApp bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Bug Bot",price:"5,000 TZS"}], needPanel: false },
+      { id: "normalbot", name: "Normal Bot", category: "bots", desc: "Standard automation", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Normal Bot",price:"4,000 TZS"}], needPanel: false },
+      { id: "botdev", name: "Bot Development", category: "bots", desc: "Custom bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Development",price:"25,000 TZS"}], needPanel: false },
+      { id: "azam1d", name: "Azam TV 1 Day", category: "azam", desc: "24h all channels", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Day",price:"500 TZS"}], needPanel: false },
+      { id: "azam1w", name: "Azam TV 1 Week", category: "azam", desc: "7 days access", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Week",price:"2,000 TZS"}], needPanel: false },
+      { id: "azam1m", name: "Azam TV 1 Month", category: "azam", desc: "Monthly unlimited", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Month",price:"3,000 TZS"}], needPanel: false },
+      { id: "azam1y", name: "Azam TV 1 Year", category: "azam", desc: "Best value yearly", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Year",price:"5,000 TZS"}], needPanel: false },
+      { id: "nida", name: "NIDA Soft Copy", category: "documents", desc: "Digital NIDA document", img: "https://h.uguu.se/ydzmLpek.jpg", prices: [{plan:"Soft Copy",price:"10,000 TZS"}], needPanel: false },
+      { id: "birthcert", name: "Birthday Certificate", category: "documents", desc: "RITA Certificate", img: "https://d.uguu.se/GEJPFeNk.jpg", prices: [{plan:"RITA Fee",price:"20,000 TZS"},{plan:"Service Fee",price:"15,000 TZS"},{plan:"TOTAL",price:"35,000 TZS"}], needPanel: false },
+      { id: "vpn10d", name: "Halotel VPN 10 Days", category: "vpn", desc: "Secure VPN", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"10 Days",price:"2,500 TZS"}], needPanel: false },
+      { id: "vpn2w", name: "Halotel VPN 2 Weeks", category: "vpn", desc: "Secure VPN", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"2 Weeks",price:"3,500 TZS"}], needPanel: false },
+      { id: "vpn1m", name: "Halotel VPN 1 Month", category: "vpn", desc: "Secure VPN", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"1 Month",price:"4,500 TZS"}], needPanel: false }
     ];
-
-    async function loadServicesFromFirestore() {
-        const snap = await db.collection("services").get();
-        if(!snap.empty) {
-            SERVICES = [];
-            snap.forEach(doc => SERVICES.push({ id: doc.id, ...doc.data() }));
-        } else {
-            for(const s of SERVICES) await db.collection("services").add(s);
-        }
-        renderCategories();
-    }
 
     function renderCategories() {
-        const container = document.getElementById('categoriesContainer');
-        container.innerHTML = `<div class="categories-grid" id="categoriesGrid"></div>`;
-        const grid = document.getElementById('categoriesGrid');
-        grid.innerHTML = CATEGORIES.map(cat => `
-            <div class="category-card" data-cat="${cat.key}">
-                <img src="${cat.img}" class="category-img" alt="${cat.name}">
-                <div class="category-name">${cat.name}</div>
-            </div>
-        `).join('');
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const catKey = card.dataset.cat;
-                let filtered = catKey === 'all' ? SERVICES : SERVICES.filter(s => s.category === catKey);
-                displayServices(filtered);
-                document.getElementById('servicesArea').style.display = 'block';
-                document.getElementById('servicesTitle').innerHTML = `<i class="fas fa-box-open"></i> ${catKey === 'all' ? 'All Services' : catKey.toUpperCase()}`;
-                window.scrollTo({ top: 350, behavior: 'smooth' });
-            });
-        });
+      let html = '';
+      CATEGORIES.forEach(cat => { html += `<div class="glass-panel rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition category-card" data-cat="${cat.key}"><img src="${cat.img}" class="w-full h-28 object-cover"><div class="p-2 text-center text-sm font-semibold">${cat.name}</div></div>`; });
+      document.getElementById('categoriesContainer').innerHTML = html;
+      document.querySelectorAll('.category-card').forEach(card => { card.addEventListener('click', () => { let cat = card.dataset.cat; let filtered = cat === 'all' ? SERVICES : SERVICES.filter(s => s.category === cat); displayServices(filtered, cat); document.getElementById('servicesArea').style.display = 'block'; document.getElementById('servicesTitle').innerHTML = `<i class="fas fa-box-open text-orange-500 mr-2"></i>${cat === 'all' ? 'All Services' : cat.toUpperCase()}`; window.scrollTo({ top: 400, behavior: 'smooth' }); }); });
     }
 
     function displayServices(services) {
-        const grid = document.getElementById('servicesGrid');
-        grid.innerHTML = services.map(svc => `
-            <div class="service-card" data-svc='${JSON.stringify(svc).replace(/'/g, "&apos;")}'>
-                <img src="${svc.img}" class="service-img" onerror="this.src='https://placehold.co/400x250/16162a/f97316?text=Service'">
-                <div class="service-content">
-                    <h3>${svc.name}</h3>
-                    <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0;">${svc.desc || ''}</p>
-                    <div class="price-badge">${svc.prices[0].price}</div>
-                </div>
-            </div>
-        `).join('');
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const raw = card.dataset.svc;
-                const service = JSON.parse(raw.replace(/&apos;/g, "'"));
-                openOrderModal(service);
-            });
-        });
-    }
-
-    function sendWhatsAppOrder(name, phone, service, plan, extraData) {
-        let phoneNum = phone.replace(/\D/g,'');
-        if(!phoneNum.startsWith('255')) phoneNum = '255' + phoneNum.replace(/^0/,'');
-        
-        let message = `*🛒 STANY PANEL SERVICE - NEW ORDER*%0A%0A`;
-        message += `📦 *Service:* ${service.name}%0A`;
-        message += `💰 *Plan:* ${plan.plan} - ${plan.price}%0A`;
-        message += `👤 *Customer Name:* ${name}%0A`;
-        message += `📞 *WhatsApp:* ${phone}%0A`;
-        
-        if(extraData.panelEmail && extraData.panelPass) {
-            message += `📧 *Email:* ${extraData.panelEmail}%0A`;
-            message += `🔑 *Panel Password:* ${extraData.panelPass}%0A`;
-        }
-        
-        if(extraData.documents) {
-            message += `%0A📋 *Available Documents:*%0A${extraData.documents}%0A`;
-            message += `📍 *Service Area:* Tanzania Nzima%0A`;
-        }
-        
-        if(extraData.nidaNumber) {
-            message += `%0A🆔 *NIDA Number:* ${extraData.nidaNumber}%0A`;
-            message += `👩 *Mother's Name/School Year:* ${extraData.motherInfo}%0A`;
-            message += `🏙️ *Region:* ${extraData.region || 'Not specified'}%0A`;
-        }
-        
-        message += `%0A✅ *Payment Status:* Pending Confirmation%0A`;
-        message += `📝 *Note:* I confirm my order details above. Please verify and share payment instructions.%0A%0A`;
-        message += `📅 *Order Date:* ${new Date().toLocaleString()}`;
-        
-        // Save to Firestore
-        db.collection("orders").add({
-            customerName: name, customerPhone: phone, serviceName: service.name,
-            planName: plan.plan, amount: plan.price, status: "pending",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(), userId: currentUser?.uid || "guest"
-        }).catch(console.error);
-        
-        // Open WhatsApp
-        window.open(`https://wa.me/255787069580?text=${message}`, '_blank');
+      let html = '';
+      services.forEach(svc => { html += `<div class="glass-panel rounded-xl overflow-hidden service-card" data-svc='${JSON.stringify(svc).replace(/'/g, "&apos;")}'><img src="${svc.img}" class="w-full h-40 object-cover" onerror="this.src='https://placehold.co/400x250/1e293b/f97316?text=Service'"><div class="p-4"><h3 class="font-bold text-white">${svc.name}</h3><p class="text-gray-400 text-xs mt-1">${svc.desc}</p><div class="mt-3 inline-block px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-purple-600 text-white text-xs font-semibold">${svc.prices[0].price}</div></div></div>`; });
+      document.getElementById('servicesGrid').innerHTML = html;
+      document.querySelectorAll('.service-card').forEach(card => { card.addEventListener('click', () => { let svc = JSON.parse(card.dataset.svc.replace(/&apos;/g, "'")); openOrderModal(svc); }); });
     }
 
     function openOrderModal(service) {
-        selectedService = service;
-        selectedPlan = service.prices[0];
-        
-        let priceHtml = service.prices.map((p, idx) => `
-            <div class="price-option ${idx===0?'selected':''}" data-plan='${JSON.stringify(p)}'>
-                <span><i class="fas fa-tag"></i> ${p.plan}</span>
-                <strong><i class="fas fa-coins"></i> ${p.price}</strong>
-            </div>
-        `).join('');
-        
-        let requirementsHtml = '';
-        if(service.id === 'birthcert') {
-            requirementsHtml = `
-                <div class="requirements-box">
-                    <strong><i class="fas fa-file-alt"></i> MAHITAJI YA KUOMBA CHETI CHA KUZALIWA:</strong>
-                    <ul>
-                        <li><i class="fas fa-notes-medical"></i> Kadi ya Kliniki / Cheti cha FALAKI</li>
-                        <li><i class="fas fa-passport"></i> Pasi ya kusafiria / Kitambulisho cha utaifa</li>
-                        <li><i class="fas fa-graduation-cap"></i> Cheti cha kumaliza shule</li>
-                        <li><i class="fas fa-id-card"></i> Kitambulisho cha kupigia kura</li>
-                        <li><i class="fas fa-church"></i> Tangazo la kizazi / Cheti cha Ubatizo</li>
-                        <li><i class="fas fa-building"></i> Barua kutoka kwa Afisa Mtendaji</li>
-                    </ul>
-                    <p><strong><i class="fas fa-info-circle"></i> Unatakiwa kuwa na angalau viambatanisho viwili (2) au zaidi.</strong></p>
-                </div>
-            `;
-        } else if(service.id === 'nida') {
-            requirementsHtml = `
-                <div class="requirements-box">
-                    <strong><i class="fas fa-id-card"></i> MAHITAJI YA NIDA SOFT COPY:</strong>
-                    <ul>
-                        <li><i class="fas fa-qrcode"></i> Namba ya NIDA</li>
-                        <li><i class="fas fa-female"></i> Jina la mama au Mwaka wa kumaliza shule</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Mkoa unaoishi</li>
-                    </ul>
-                </div>
-            `;
-        }
-        
-        const modalDiv = document.createElement('div');
-        modalDiv.className = 'modal active';
-        modalDiv.innerHTML = `
-            <div class="modal-content" style="padding: 0;">
-                <div style="padding: 24px; border-bottom:1px solid var(--border); background: linear-gradient(135deg, rgba(249,115,22,0.1), transparent);">
-                    <h3><i class="fas fa-cube"></i> ${service.name}</h3>
-                    <p style="color: var(--text-muted); margin-top: 6px;">${service.desc || ''}</p>
-                </div>
-                <div style="padding: 20px 24px;">
-                    <div style="margin-bottom: 10px;"><i class="fas fa-tags"></i> Select Plan:</div>
-                    <div id="modalPriceList">${priceHtml}</div>
-                </div>
-                ${requirementsHtml}
-                <div style="padding: 0 24px 20px;">
-                    <div style="margin: 10px 0 5px;"><i class="fas fa-user"></i> Your Information:</div>
-                    <input type="text" id="orderName" class="form-input" placeholder="Full Name" value="${currentUser?.displayName || ''}">
-                    <input type="tel" id="orderPhone" class="form-input" placeholder="WhatsApp Number" value="${currentUser?.phoneNumber || ''}">
-                    
-                    <div id="panelFields" style="display: ${service.needPanel ? 'block' : 'none'};">
-                        <div style="margin: 10px 0 5px;"><i class="fas fa-envelope"></i> Panel Login Details:</div>
-                        <input type="email" id="orderEmail" class="form-input" placeholder="Email for Panel Login">
-                        <input type="password" id="orderPass" class="form-input" placeholder="Create Panel Password">
-                    </div>
-                    
-                    <div id="birthFields" style="display: ${service.id === 'birthcert' ? 'block' : 'none'};">
-                        <div style="margin: 10px 0 5px;"><i class="fas fa-paperclip"></i> Available Documents (list at least 2):</div>
-                        <textarea id="docList" class="form-textarea" rows="3" placeholder="Example:&#10;✓ Kadi ya Kliniki&#10;✓ Cheti cha FALAKI"></textarea>
-                    </div>
-                    
-                    <div id="nidaFields" style="display: ${service.id === 'nida' ? 'block' : 'none'};">
-                        <input type="text" id="nidaNumber" class="form-input" placeholder="NIDA Number">
-                        <input type="text" id="motherInfo" class="form-input" placeholder="Jina la mama au Mwaka wa kumaliza">
-                        <input type="text" id="region" class="form-input" placeholder="Mkoa unaoishi">
-                    </div>
-                    
-                    <button id="sendWhatsAppBtn" class="btn btn-primary" style="width:100%; justify-content:center; margin-top: 16px;">
-                        <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                    </button>
-                </div>
-                <button class="closeModalBtn" style="position:absolute; top:16px; right:20px; background:none; border:none; font-size:28px; color:white; cursor:pointer;">&times;</button>
-            </div>
-        `;
-        document.body.appendChild(modalDiv);
-        
-        document.querySelectorAll('.price-option').forEach(opt => {
-            opt.addEventListener('click', () => {
-                document.querySelectorAll('.price-option').forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                selectedPlan = JSON.parse(opt.dataset.plan);
-            });
-        });
-        
-        document.querySelector('.closeModalBtn').addEventListener('click', () => modalDiv.remove());
-        modalDiv.addEventListener('click', (e) => { if(e.target === modalDiv) modalDiv.remove(); });
-        
-        document.getElementById('sendWhatsAppBtn').addEventListener('click', () => {
-            let name = document.getElementById('orderName').value.trim();
-            let phone = document.getElementById('orderPhone').value.trim();
-            
-            if(!name) { alert("❌ Please enter your full name"); return; }
-            if(!phone) { alert("❌ Please enter your WhatsApp number"); return; }
-            
-            let extraData = {};
-            
-            if(selectedService.needPanel) {
-                let email = document.getElementById('orderEmail')?.value.trim();
-                let pass = document.getElementById('orderPass')?.value.trim();
-                if(!email || !pass) { alert("❌ Email and Password required for panel service"); return; }
-                extraData.panelEmail = email;
-                extraData.panelPass = pass;
-            }
-            
-            if(selectedService.id === 'birthcert') {
-                let docs = document.getElementById('docList')?.value.trim();
-                if(!docs || docs.length < 5) { alert("❌ Please list at least 2 available documents for Birth Certificate"); return; }
-                extraData.documents = docs;
-            }
-            
-            if(selectedService.id === 'nida') {
-                let nida = document.getElementById('nidaNumber')?.value.trim();
-                let mother = document.getElementById('motherInfo')?.value.trim();
-                if(!nida || !mother) { alert("❌ Please fill NIDA Number and Mother's Name/School Year"); return; }
-                extraData.nidaNumber = nida;
-                extraData.motherInfo = mother;
-                extraData.region = document.getElementById('region')?.value.trim() || '';
-            }
-            
-            sendWhatsAppOrder(name, phone, selectedService, selectedPlan, extraData);
-            modalDiv.remove();
-            alert("✅ Order sent successfully! Admin will respond on WhatsApp shortly.");
-        });
+      let selectedPlan = service.prices[0];
+      let priceHtml = service.prices.map((p, idx) => `<div class="flex justify-between items-center p-3 rounded-xl bg-white/5 mb-2 cursor-pointer hover:bg-orange-500/20 transition price-option ${idx===0?'selected border border-orange-500':''}" data-plan='${JSON.stringify(p)}'><span>${p.plan}</span><strong class="text-orange-500">${p.price}</strong></div>`).join('');
+      let reqHtml = '';
+      if(service.id === 'birthcert') reqHtml = `<div class="bg-orange-500/10 p-3 rounded-xl mb-3 text-xs"><strong class="text-orange-400">📋 MAHITAJI:</strong> Kadi ya Kliniki, Cheti cha FALAKI, Pasipoti, Kitambulisho, Tangazo la kizazi (Angalau viwili)</div>`;
+      if(service.id === 'nida') reqHtml = `<div class="bg-orange-500/10 p-3 rounded-xl mb-3 text-xs"><strong class="text-orange-400">🆔 MAHITAJI:</strong> Namba ya NIDA + Jina la mama au Mwaka wa kumaliza + Mkoa</div>`;
+      
+      let modal = document.createElement('div');
+      modal.className = 'modal fixed inset-0 bg-black/95 backdrop-blur-lg z-[1000] flex items-center justify-center p-4';
+      modal.innerHTML = `<div class="glass-panel rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto"><div class="p-5 border-b border-white/10"><h3 class="text-xl font-bold text-white">${service.name}</h3><p class="text-gray-400 text-sm">${service.desc}</p></div><div class="p-5"><div class="mb-3 text-sm">Select Plan:</div>${priceHtml}</div>${reqHtml}<div class="p-5 pt-0"><input type="text" id="orderName" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white mb-3" placeholder="Full Name" value="${currentUser?.displayName || ''}"><input type="tel" id="orderPhone" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white mb-3" placeholder="WhatsApp Number"><div id="panelFields" style="display:${service.needPanel?'block':'none'}"><input type="email" id="orderEmail" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white mb-3" placeholder="Email for Panel"><input type="password" id="orderPass" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white mb-3" placeholder="Panel Password"></div><button id="sendOrderBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-purple-600 text-white font-semibold"><i class="fab fa-whatsapp mr-2"></i> Order via WhatsApp</button></div><button class="closeModal absolute top-4 right-4 text-white text-2xl">&times;</button></div>`;
+      document.body.appendChild(modal);
+      
+      document.querySelectorAll('.price-option').forEach(opt => { opt.addEventListener('click', () => { document.querySelectorAll('.price-option').forEach(o => o.classList.remove('selected', 'border-orange-500')); opt.classList.add('selected', 'border-orange-500'); selectedPlan = JSON.parse(opt.dataset.plan); }); });
+      modal.querySelector('.closeModal').addEventListener('click', () => modal.remove());
+      modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+      document.getElementById('sendOrderBtn').addEventListener('click', () => {
+        let name = document.getElementById('orderName').value.trim();
+        let phone = document.getElementById('orderPhone').value.trim();
+        if(!name || !phone) { alert("❌ Please enter name and WhatsApp number"); return; }
+        if(service.needPanel && (!document.getElementById('orderEmail')?.value.trim() || !document.getElementById('orderPass')?.value.trim())) { alert("❌ Email and password required for panel"); return; }
+        let phoneNum = phone.replace(/\D/g,''); if(!phoneNum.startsWith('255')) phoneNum = '255' + phoneNum.replace(/^0/,'');
+        let msg = `*🛒 STANY PANEL - NEW ORDER*%0A%0A📦 Service: ${service.name}%0A💰 Plan: ${selectedPlan.plan} - ${selectedPlan.price}%0A👤 Customer: ${name}%0A📞 WhatsApp: ${phone}`;
+        if(service.needPanel) msg += `%0A📧 Email: ${document.getElementById('orderEmail')?.value.trim()}%0A🔑 Password: ${document.getElementById('orderPass')?.value.trim()}`;
+        msg += `%0A%0A✅ Payment pending confirmation. Please activate.`;
+        db.collection("orders").add({ customerName: name, customerPhone: phone, serviceName: service.name, planName: selectedPlan.plan, amount: selectedPlan.price, status: "pending", createdAt: new Date() }).catch(console.error);
+        window.open(`https://wa.me/255787069580?text=${msg}`, '_blank');
+        modal.remove();
+        alert("✅ Order sent! Admin will respond on WhatsApp.");
+      });
     }
 
+    // Auth Logic
     let isLogin = false;
-    document.getElementById('loginBtn')?.addEventListener('click', () => {
-        isLogin = true;
-        document.getElementById('authTitle').innerText = "Login";
-        document.getElementById('authBtn').innerText = "Login";
-        document.getElementById('homePage').style.display = 'none';
-        document.getElementById('authPage').style.display = 'block';
-        document.getElementById('dashboardPage').style.display = 'none';
-    });
-    document.getElementById('signupBtn')?.addEventListener('click', () => {
-        isLogin = false;
-        document.getElementById('authTitle').innerText = "Create Account";
-        document.getElementById('authBtn').innerText = "Sign Up";
-        document.getElementById('homePage').style.display = 'none';
-        document.getElementById('authPage').style.display = 'block';
-        document.getElementById('dashboardPage').style.display = 'none';
-    });
-    document.getElementById('toggleAuthMode')?.addEventListener('click', () => {
-        isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? "Login" : "Create Account";
-        document.getElementById('authBtn').innerText = isLogin ? "Login" : "Sign Up";
-    });
-    document.getElementById('authForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('username').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const pwd = document.getElementById('password').value;
-        if(!username || !phone || pwd.length<6) { alert("Fill all fields correctly"); return; }
-        try {
-            if(isLogin) {
-                await auth.signInWithEmailAndPassword(username.replace(/\s/g,'')+"@stany.com", pwd);
-            } else {
-                await auth.createUserWithEmailAndPassword(username.replace(/\s/g,'')+"@stany.com", pwd);
-                await auth.currentUser.updateProfile({displayName: username});
-                await db.collection("users").doc(auth.currentUser.uid).set({name: username, phone, createdAt: new Date()});
-            }
-        } catch(err) { alert(err.message); }
-    });
+    function updateAuthUI() {
+      if(currentUser) {
+        document.getElementById('authButtonsContainer').innerHTML = `<span class="glass-panel px-6 py-2 rounded-full"><i class="fas fa-user-circle text-orange-500 mr-2"></i>${currentUser.displayName || currentUser.email} <button id="logoutBtnMain" class="ml-3 text-red-400 text-xs hover:text-red-300"><i class="fas fa-sign-out-alt"></i> Logout</button></span>`;
+        document.getElementById('userBadge').classList.remove('hidden');
+        document.getElementById('userNameDisplay').innerText = currentUser.displayName || "User";
+        document.getElementById('logoutBtnMain')?.addEventListener('click', () => auth.signOut());
+        document.getElementById('logoutBtnNav')?.addEventListener('click', () => auth.signOut());
+      } else {
+        document.getElementById('authButtonsContainer').innerHTML = `<button id="showLoginBtn" class="px-6 py-2 rounded-full border border-orange-500 text-orange-500"><i class="fas fa-sign-in-alt"></i> Login</button><button id="showSignupBtn" class="px-6 py-2 rounded-full bg-gradient-to-r from-orange-500 to-purple-600 text-white"><i class="fas fa-user-plus"></i> Sign Up</button>`;
+        document.getElementById('userBadge').classList.add('hidden');
+        document.getElementById('showLoginBtn')?.addEventListener('click', () => { document.getElementById('homePage').style.display = 'none'; document.getElementById('authPage').style.display = 'block'; document.getElementById('dashboardPage').style.display = 'none'; document.getElementById('authTitle').innerText = "Login"; document.getElementById('authBtn').innerText = "Login"; isLogin=true; });
+        document.getElementById('showSignupBtn')?.addEventListener('click', () => { document.getElementById('homePage').style.display = 'none'; document.getElementById('authPage').style.display = 'block'; document.getElementById('dashboardPage').style.display = 'none'; document.getElementById('authTitle').innerText = "Create Account"; document.getElementById('authBtn').innerText = "Sign Up"; isLogin=false; });
+      }
+    }
+
+    // Auth Pages
+    const homePage = document.getElementById('home');
+    const authPageDiv = document.createElement('div'); authPageDiv.id = 'authPage'; authPageDiv.style.display = 'none'; authPageDiv.className = 'min-h-screen flex items-center justify-center px-4 py-20'; authPageDiv.innerHTML = `<div class="glass-panel rounded-2xl p-8 max-w-md w-full"><h2 id="authTitle" class="text-2xl font-bold text-white text-center mb-6">Create Account</h2><form id="authForm"><input type="text" id="username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white mb-3" placeholder="Full Name" required><input type="tel" id="phone" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white mb-3" placeholder="WhatsApp Number" required><input type="password" id="password" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white mb-4" placeholder="Password (min 6)" required><button type="submit" id="authBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-purple-600 text-white font-semibold">Sign Up</button></form><p class="text-center mt-4"><a id="toggleAuthMode" class="text-orange-500 cursor-pointer">Already have an account? Login</a></p></div></div>`;
+      document.querySelector('main').appendChild(authPageDiv);
+    document.getElementById('home').after(authPageDiv);
+
+    document.getElementById('toggleAuthMode')?.addEventListener('click', () => { isLogin = !isLogin; document.getElementById('authTitle').innerText = isLogin ? "Login" : "Create Account"; document.getElementById('authBtn').innerText = isLogin ? "Login" : "Sign Up"; });
+    document.getElementById('authForm')?.addEventListener('submit', async (e) => { e.preventDefault(); let username = document.getElementById('username').value.trim(); let phone = document.getElementById('phone').value.trim(); let pwd = document.getElementById('password').value; if(!username || !phone || pwd.length<6) { alert("Fill all fields correctly"); return; } try { if(isLogin) await auth.signInWithEmailAndPassword(username.replace(/\s/g,'')+"@stany.com", pwd); else { await auth.createUserWithEmailAndPassword(username.replace(/\s/g,'')+"@stany.com", pwd); await auth.currentUser.updateProfile({displayName: username}); await db.collection("users").doc(auth.currentUser.uid).set({name: username, phone}); } } catch(err) { alert(err.message); } });
+    
     auth.onAuthStateChanged(async (user) => {
-        if(user) {
-            currentUser = user;
-            document.getElementById('authButtons').style.display = 'none';
-            document.getElementById('userMenu').style.display = 'flex';
-            document.getElementById('userName').innerText = user.displayName || "User";
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('authPage').style.display = 'none';
-            document.getElementById('dashboardPage').style.display = 'block';
-            await loadServicesFromFirestore();
-            document.getElementById('servicesArea').style.display = 'none';
-        } else {
-            currentUser = null;
-            document.getElementById('authButtons').style.display = 'flex';
-            document.getElementById('userMenu').style.display = 'none';
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('dashboardPage').style.display = 'none';
-            document.getElementById('authPage').style.display = 'none';
-        }
+      if(user) { currentUser = user; updateAuthUI(); homePage.style.display = 'block'; authPageDiv.style.display = 'none'; renderCategories(); document.getElementById('servicesArea').style.display = 'none'; document.getElementById('loader').style.display = 'none'; animateValue("statProjects", 0, SERVICES.length, 1500); animateValue("statClients", 0, 150, 1500); } 
+      else { currentUser = null; updateAuthUI(); homePage.style.display = 'block'; authPageDiv.style.display = 'none'; renderCategories(); document.getElementById('loader').style.display = 'none'; animateValue("statProjects", 0, SERVICES.length, 1500); animateValue("statClients", 0, 150, 1500); }
     });
-    document.getElementById('logoutBtn')?.addEventListener('click', () => auth.signOut());
-    document.getElementById('homeLink')?.addEventListener('click', () => {
-        if(currentUser) {
-            document.getElementById('dashboardPage').style.display = 'block';
-            document.getElementById('servicesArea').style.display = 'none';
-            document.getElementById('homePage').style.display = 'none';
-        } else {
-            document.getElementById('homePage').style.display = 'block';
-        }
-    });
-    document.getElementById('exploreBtn')?.addEventListener('click', () => {
-        if(!currentUser) {
-            isLogin = false;
-            document.getElementById('authTitle').innerText = "Create Account";
-            document.getElementById('authBtn').innerText = "Sign Up";
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('authPage').style.display = 'block';
-        }
-    });
-    document.getElementById('backBtn')?.addEventListener('click', () => {
-        document.getElementById('servicesArea').style.display = 'none';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    document.getElementById('whatsappFloatBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open('https://wa.me/255787069580?text=Hello%20Stany%20Panel!%20I%20need%20assistance.', '_blank');
-    });
-</script>
+    
+    document.getElementById('backBtn')?.addEventListener('click', () => { document.getElementById('servicesArea').style.display = 'none'; });
+    function setActiveNav(el) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active', 'text-orange-500')); el.classList.add('active', 'text-orange-500'); }
+    function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+    function animateValue(id, start, end, duration) { let startTime = null; function step(timestamp) { if (!startTime) startTime = timestamp; let progress = Math.min((timestamp - startTime) / duration, 1); document.getElementById(id).innerHTML = Math.floor(progress * (end - start) + start); if (progress < 1) requestAnimationFrame(step); } requestAnimationFrame(step); }
+    function sendContactToWhatsApp() { let name = document.getElementById('contactName').value, email = document.getElementById('contactEmail').value, phone = document.getElementById('contactPhone').value, service = document.getElementById('contactService').value, msg = document.getElementById('contactMessage').value; if(!name || !email || !service || !msg) { alert("Please fill all required fields"); return; } let text = `*New Inquiry from Stany Panel Website*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Phone:* ${phone || 'Not provided'}%0A*Service:* ${service}%0A*Message:* ${msg}`; window.open(`https://wa.me/255787069580?text=${text}`, '_blank'); }
+    document.getElementById('contactForm')?.addEventListener('submit', (e) => { e.preventDefault(); alert("Thank you! We will contact you within 24 hours."); document.getElementById('contactForm').reset(); });
+    window.addEventListener('scroll', () => { let winScroll = document.body.scrollTop || document.documentElement.scrollTop; let height = document.documentElement.scrollHeight - document.documentElement.clientHeight; let scrolled = (winScroll / height) * 100; document.getElementById('progressBar').style.width = scrolled + '%'; });
+    window.addEventListener('load', () => { setTimeout(() => { document.getElementById('loader').style.opacity = '0'; setTimeout(() => { document.getElementById('loader').style.display = 'none'; document.getElementById('welcomeMsg').classList.add('opacity-100'); setTimeout(() => document.getElementById('welcomeMsg').classList.remove('opacity-100'), 3000); }, 500); }, 1500); });
+    document.getElementById('year').innerHTML = new Date().getFullYear();
+    document.getElementById('getStartedBtnDesktop')?.addEventListener('click', () => { if(!currentUser) { document.getElementById('showSignupBtn')?.click(); } });
+  </script>
 </body>
 </html>
