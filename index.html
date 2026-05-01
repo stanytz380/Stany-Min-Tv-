@@ -321,6 +321,9 @@
             box-shadow: 0 5px 20px rgba(37,211,102,0.5);
             z-index: 99;
             transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
         }
 
         .whatsapp-float:hover {
@@ -395,7 +398,7 @@
     </div>
 </main>
 
-<a href="https://wa.me/255787069580" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="#" class="whatsapp-float" id="whatsappFloatBtn"><i class="fab fa-whatsapp"></i></a>
 
 <script>
     const firebaseConfig = {
@@ -423,30 +426,31 @@
         { key: "vpn", name: "VPN & Security", img: "https://o.uguu.se/vizuEVnl.jpg" }
     ];
 
-    let SERVICES = [];
+    let SERVICES = [
+        { id: "unl", name: "Unlimited Panel", category: "panels", desc: "Full premium access, no data limits", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"Unlimited Access",price:"5,000 TZS"}], needPanel: true },
+        { id: "2gb", name: "2GB Panel", category: "panels", desc: "2GB premium data package", img: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=250&fit=crop", prices: [{plan:"2GB Data",price:"3,000 TZS"}], needPanel: true },
+        { id: "4gb", name: "4GB Panel", category: "panels", desc: "4GB high-speed data", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop", prices: [{plan:"4GB Data",price:"4,000 TZS"}], needPanel: true },
+        { id: "5gb", name: "5GB Panel", category: "panels", desc: "5GB ultimate value", img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop", prices: [{plan:"5GB Data",price:"4,500 TZS"}], needPanel: true },
+        { id: "bugbot", name: "Bug Bot", category: "bots", desc: "Advanced WhatsApp bug detection bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Bug Bot Deployment",price:"5,000 TZS"}], needPanel: false },
+        { id: "normalbot", name: "Normal Bot", category: "bots", desc: "Standard automation bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Normal Bot",price:"4,000 TZS"}], needPanel: false },
+        { id: "botdev", name: "Bot Development", category: "bots", desc: "Custom bot tailored to your needs", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Custom Development",price:"25,000 TZS"}], needPanel: false },
+        { id: "azam1d", name: "Azam TV 1 Day", category: "azam", desc: "24 hours all channels access", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Day",price:"500 TZS"}], needPanel: false },
+        { id: "azam1w", name: "Azam TV 1 Week", category: "azam", desc: "7 days premium entertainment", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Week",price:"2,000 TZS"}], needPanel: false },
+        { id: "azam1m", name: "Azam TV 1 Month", category: "azam", desc: "30 days unlimited", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Month",price:"3,000 TZS"}], needPanel: false },
+        { id: "azam1y", name: "Azam TV 1 Year", category: "azam", desc: "Best value yearly plan", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Year",price:"5,000 TZS"}], needPanel: false },
+        { id: "nida", name: "NIDA Soft Copy", category: "documents", desc: "Digital NIDA registration document", img: "https://h.uguu.se/ydzmLpek.jpg", prices: [{plan:"Soft Copy",price:"10,000 TZS"}], needPanel: false, hasReqs: true, reqType: "nida" },
+        { id: "birthcert", name: "Birthday Certificate", category: "documents", desc: "RITA Certificate + Service Fee", img: "https://d.uguu.se/GEJPFeNk.jpg", prices: [{plan:"RITA Fee",price:"20,000 TZS"},{plan:"Service Fee",price:"15,000 TZS"},{plan:"TOTAL",price:"35,000 TZS"}], needPanel: false, hasReqs: true, reqType: "birth" },
+        { id: "halovpn10", name: "Halotel VPN 10 Days", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"10 Days",price:"2,500 TZS"}], needPanel: false },
+        { id: "halovpn2w", name: "Halotel VPN 2 Weeks", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"2 Weeks",price:"3,500 TZS"}], needPanel: false },
+        { id: "halovpn1m", name: "Halotel VPN 1 Month", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"1 Month",price:"4,500 TZS"}], needPanel: false }
+    ];
 
-    async function loadServices() {
+    async function loadServicesFromFirestore() {
         const snap = await db.collection("services").get();
         if(!snap.empty) {
             SERVICES = [];
             snap.forEach(doc => SERVICES.push({ id: doc.id, ...doc.data() }));
         } else {
-            SERVICES = [
-                { id: "unl", name: "Unlimited Panel", category: "panels", desc: "Full premium access, no data limits", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"Unlimited Access",price:"5,000 TZS"}], needPanel: true },
-                { id: "2gb", name: "2GB Panel", category: "panels", desc: "2GB premium data package", img: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=250&fit=crop", prices: [{plan:"2GB Data",price:"3,000 TZS"}], needPanel: true },
-                { id: "4gb", name: "4GB Panel", category: "panels", desc: "4GB high-speed data", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop", prices: [{plan:"4GB Data",price:"4,000 TZS"}], needPanel: true },
-                { id: "5gb", name: "5GB Panel", category: "panels", desc: "5GB ultimate value", img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=250&fit=crop", prices: [{plan:"5GB Data",price:"4,500 TZS"}], needPanel: true },
-                { id: "bugbot", name: "Bug Bot", category: "bots", desc: "Advanced WhatsApp bug detection bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Bug Bot Deployment",price:"5,000 TZS"}], needPanel: false },
-                { id: "normalbot", name: "Normal Bot", category: "bots", desc: "Standard automation bot", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Normal Bot",price:"4,000 TZS"}], needPanel: false },
-                { id: "botdev", name: "Bot Development", category: "bots", desc: "Custom bot tailored to your needs", img: "https://d.uguu.se/JWnGgPpw.jpg", prices: [{plan:"Custom Development",price:"25,000 TZS"}], needPanel: false },
-                { id: "azam1d", name: "Azam TV 1 Day", category: "azam", desc: "24 hours all channels access", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Day",price:"500 TZS"}], needPanel: false },
-                { id: "azam1w", name: "Azam TV 1 Week", category: "azam", desc: "7 days premium entertainment", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Week",price:"2,000 TZS"}], needPanel: false },
-                { id: "azam1m", name: "Azam TV 1 Month", category: "azam", desc: "30 days unlimited", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Month",price:"3,000 TZS"}], needPanel: false },
-                { id: "azam1y", name: "Azam TV 1 Year", category: "azam", desc: "Best value yearly plan", img: "https://h.uguu.se/lgmUMJlX.jpg", prices: [{plan:"1 Year",price:"5,000 TZS"}], needPanel: false },
-                { id: "nida", name: "NIDA Soft Copy", category: "documents", desc: "Digital NIDA registration document", img: "https://h.uguu.se/ydzmLpek.jpg", prices: [{plan:"Soft Copy",price:"10,000 TZS"}], needPanel: false, hasReqs: true, reqType: "nida" },
-                { id: "birthcert", name: "Birthday Certificate", category: "documents", desc: "RITA Certificate + Service Fee", img: "https://d.uguu.se/GEJPFeNk.jpg", prices: [{plan:"RITA Fee",price:"20,000 TZS"},{plan:"Service Fee",price:"15,000 TZS"},{plan:"TOTAL",price:"35,000 TZS"}], needPanel: false, hasReqs: true, reqType: "birth" },
-                { id: "halovpn", name: "Halotel VPN Unlimited", category: "vpn", desc: "Secure VPN for Halotel users", img: "https://images.unsplash.com/photo-1551654815-9c73c7b1c7f1?w=400&h=250&fit=crop", prices: [{plan:"10 Days",price:"2,500 TZS"},{plan:"2 Weeks",price:"3,500 TZS"},{plan:"1 Month",price:"4,500 TZS"}], needPanel: false }
-            ];
             for(const s of SERVICES) await db.collection("services").add(s);
         }
         renderCategories();
@@ -466,7 +470,7 @@
             card.addEventListener('click', () => {
                 const catKey = card.dataset.cat;
                 let filtered = catKey === 'all' ? SERVICES : SERVICES.filter(s => s.category === catKey);
-                displayServices(filtered, catKey);
+                displayServices(filtered);
                 document.getElementById('servicesArea').style.display = 'block';
                 document.getElementById('servicesTitle').innerHTML = `<i class="fas fa-box-open"></i> ${catKey === 'all' ? 'All Services' : catKey.toUpperCase()}`;
                 window.scrollTo({ top: 350, behavior: 'smooth' });
@@ -495,6 +499,47 @@
         });
     }
 
+    function sendWhatsAppOrder(name, phone, service, plan, extraData) {
+        let phoneNum = phone.replace(/\D/g,'');
+        if(!phoneNum.startsWith('255')) phoneNum = '255' + phoneNum.replace(/^0/,'');
+        
+        let message = `*🛒 STANY PANEL SERVICE - NEW ORDER*%0A%0A`;
+        message += `📦 *Service:* ${service.name}%0A`;
+        message += `💰 *Plan:* ${plan.plan} - ${plan.price}%0A`;
+        message += `👤 *Customer Name:* ${name}%0A`;
+        message += `📞 *WhatsApp:* ${phone}%0A`;
+        
+        if(extraData.panelEmail && extraData.panelPass) {
+            message += `📧 *Email:* ${extraData.panelEmail}%0A`;
+            message += `🔑 *Panel Password:* ${extraData.panelPass}%0A`;
+        }
+        
+        if(extraData.documents) {
+            message += `%0A📋 *Available Documents:*%0A${extraData.documents}%0A`;
+            message += `📍 *Service Area:* Tanzania Nzima%0A`;
+        }
+        
+        if(extraData.nidaNumber) {
+            message += `%0A🆔 *NIDA Number:* ${extraData.nidaNumber}%0A`;
+            message += `👩 *Mother's Name/School Year:* ${extraData.motherInfo}%0A`;
+            message += `🏙️ *Region:* ${extraData.region || 'Not specified'}%0A`;
+        }
+        
+        message += `%0A✅ *Payment Status:* Pending Confirmation%0A`;
+        message += `📝 *Note:* I confirm my order details above. Please verify and share payment instructions.%0A%0A`;
+        message += `📅 *Order Date:* ${new Date().toLocaleString()}`;
+        
+        // Save to Firestore
+        db.collection("orders").add({
+            customerName: name, customerPhone: phone, serviceName: service.name,
+            planName: plan.plan, amount: plan.price, status: "pending",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(), userId: currentUser?.uid || "guest"
+        }).catch(console.error);
+        
+        // Open WhatsApp
+        window.open(`https://wa.me/255787069580?text=${message}`, '_blank');
+    }
+
     function openOrderModal(service) {
         selectedService = service;
         selectedPlan = service.prices[0];
@@ -519,7 +564,7 @@
                         <li><i class="fas fa-church"></i> Tangazo la kizazi / Cheti cha Ubatizo</li>
                         <li><i class="fas fa-building"></i> Barua kutoka kwa Afisa Mtendaji</li>
                     </ul>
-                    <p><strong><i class="fas fa-info-circle"></i> Unatakiwa kuwa na angalau viambatanisho viwili (2) au zaidi. Huduma inapatikana Tanzania nzima.</strong></p>
+                    <p><strong><i class="fas fa-info-circle"></i> Unatakiwa kuwa na angalau viambatanisho viwili (2) au zaidi.</strong></p>
                 </div>
             `;
         } else if(service.id === 'nida') {
@@ -551,7 +596,7 @@
                 <div style="padding: 0 24px 20px;">
                     <div style="margin: 10px 0 5px;"><i class="fas fa-user"></i> Your Information:</div>
                     <input type="text" id="orderName" class="form-input" placeholder="Full Name" value="${currentUser?.displayName || ''}">
-                    <input type="tel" id="orderPhone" class="form-input" placeholder="WhatsApp Number" value="">
+                    <input type="tel" id="orderPhone" class="form-input" placeholder="WhatsApp Number" value="${currentUser?.phoneNumber || ''}">
                     
                     <div id="panelFields" style="display: ${service.needPanel ? 'block' : 'none'};">
                         <div style="margin: 10px 0 5px;"><i class="fas fa-envelope"></i> Panel Login Details:</div>
@@ -561,7 +606,7 @@
                     
                     <div id="birthFields" style="display: ${service.id === 'birthcert' ? 'block' : 'none'};">
                         <div style="margin: 10px 0 5px;"><i class="fas fa-paperclip"></i> Available Documents (list at least 2):</div>
-                        <textarea id="docList" class="form-textarea" rows="3" placeholder="Example:&#10;✓ Kadi ya Kliniki&#10;✓ Cheti cha FALAKI&#10;✓ Kitambulisho cha kupigia kura"></textarea>
+                        <textarea id="docList" class="form-textarea" rows="3" placeholder="Example:&#10;✓ Kadi ya Kliniki&#10;✓ Cheti cha FALAKI"></textarea>
                     </div>
                     
                     <div id="nidaFields" style="display: ${service.id === 'nida' ? 'block' : 'none'};">
@@ -597,59 +642,32 @@
             if(!name) { alert("❌ Please enter your full name"); return; }
             if(!phone) { alert("❌ Please enter your WhatsApp number"); return; }
             
+            let extraData = {};
+            
             if(selectedService.needPanel) {
                 let email = document.getElementById('orderEmail')?.value.trim();
                 let pass = document.getElementById('orderPass')?.value.trim();
                 if(!email || !pass) { alert("❌ Email and Password required for panel service"); return; }
+                extraData.panelEmail = email;
+                extraData.panelPass = pass;
             }
             
             if(selectedService.id === 'birthcert') {
                 let docs = document.getElementById('docList')?.value.trim();
                 if(!docs || docs.length < 5) { alert("❌ Please list at least 2 available documents for Birth Certificate"); return; }
+                extraData.documents = docs;
             }
+            
             if(selectedService.id === 'nida') {
                 let nida = document.getElementById('nidaNumber')?.value.trim();
                 let mother = document.getElementById('motherInfo')?.value.trim();
                 if(!nida || !mother) { alert("❌ Please fill NIDA Number and Mother's Name/School Year"); return; }
+                extraData.nidaNumber = nida;
+                extraData.motherInfo = mother;
+                extraData.region = document.getElementById('region')?.value.trim() || '';
             }
             
-            let phoneNum = phone.replace(/\D/g,'');
-            if(!phoneNum.startsWith('255')) phoneNum = '255' + phoneNum.replace(/^0/,'');
-            
-            let message = `*🛒 STANY PANEL SERVICE - NEW ORDER*%0A%0A`;
-            message += `📦 *Service:* ${selectedService.name}%0A`;
-            message += `💰 *Plan:* ${selectedPlan.plan} - ${selectedPlan.price}%0A`;
-            message += `👤 *Customer Name:* ${name}%0A`;
-            message += `📞 *WhatsApp:* ${phone}%0A`;
-            
-            if(selectedService.needPanel) {
-                message += `📧 *Email:* ${document.getElementById('orderEmail')?.value.trim()}%0A`;
-                message += `🔑 *Panel Password:* ${document.getElementById('orderPass')?.value.trim()}%0A`;
-            }
-            
-            if(selectedService.id === 'birthcert') {
-                message += `%0A📋 *MAHITAJI (Available Documents):*%0A${document.getElementById('docList')?.value.trim()}%0A`;
-                message += `%0A📍 *Service Area:* Tanzania Nzima%0A`;
-                message += `ℹ️ *Requirements:* Viambatanisho viwili au zaidi kutoka kwenye orodha.`;
-            }
-            
-            if(selectedService.id === 'nida') {
-                message += `%0A🆔 *NIDA Number:* ${document.getElementById('nidaNumber')?.value.trim()}%0A`;
-                message += `👩 *Mother's Name / School Year:* ${document.getElementById('motherInfo')?.value.trim()}%0A`;
-                message += `🏙️ *Region:* ${document.getElementById('region')?.value.trim() || 'Not specified'}%0A`;
-            }
-            
-            message += `%0A%0A✅ *Payment Status:* Pending Confirmation%0A`;
-            message += `📝 *Note:* I confirm my order details above. Please verify and share payment instructions.`;
-            message += `%0A%0A📅 *Order Date:* ${new Date().toLocaleString()}`;
-            
-            db.collection("orders").add({
-                customerName: name, customerPhone: phone, serviceName: selectedService.name,
-                planName: selectedPlan.plan, amount: selectedPlan.price, status: "pending",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(), userId: currentUser?.uid || "guest"
-            }).catch(console.error);
-            
-            window.open(`https://wa.me/255787069580?text=${message}`, '_blank');
+            sendWhatsAppOrder(name, phone, selectedService, selectedPlan, extraData);
             modalDiv.remove();
             alert("✅ Order sent successfully! Admin will respond on WhatsApp shortly.");
         });
@@ -702,7 +720,7 @@
             document.getElementById('homePage').style.display = 'none';
             document.getElementById('authPage').style.display = 'none';
             document.getElementById('dashboardPage').style.display = 'block';
-            await loadServices();
+            await loadServicesFromFirestore();
             document.getElementById('servicesArea').style.display = 'none';
         } else {
             currentUser = null;
@@ -735,6 +753,10 @@
     document.getElementById('backBtn')?.addEventListener('click', () => {
         document.getElementById('servicesArea').style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('whatsappFloatBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open('https://wa.me/255787069580?text=Hello%20Stany%20Panel!%20I%20need%20assistance.', '_blank');
     });
 </script>
 </body>
